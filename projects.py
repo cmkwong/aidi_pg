@@ -26,7 +26,7 @@ class spot12_project:
         self.controller = controller
         self.previous_url = None
         self.current_url = None
-        self.query_done = 1
+        self.query_done = 0
         self.new_query = True
 
     def get_query_text(self):

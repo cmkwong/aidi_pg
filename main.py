@@ -16,9 +16,6 @@ while (not (command_string == "quit")):
         PROJECT_TYPE = common.menu_choice()
         graders.setup_project(PROJECT_TYPE)
 
-    if (graders.grader.new_query):
-        graders.print_status()
-
     try: # bigger exception, avoid accidently close down
         print("Answer Input: ")
         terminal.activate()  # back to terminal shell for input
@@ -26,6 +23,8 @@ while (not (command_string == "quit")):
         command_string = common.control_command_check(graders, user_command)
         if command_string == "command_not_checked":
             gradingFinish = graders.decode(user_command)
+        if (graders.grader.new_query):
+            graders.print_status()
     except:
         print("Might be your input so fast.")
         continue

@@ -35,6 +35,7 @@ class Graders:
     def __init__(self, web_controller):
         self.web_controller = web_controller
         self.grader = None
+        self.projects_query_done = 0
 
     def setup_project(self, project_type):
         if (project_type == 1):
@@ -47,10 +48,10 @@ class Graders:
         return gradingFinish
 
     def get_query_done(self):
-        return self.grader.query_done
+        return (self.projects_query_done + self.grader.query_done)
 
     def print_status(self):
-        print("Count: ", self.get_query_done())
+        print("Done: ", self.get_query_done())
 
 def control_command_check(graders, ans):
     if (ans[0:2] == "-l"):
@@ -62,6 +63,7 @@ def control_command_check(graders, ans):
         command_string = "quit"
         return command_string
     elif (ans[0:2] == "-p"):
+        graders.projects_query_done = graders.grader.query_done # keep previous amount of done number
         PROJECT_TYPE = menu_choice()
         graders.setup_project(PROJECT_TYPE)
         command_string = "command_checked"
