@@ -46,6 +46,11 @@ class web_controller:
         for window_handle in self.browser.window_handles:
             if window_handle != self.original_window:
                 self.browser.switch_to.window(window_handle)
+                # js_code = """
+                #     window.stop();
+                #     window.close();
+                # """
+                # self.browser.execute_script(js_code)
                 self.browser.close()
         self.back_tag_one()
 

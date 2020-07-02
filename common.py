@@ -1,5 +1,4 @@
 import projects
-
 MAX_PROJ_NUM = 2
 
 def menu_input():
@@ -32,16 +31,16 @@ def menu_choice():
     print("Type of Project: ", num_input, " activated.")
     return num_input
 
-class Decoder:
-    def __init__(self, controller):
-        self.controller = controller
+class Graders:
+    def __init__(self, web_controller):
+        self.web_controller = web_controller
         self.grader = None
 
     def setup_project(self, project_type):
         if (project_type == 1):
-            self.grader = projects.spot12_project(self.controller)
+            self.grader = projects.spot12_project(self.web_controller)
         elif (project_type == 2):
-            self.grader = projects.saf_project(self.controller)
+            self.grader = projects.saf_project(self.web_controller)
 
     def decode(self, ans):
         gradingFinish = self.grader.grading(ans)
@@ -53,10 +52,24 @@ class Decoder:
     def print_status(self):
         print("Count: ", self.get_query_done())
 
-def control_command_check(project_grader, ans):
+def control_command_check(graders, ans):
     if (ans[0:2] == "-l"):
         url = ans[3:]
-        project_grader.controller.open_project_link(url)
+        graders.grader.controller.open_project_link(url)
+        command_string = "command_checked"
+        return command_string
+    elif (ans[0:2] == "-q"):
+        command_string = "quit"
+        return command_string
+    elif (ans[0:2] == "-p"):
+        PROJECT_TYPE = menu_choice()
+        graders.setup_project(PROJECT_TYPE)
+        command_string = "command_checked"
+        return command_string
+    else:
+        command_string = "command_not_checked"
+        return command_string
+
 
 
 
