@@ -1,6 +1,5 @@
 import numpy as np
 import time
-from bs4 import BeautifulSoup
 
 def base_code_check(controller, ans, max_web_search_links):
     if (ans[0] == '`'):
