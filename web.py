@@ -5,13 +5,13 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 
+from config import *
 import time
 import numpy as np
 from bs4 import BeautifulSoup
 
-class web_controller:
+class Web:
     def __init__(self, init_url):
         self.init_url = init_url
         self.browser = None
@@ -53,12 +53,6 @@ class web_controller:
                 # self.browser.execute_script(js_code)
                 self.browser.close()
         self.back_tag_one()
-
-    def get_html(self):
-        self.back_tag_one()
-        html = self.browser.page_source
-        time.sleep(1)
-        return html
 
     def click_by_id_until(self, id):
         element = WebDriverWait(self.browser.find_element_by_id(id), 5).until(EC.element_to_be_clickable((By.ID, id)))
@@ -117,21 +111,45 @@ class web_controller:
                 links.append(self.browser.execute_script(js_code))
         return links
 
+    def get_motherTag_url(self):
+        self.back_tag_one()
+        return self.browser.current_url
+
+    def get_html(self):
+        self.back_tag_one()
+        html = self.browser.page_source
+        time.sleep(1)
+        return html
+
+    def get_project_id(self):
+        js_code = """
+            var name = document.getElementById('project-name').getElementsByTagName('a')[0].innerText;
+            return name;
+        """
+        return self.browser.execute_script(js_code)
+
+    def get_grader_id(self):
+        js_code = """
+            var usr_name = document.getElementsByClassName("user-name")[0].innerText;
+            return usr_name;
+        """
+        usr_name = self.browser.execute_script(js_code)
+        for x in graders_id:
+            if usr_name is x["name"]:
+                return x["_id"]
+        return None
+
     def open_links_new_tags(self, links, max_tags):
         self.back_tag_one()
         for i, link in enumerate(links):
             self.browser.execute_script("window.open('%s');" % link)
             if (i+1) == max_tags:
+                self.back_tag_one()
                 break
         self.back_tag_one()
 
-
     def input_text(self, selector_path, text):
         pass
-
-    def get_motherTag_url(self):
-        self.back_tag_one()
-        return self.browser.current_url
 
     def quite_driver(self):
         self.browser.quit()

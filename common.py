@@ -32,16 +32,19 @@ def menu_choice():
     return num_input
 
 class Graders:
-    def __init__(self, web_controller):
+    def __init__(self, web_controller, db_controller):
         self.web_controller = web_controller
+        self.db_controller = db_controller
         self.grader = None
         self.projects_query_done = 0
 
     def setup_project(self, project_type):
         if (project_type == 1):
-            self.grader = projects.spot12_project(self.web_controller)
+            # self.db_controller.project_type = 1
+            self.grader = projects.spot12_project(self.web_controller, self.db_controller)
         elif (project_type == 2):
-            self.grader = projects.saf_project(self.web_controller)
+            # self.db_controller.project_type = 2
+            self.grader = projects.saf_project(self.web_controller, self.db_controller)
 
     def decode(self, ans):
         gradingFinish = self.grader.grading(ans)
@@ -56,7 +59,7 @@ class Graders:
 def control_command_check(graders, ans):
     if (ans[0:2] == "-l"):
         url = ans[3:]
-        graders.grader.controller.open_project_link(url)
+        graders.grader.web_controller.open_project_link(url)
         command_string = "command_checked"
         return command_string
     elif (ans[0:2] == "-q"):

@@ -1,4 +1,3 @@
-import numpy as np
 import time
 
 def base_code_check(controller, ans, max_web_search_links):
@@ -21,12 +20,15 @@ def base_code_check(controller, ans, max_web_search_links):
         return False
 
 class spot12_project:
-    def __init__(self, controller):
-        self.controller = controller
+    def __init__(self, web_controller, db_controller):
+        self.web_controller = web_controller
+        self.db_controller = db_controller
         self.previous_url = None
         self.current_url = None
         self.query_done = 0
-        self.new_query = True
+        self.new_query = False
+        self.grader_id = None
+        self.project_id = None
 
     def get_query_text(self):
         query_text = None
@@ -37,7 +39,7 @@ class spot12_project:
         js_code2 = "document.getElementsByClassName('search-input form-control')[0].getAttribute('value')"
         while (query_text==None):
             try:
-                query_text = self.controller.browser.execute_script(js_code)
+                query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
             except:
                 continue
@@ -45,46 +47,66 @@ class spot12_project:
 
     def get_query_url(self):
         js_code = "document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href')"
-        query_web_search_url = self.controller.browser.execute_script(js_code)
+        query_web_search_url = self.web_controller.browser.execute_script(js_code)
         return query_web_search_url
 
     def grading(self, ans):
-        self.current_url = self.controller.get_motherTag_url()
+        self.current_url = self.web_controller.get_motherTag_url()
         self.new_query = False # set to default false
-        base_command = base_code_check(self.controller, ans, max_web_search_links=3)
+        base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
         if (base_command):
             return False
         elif (not base_command):
+
+            # insert query and answer
+            text = self.get_query_text()
+            result_links = self.web_controller.get_links()
+            if self.grader_id is None or self.project_id is None:
+                self.grader_id = self.web_controller.get_grader_id()
+                self.project_id = self.web_controller.get_project_id()
+            query_id = self.db_controller.query_insert(self.project_id, text, result_links)
+            answer_id = None
+            if query_id is not None:
+                answer_id = self.db_controller.grader_answer_insert(self.grader_id, query_id, query_link=self.current_url)
+            else:
+                print("Error: query insert unsuccessfully.")
+
             num = 1
             for a in ans:
                 if (a=='i'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
                 elif (a=='l'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
                 elif (a=='x'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
                 elif(a=='e'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
                 elif (a=='g'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.controller.click_by_id(("result" + str(num) + "_relevancegood"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
                 elif (a=='f'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.controller.click_by_id(("result" + str(num) + "_relevancefair"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
                 elif (a=='b'):
-                    self.controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.controller.click_by_id(("result" + str(num) + "_relevancebad"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
                 else:
                     print("--------Not correct ans detected.--------")
                     return False
                 num = num + 1
             if (len(ans)==1):
-                self.controller.click_by_id("result2_validationno_result2")
-                self.controller.click_by_id("result3_validationno_result3")
+                self.web_controller.click_by_id("result2_validationno_result2")
+                self.web_controller.click_by_id("result3_validationno_result3")
             elif (len(ans)==2):
-                self.controller.click_by_id("result3_validationno_result3")
-            self.controller.click_next_btn()
+                self.web_controller.click_by_id("result3_validationno_result3")
+            self.web_controller.click_next_btn()
+
+            # update grader answer
+            if answer_id is not None:
+                self.db_controller.grader_answer_update(answer_id, answer=ans)
+            else:
+                print("Error: answer insert unsuccessfully")
 
             # increase the query done if it is new query
             if (self.current_url != self.previous_url):
@@ -95,8 +117,9 @@ class spot12_project:
 
 
 class saf_project:
-    def __init__(self, controller):
-        self.controller = controller
+    def __init__(self, web_controller, db_controller):
+        self.web_controller = web_controller
+        self.db_controller = db_controller
         self.previous_url = None
         self.current_url = None
         self.query_done = 1
@@ -111,7 +134,7 @@ class saf_project:
         js_code2 = "document.getElementsByClassName('search-input form-control')[0].getAttribute('value')"
         while (query_text == None):
             try:
-                query_text = self.controller.browser.execute_script(js_code)
+                query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
             except:
                 continue
@@ -119,46 +142,46 @@ class saf_project:
 
     def get_query_url(self):
         js_code = "document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href')"
-        query_web_search_url = self.controller.browser.execute_script(js_code)
+        query_web_search_url = self.web_controller.browser.execute_script(js_code)
         return query_web_search_url
 
     def grading(self, ans):
-        self.current_url = self.controller.get_motherTag_url()
+        self.current_url = self.web_controller.get_motherTag_url()
         self.new_query = False  # set to default false
-        base_command = base_code_check(self.controller, ans, max_web_search_links=3)
+        base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
         if (base_command):
             return False
         elif (not base_command):
             num = 1
             if (ans == 'i'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
             elif (ans == 'l'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
             elif (ans == 'x'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
             elif (ans == 'e'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+                self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
             elif (ans == 'g'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.controller.click_by_id(("result" + str(num) + "_relevancegood"))
+                self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
             elif (ans == 'f'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.controller.click_by_id(("result" + str(num) + "_relevancefair"))
+                self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
             elif (ans == 'b'):
-                self.controller.click_by_id(
+                self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.controller.click_by_id(("result" + str(num) + "_relevancebad"))
+                self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
             else:
                 print("--------Not correct ans detected.--------")
                 return False
-            self.controller.click_next_btn()
+            self.web_controller.click_next_btn()
 
             # increase the query done if it is new query
             if (self.current_url != self.previous_url):
