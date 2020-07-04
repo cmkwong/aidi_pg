@@ -75,11 +75,12 @@ class Database:
         else:
             return None
 
-    def grader_answer_update(self, answer_id, answer="na"):
+    def grader_answer_update(self, grader_id, answer_id, answer="na"):
         target = {
             "_id": answer_id
         }
         new_dict = {"$set": {
+            "grader": grader_id,
             "grader_answer": answer,
             "time": datetime.datetime.fromtimestamp(time.time())
         }}

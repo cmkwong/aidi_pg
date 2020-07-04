@@ -18,6 +18,37 @@ def base_code_check(controller, ans, max_web_search_links):
         return True
     else:
         return False
+class base_project:
+    def __init__(self, web_controller, db_controller):
+        self.web_controller = web_controller
+        self.db_controller = db_controller
+        self.previous_url = None
+        self.current_url = None
+        self.query_done = 0
+        self.new_query = False
+        self.grader_id = None
+        self.project_id = None
+
+    def get_query_text(self):
+        query_text = None
+        js_code = """
+            var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
+            return query_text;
+        """
+        js_code2 = "document.getElementsByClassName('search-input form-control')[0].getAttribute('value')"
+        while (query_text==None):
+            try:
+                query_text = self.web_controller.browser.execute_script(js_code)
+                time.sleep(0.5)
+            except:
+                continue
+        return query_text
+
+    def get_query_url(self):
+        js_code = "document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href')"
+        query_web_search_url = self.web_controller.browser.execute_script(js_code)
+        return query_web_search_url
+
 
 class spot12_project:
     def __init__(self, web_controller, db_controller):
@@ -104,7 +135,7 @@ class spot12_project:
 
             # update grader answer
             if answer_id is not None:
-                self.db_controller.grader_answer_update(answer_id, answer=ans)
+                self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
             else:
                 print("Error: answer insert unsuccessfully")
 

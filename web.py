@@ -135,7 +135,7 @@ class Web:
         """
         usr_name = self.browser.execute_script(js_code)
         for x in graders_id:
-            if usr_name is x["name"]:
+            if usr_name == x["name"]:
                 return x["_id"]
         return None
 

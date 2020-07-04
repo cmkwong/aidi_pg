@@ -71,6 +71,10 @@ def control_command_check(graders, ans):
         graders.setup_project(PROJECT_TYPE)
         command_string = "command_checked"
         return command_string
+    elif (ans[0:4] == "--rg"):
+        graders.grader.db_controller.graders_id_update()
+    elif (ans[0:4] == "--rp"):
+        graders.grader.db_controller.project_info_update()
     else:
         command_string = "command_not_checked"
         return command_string
