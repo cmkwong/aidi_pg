@@ -30,6 +30,14 @@ class base_grader:
         self.grader_id = None
         self.project_id = None
         self.project_type = None
+        self.time_delay = 260
+
+    def update_status(self):
+        # increase the query done if it is new query
+        if (self.current_url != self.previous_url):
+            self.query_done = self.query_done + 1
+            self.previous_url = self.current_url
+            self.new_query = True
 
     def get_query_text(self):
         query_text = None
@@ -37,7 +45,6 @@ class base_grader:
             var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
             return query_text;
         """
-        js_code2 = "document.getElementsByClassName('search-input form-control')[0].getAttribute('value')"
         while (query_text==None):
             try:
                 query_text = self.web_controller.browser.execute_script(js_code)
@@ -165,84 +172,27 @@ class base_grader:
             # update ans into db
             self.update_db_ans(answer_id, ans)
 
-            # increase the query done if it is new query
-            if (self.current_url != self.previous_url):
-                self.query_done = self.query_done + 1
-                self.previous_url = self.current_url
-                self.new_query = True
+            # update status after finish a grading
+            self.update_status()
+
             return True
 
+    def auto_execute(self):
+        # auto mode
+        if self.project_id is None:
+            self.project_id = self.web_controller.get_project_id()
+        text = self.get_query_text()
+        ans, grader_name = self.db_controller.find_one_ans(self.project_id, text)
+        print("Got from: ", grader_name, "\nAns: ", ans)
+        print("Delay...")
+        for i in reversed(range(0, self.time_delay)):
+            time.sleep(1)
+            print(i)
 
-class saf_project:
-    def __init__(self, web_controller, db_controller):
-        self.web_controller = web_controller
-        self.db_controller = db_controller
-        self.previous_url = None
-        self.current_url = None
-        self.query_done = 1
-        self.new_query = True
+        # grading ans that from database
+        self.grading(ans)
 
-    def get_query_text(self):
-        query_text = None
-        js_code = """
-            var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
-            return query_text;
-        """
-        js_code2 = "document.getElementsByClassName('search-input form-control')[0].getAttribute('value')"
-        while (query_text == None):
-            try:
-                query_text = self.web_controller.browser.execute_script(js_code)
-                time.sleep(0.5)
-            except:
-                continue
-        return query_text
+        # update status after finish a grading
+        self.update_status()
 
-    def get_query_url(self):
-        js_code = "document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href')"
-        query_web_search_url = self.web_controller.browser.execute_script(js_code)
-        return query_web_search_url
-
-    def grading(self, ans):
-        self.current_url = self.web_controller.get_motherTag_url()
-        self.new_query = False  # set to default false
-        base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
-        if (base_command):
-            return False
-        elif (not base_command):
-            num = 1
-            if (ans == 'i'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
-            elif (ans == 'l'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
-            elif (ans == 'x'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-            elif (ans == 'e'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-            elif (ans == 'g'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-            elif (ans == 'f'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-            elif (ans == 'b'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
-            else:
-                print("--------Not correct ans detected.--------")
-                return False
-            self.web_controller.click_next_btn()
-
-            # increase the query done if it is new query
-            if (self.current_url != self.previous_url):
-                self.query_done = self.query_done + 1
-                self.previous_url = self.current_url
-                self.new_query = True
-            return True
+        return True

@@ -14,19 +14,24 @@ graders = common.Graders(web_controller, db_controller)
 
 terminal = app('Terminal')
 first_time = True
+
 while (not (command_string == "quit")):
 
     if first_time:
-        PROJECT_TYPE = common.menu_choice()
-        graders.setup_project(PROJECT_TYPE)
+        project_index = common.menu_choice()
+        graders.setup_project(project_index)
 
     # try: # bigger exception, avoid accidently close down
     print("Answer Input: ")
     terminal.activate()  # back to terminal shell for input
     user_command = input()
     command_string = common.control_command_check(graders, user_command)
+
     if command_string == "command_not_checked":
         gradingFinish = graders.decode(user_command)
+    elif command_string == "auto":
+        gradingFinish = graders.decode(user_command)
+
     if (graders.grader.new_query):
         graders.print_status()
     # except:

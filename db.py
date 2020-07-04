@@ -94,4 +94,17 @@ class Database:
         self.db["graders"].drop()
         self.db["graders"].insert_many(graders_id)
         print("Renew graders info done.")
-        
+
+    def find_one_ans(self, project_id, text):
+        filter = {
+            "project": project_id,
+            "text": text
+        }
+        query_id = self.db["querys"].find_one(filter)["_id"]
+        filter = {
+            "query_id": query_id
+        }
+        ans = self.db["answers"].find_one(filter)["grader_answer"]
+        grader_id = self.db["answers"].find_one(filter)["grader"]
+        grader_name = self.db["graders"].find_one({"_id": grader_id})["name"]
+        return ans, grader_name
