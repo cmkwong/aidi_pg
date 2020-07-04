@@ -1,5 +1,7 @@
 import projects
-MAX_PROJ_NUM = 2
+from config import *
+
+MAX_PROJ_NUM = len(projects_info)
 
 def menu_input():
     try:
@@ -14,22 +16,26 @@ def menu_input():
     if (num_input <= 0 or num_input > MAX_PROJ_NUM):
         print("Invalid range of Number.")
         return None
-    return num_input
+    return num_input-1
 
 def print_proj_list():
     print("\n")
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
-    print("1. spot1/2")
-    print("2. saf")
+    for index, project in enumerate(projects_info):
+        print((index+1), ": ", project["_id"])
 
 def menu_choice():
-    num_input = None
-    while(num_input==None):
+    project_index = None
+    project_type = None
+    while(project_index==None):
         print_proj_list()
-        num_input = menu_input()
-    print("Type of Project: ", num_input, " activated.")
-    return num_input
+        project_index = menu_input()
+        if project_index == None:
+            continue
+        project_type = projects_info[project_index]["type"]
+    print("Type of Project: ", project_type, " activated.")
+    return project_index
 
 class Graders:
     def __init__(self, web_controller, db_controller):
@@ -38,16 +44,15 @@ class Graders:
         self.grader = None
         self.projects_query_done = 0
 
-    def setup_project(self, project_type):
-        if (project_type == 1):
-            # self.db_controller.project_type = 1
-            self.grader = projects.spot12_project(self.web_controller, self.db_controller)
-        elif (project_type == 2):
-            # self.db_controller.project_type = 2
-            self.grader = projects.saf_project(self.web_controller, self.db_controller)
+    def setup_project(self, project_index):
+        self.grader = projects.base_grader(self.web_controller, self.db_controller)
+        self.grader.project_type = projects_info[project_index]["type"]
+        link = projects_info[project_index]["link"]
+        #link = "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-06-29/grading/zh_HK/s/8830c484a27f24a4b7b10e83587dcac0/r/8830c484a27f24a4b7b10e83587dcac0"
+        self.grader.web_controller.open_project_link(link)
 
     def decode(self, ans):
-        gradingFinish = self.grader.grading(ans)
+        gradingFinish = self.grader.execute(ans)
         return gradingFinish
 
     def get_query_done(self):

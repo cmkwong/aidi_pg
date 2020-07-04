@@ -64,8 +64,7 @@ class Database:
             my_dict = {
                 "_id": ans_id,
                 "grader": grader_id,
-                "query_id": query_id,
-                "query_link": query_link
+                "query_id": query_id
             }
             answer_id = self.db["answers"].insert_one(my_dict).inserted_id
             return answer_id
@@ -95,3 +94,4 @@ class Database:
         self.db["graders"].drop()
         self.db["graders"].insert_many(graders_id)
         print("Renew graders info done.")
+        
