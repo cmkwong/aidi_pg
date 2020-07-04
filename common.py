@@ -73,6 +73,8 @@ class Graders:
             return gradingFinish
         elif (self.auto_mode == True):
             gradingFinish = self.grader.auto_execute()
+            if gradingFinish == False:
+                self.auto_mode = False
             return gradingFinish
 
     def get_query_done(self):

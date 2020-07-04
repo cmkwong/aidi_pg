@@ -178,11 +178,19 @@ class base_grader:
             return True
 
     def auto_execute(self):
+
         # auto mode
         if self.project_id is None:
             self.project_id = self.web_controller.get_project_id()
         text = self.get_query_text()
+
+        # read from database
         ans, grader_name = self.db_controller.find_one_ans(self.project_id, text)
+        if (ans == None):
+            print("Cannot find the query or answer from database. Please complete it manually.")
+            return False
+
+        # if query and answer found
         print("Got from: ", grader_name, "\nAns: ", ans)
         print("Delay...")
         for i in reversed(range(0, self.time_delay)):

@@ -100,11 +100,23 @@ class Database:
             "project": project_id,
             "text": text
         }
-        query_id = self.db["querys"].find_one(filter)["_id"]
+        query = self.db["querys"].find_one(filter)
+        if (query):
+            query_id = query["_id"]
+        else:
+            return None, None
         filter = {
             "query_id": query_id
         }
-        ans = self.db["answers"].find_one(filter)["grader_answer"]
-        grader_id = self.db["answers"].find_one(filter)["grader"]
-        grader_name = self.db["graders"].find_one({"_id": grader_id})["name"]
-        return ans, grader_name
+        ans_info = self.db["answers"].find_one(filter)
+        if (ans_info):
+            ans = ans_info["grader_answer"]
+            grader_id = ans_info["grader"]
+            grader = self.db["graders"].find_one({"_id": grader_id})
+            if (grader):
+                grader_name = grader["name"]
+            else:
+                grader_name = "Unknown"
+            return ans, grader_name
+        else:
+            return None, None

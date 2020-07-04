@@ -4,6 +4,7 @@ import db
 from appscript import *
 
 command_string = "command_not_checked"
+user_command = None
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
 web_controller = web.Web(init_url=default_url)
@@ -22,15 +23,20 @@ while (not (command_string == "quit")):
         graders.setup_project(project_index)
 
     # try: # bigger exception, avoid accidently close down
-    print("Answer Input: ")
-    terminal.activate()  # back to terminal shell for input
-    user_command = input()
-    command_string = common.control_command_check(graders, user_command)
+
+    if (command_string != "auto"):
+        print("Answer Input: ")
+        terminal.activate()  # back to terminal shell for input
+        user_command = input()
+        command_string = common.control_command_check(graders, user_command)
 
     if command_string == "command_not_checked":
         gradingFinish = graders.decode(user_command)
-    elif command_string == "auto":
+
+    if command_string == "auto":
         gradingFinish = graders.decode(user_command)
+        if gradingFinish == False:
+            command_string = "command_not_checked"
 
     if (graders.grader.new_query):
         graders.print_status()
