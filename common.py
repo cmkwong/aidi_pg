@@ -42,10 +42,11 @@ def menu_choice():
     while(project_index==None):
         print_proj_list()
         project_index = num_input_check()
+        if project_index == None:
+            continue
         if (project_index <= 0 or project_index > MAX_PROJ_NUM):
             print("Invalid range of Number.")
             project_index = None
-        if project_index == None:
             continue
         project_index = project_index - 1
         project_type = projects_info[project_index]["type"]
