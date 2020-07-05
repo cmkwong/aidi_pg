@@ -9,7 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from config import *
 import time
 import numpy as np
-from bs4 import BeautifulSoup
 
 class Web:
     def __init__(self, init_url):
@@ -19,7 +18,7 @@ class Web:
 
     def open_chrome(self, executable_path="/Users/issgrader/Downloads/chromedriver"):
         chrome_options = Options()
-        chrome_options.add_extension(r'~/PycharmProjects/aidi_program/appleconnect.crx')
+        chrome_options.add_extension(r'appleconnect.crx')
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
         self.browser.get(self.init_url)
         # Alert(self.browser).accept()
