@@ -16,7 +16,7 @@ class Web:
         self.browser = None
         self.original_window = None
 
-    def open_chrome(self, executable_path="/Users/issgrader/Downloads/chromedriver"):
+    def open_chrome(self, executable_path="../driver/chromedriver"):
         chrome_options = Options()
         chrome_options.add_extension(r'appleconnect.crx')
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
