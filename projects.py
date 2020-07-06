@@ -152,6 +152,59 @@ class base_grader:
                 return False
             self.web_controller.click_next_btn()
 
+        elif (self.project_type == "eval3"):
+            max_num = 3
+            len_ans = len(ans)
+            num = 1
+            for a in ans:
+                if a == 'v':
+                    # press vague
+                    self.web_controller.click_by_id("query_vagueyes_vague")
+                    continue
+                if a == 'n':
+                    # press query inappropriate
+                    len_ans = len_ans - 1
+                    self.web_controller.click_by_id("query_appropriatefalse")
+                if a == "i":
+                    # press result inappropriate
+                    self.web_controller.click_by_id("result" + str(num) + "_validationresult" + str(num) + "_inappropriate")
+                if a == "l":
+                    self.web_controller.click_by_id("result"+str(num)+"_validationresult"+str(num)+"_wrong_language")
+                if a == "x":
+                    self.web_controller.click_by_id("result"+str(num)+"_validationresult"+str(num)+"_cannot_be_judged")
+                if a == "e":
+                    # press can be judge
+                    self.web_controller.click_by_id(
+                        "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
+                    # press excellent
+                    self.web_controller.click_by_id("result" + str(num) + "_relevanceexcellent")
+                if a == "g":
+                    # press can be judge
+                    self.web_controller.click_by_id(
+                        "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
+                    # press good
+                    self.web_controller.click_by_id("result" + str(num) + "_relevancegood")
+                if a == "f":
+                    # press can be judge
+                    self.web_controller.click_by_id(
+                        "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
+                    # press fair
+                    self.web_controller.click_by_id("result" + str(num) + "_relevancefair")
+                if a == "b":
+                    # press can be judge
+                    self.web_controller.click_by_id(
+                        "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
+                    # press bad
+                    self.web_controller.click_by_id("result" + str(num) + "_relevancebad")
+                if num == max_num:
+                    continue
+                elif num == len_ans:
+                    self.web_controller.click_by_id("result" + str(num+1) + "_shownno")
+                elif num <= len_ans:
+                    self.web_controller.click_by_id("result" + str(num+1) + "_shownyes")
+                num = num + 1
+            # press next
+            self.web_controller.click_next_btn()
         else:
             print("Project type not setup correctly.")
 
