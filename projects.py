@@ -30,7 +30,7 @@ class base_grader:
         self.grader_id = None
         self.project_id = None
         self.project_type = None
-        self.time_delay = 260
+        self.time_delay = 60
 
     def update_status(self):
         # increase the query done if it is new query

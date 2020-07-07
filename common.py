@@ -18,8 +18,8 @@ def num_input_check():
 def time_delay_set(graders):
     print("Enter the delay time(Second): ")
     time_delay = num_input_check()
-    if ((time_delay < 10) or (time_delay > 260)):
-        print("Invalid range. (10-260)")
+    if ((time_delay < 0) or (time_delay > 260)):
+        print("Invalid range. (0-260)")
         time_delay = None
     if (time_delay is not None):
         graders.grader.time_delay = time_delay
@@ -107,11 +107,6 @@ def control_command_check(graders, ans):
     elif (ans[0:5] == "-auto"):
         if graders.auto_mode == False:
             graders.auto_mode = True
-            set_ok = time_delay_set(graders)
-            if not set_ok:
-                graders.auto_mode = False
-                print("Set auto mode failed. Try again.")
-                return False
             print("Auto-mode activated.")
             return auto_activated
         elif graders.auto_mode == True:
@@ -120,7 +115,11 @@ def control_command_check(graders, ans):
             return False
 
     elif (ans[0:2] == "-t"):
-        _ = time_delay_set(graders)
+        set_ok = time_delay_set(graders)
+        if not set_ok:
+            graders.auto_mode = False
+            print("Set auto mode failed. Try again.")
+            return False
         return command_checked
 
     elif (ans[0:4] == "--rg"):
