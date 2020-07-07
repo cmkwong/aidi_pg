@@ -39,6 +39,10 @@ class base_grader:
             self.previous_url = self.current_url
             self.new_query = True
 
+    def renew_status(self):
+        self.current_url = self.web_controller.get_motherTag_url()
+        self.new_query = False
+
     def get_query_text(self):
         query_text = None
         js_code = """
@@ -96,25 +100,20 @@ class base_grader:
                 elif (a == 'x'):
                     self.web_controller.click_by_id(
                         ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-                elif (a == 'e'):
-                    self.web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-                elif (a == 'g'):
-                    self.web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-                elif (a == 'f'):
-                    self.web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-                elif (a == 'b'):
-                    self.web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
                 else:
-                    print("--------Not correct ans detected.--------")
-                    return False
+                    self.web_controller.click_by_id(
+                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                    if (a == 'e'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+                    elif (a == 'g'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
+                    elif (a == 'f'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
+                    elif (a == 'b'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
+                    else:
+                        print("--------Not correct ans detected.--------")
+                        return False
                 num = num + 1
             if (len(ans) == 1):
                 self.web_controller.click_by_id("result2_validationno_result2")
@@ -122,6 +121,7 @@ class base_grader:
             elif (len(ans) == 2):
                 self.web_controller.click_by_id("result3_validationno_result3")
             self.web_controller.click_next_btn()
+            return True
 
         elif (self.project_type == "saf"):
             num = 1
@@ -137,26 +137,22 @@ class base_grader:
             elif (ans == 'x'):
                 self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-            elif (ans == 'e'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-            elif (ans == 'g'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-            elif (ans == 'f'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-            elif (ans == 'b'):
-                self.web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
             else:
-                print("--------Not correct ans detected.--------")
-                return False
+                self.web_controller.click_by_id(
+                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                if (ans == 'e'):
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+                elif (ans == 'g'):
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
+                elif (ans == 'f'):
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
+                elif (ans == 'b'):
+                    self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
+                else:
+                    print("--------Not correct ans detected.--------")
+                    return False
             self.web_controller.click_next_btn()
+            return True
 
         elif (self.project_type == "eval3"):
             max_num = 3
@@ -212,14 +208,14 @@ class base_grader:
                     num = num + 1
             # press next
             self.web_controller.click_next_btn()
+            return True
 
         else:
             print("Project type not setup correctly.")
             return False
 
     def execute(self, ans):
-        self.current_url = self.web_controller.get_motherTag_url()
-        self.new_query = False # set to default false
+        self.renew_status()
         base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
         if (base_command):
             return False
@@ -243,8 +239,7 @@ class base_grader:
 
     def auto_execute(self):
         # auto mode
-        self.current_url = self.web_controller.get_motherTag_url()
-        self.new_query = False
+        self.renew_status()
         if self.project_id is None:
             self.project_id = self.web_controller.get_project_id()
         text = self.get_query_text()
@@ -252,7 +247,7 @@ class base_grader:
         # read from database
         ans, grader_name = self.db_controller.find_one_ans(self.project_id, text)
         if (ans == None):
-            print("Cannot find the query or answer from database. Please complete it manually.")
+            print("Not Found! Please complete this manually.")
             return False
 
         # press web search
@@ -264,7 +259,7 @@ class base_grader:
         print("Delay...")
         for i in reversed(range(0, self.time_delay)):
             time.sleep(1)
-            print(i)
+            print(i, " seconds")
 
         # grading ans that from database
         self.grading(ans)

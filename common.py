@@ -74,8 +74,6 @@ class Graders:
             return gradingFinish
         elif (self.auto_mode == True):
             gradingFinish = self.grader.auto_execute()
-            if gradingFinish == False:
-                self.auto_mode = False
             return gradingFinish
 
     def get_query_done(self):
@@ -105,14 +103,14 @@ def control_command_check(graders, ans):
         return command_checked
 
     elif (ans[0:5] == "-auto"):
-        if graders.auto_mode == False:
-            graders.auto_mode = True
-            print("Auto-mode activated.")
-            return auto_activated
-        elif graders.auto_mode == True:
-            graders.auto_mode = False
-            print("Auto-mode de-activated.")
-            return False
+        graders.auto_mode = True
+        print("Auto-mode activated.")
+        return auto_activated
+
+    elif (ans[0:6] == "-nauto"):
+        graders.auto_mode = False
+        print("Auto-mode de-activated.")
+        return command_checked
 
     elif (ans[0:2] == "-t"):
         set_ok = time_delay_set(graders)
