@@ -30,7 +30,7 @@ class base_grader:
         self.grader_id = None
         self.project_id = None
         self.project_type = None
-        self.time_delay = 60
+        self.time_delay = 1
 
     def update_status(self):
         # increase the query done if it is new query
@@ -236,8 +236,9 @@ class base_grader:
             return True
 
     def auto_execute(self):
-
         # auto mode
+        self.current_url = self.web_controller.get_motherTag_url()
+        self.new_query = False
         if self.project_id is None:
             self.project_id = self.web_controller.get_project_id()
         text = self.get_query_text()
@@ -247,6 +248,10 @@ class base_grader:
         if (ans == None):
             print("Cannot find the query or answer from database. Please complete it manually.")
             return False
+
+        # press web search
+        self.web_controller.click_web_search()
+        self.web_controller.close_other_tags()
 
         # if query and answer found
         print("Got from: ", grader_name, "\nAns: ", ans)
