@@ -82,6 +82,9 @@ class base_grader:
 
     def grading(self, ans):
         if (self.project_type == "spot12"):
+            if len(ans) > 3:
+                print("Wrong length of answer.")
+                return False
             num = 1
             for a in ans:
                 if (a == 'i'):
@@ -122,6 +125,9 @@ class base_grader:
 
         elif (self.project_type == "saf"):
             num = 1
+            if len(ans) > 1:
+                print("Wrong length of answer.")
+                return False
             if (ans == 'i'):
                 self.web_controller.click_by_id(
                     ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
@@ -156,50 +162,47 @@ class base_grader:
             max_num = 3
             len_ans = len(ans)
             num = 1
+            if len(ans) > 4:
+                print("Wrong length of answer.")
+                return False
             if ans[0] == 'v':
                 # press vague
                 self.web_controller.click_by_id("query_vagueyes_vague")
             else:
+                self.web_controller.click_by_id("query_vagueno")
                 if ans[0] == 'n':
                     # press query inappropriate
                     len_ans = len_ans - 1
-                    self.web_controller.click_by_id("query_vagueno")
                     self.web_controller.click_by_id("query_appropriatefalse")
                 else:
-                    self.web_controller.click_by_id("query_vagueno")
                     self.web_controller.click_by_id("query_appropriatetrue")
                 for a in ans:
                     if a == "i":
                         # press result inappropriate
                         self.web_controller.click_by_id("result" + str(num) + "_validationresult" + str(num) + "_inappropriate")
-                    if a == "l":
+                    elif a == "l":
                         self.web_controller.click_by_id("result"+str(num)+"_validationresult"+str(num)+"_wrong_language")
-                    if a == "x":
+                    elif a == "x":
                         self.web_controller.click_by_id("result"+str(num)+"_validationresult"+str(num)+"_cannot_be_judged")
-                    if a == "e":
+                    else:
                         # press can be judge
                         self.web_controller.click_by_id(
                             "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
-                        # press excellent
-                        self.web_controller.click_by_id("result" + str(num) + "_relevanceexcellent")
-                    if a == "g":
-                        # press can be judge
-                        self.web_controller.click_by_id(
-                            "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
-                        # press good
-                        self.web_controller.click_by_id("result" + str(num) + "_relevancegood")
-                    if a == "f":
-                        # press can be judge
-                        self.web_controller.click_by_id(
-                            "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
-                        # press fair
-                        self.web_controller.click_by_id("result" + str(num) + "_relevancefair")
-                    if a == "b":
-                        # press can be judge
-                        self.web_controller.click_by_id(
-                            "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
-                        # press bad
-                        self.web_controller.click_by_id("result" + str(num) + "_relevancebad")
+                        if a == "e":
+                            # press excellent
+                            self.web_controller.click_by_id("result" + str(num) + "_relevanceexcellent")
+                        elif a == "g":
+                            # press good
+                            self.web_controller.click_by_id("result" + str(num) + "_relevancegood")
+                        elif a == "f":
+                            # press fair
+                            self.web_controller.click_by_id("result" + str(num) + "_relevancefair")
+                        elif a == "b":
+                            # press bad
+                            self.web_controller.click_by_id("result" + str(num) + "_relevancebad")
+                        else:
+                            print("--------Not correct ans detected.--------")
+                            return False
                     if num == max_num:
                         continue
                     elif num == len_ans:
@@ -212,6 +215,7 @@ class base_grader:
 
         else:
             print("Project type not setup correctly.")
+            return False
 
     def execute(self, ans):
         self.current_url = self.web_controller.get_motherTag_url()
@@ -225,7 +229,9 @@ class base_grader:
             answer_id = self.insert_db_query()
 
             # execute the command
-            self.grading(ans)
+            grade_ok = self.grading(ans)
+            if not grade_ok:
+                return False
 
             # update ans into db
             self.update_db_ans(answer_id, ans)

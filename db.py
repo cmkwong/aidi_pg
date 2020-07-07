@@ -110,7 +110,11 @@ class Database:
         }
         ans_info = self.db["answers"].find_one(filter)
         if (ans_info):
-            ans = ans_info["grader_answer"]
+            try:
+                ans = ans_info["grader_answer"]
+            except KeyError:
+                print("Have answer query but have no grader answer yet.")
+                return None, None
             grader_id = ans_info["grader"]
             grader = self.db["graders"].find_one({"_id": grader_id})
             if (grader):

@@ -21,6 +21,7 @@ while (not (command_string == "quit")):
     if first_time:
         project_index = common.menu_choice()
         graders.setup_project(project_index)
+        first_time = False
 
     # try: # bigger exception, avoid accidently close down
 
@@ -44,5 +45,4 @@ while (not (command_string == "quit")):
     # except:
     #     print("Might be your input so fast.")
     #     continue
-    first_time = False
 web_controller.quite_driver()
