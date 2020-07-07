@@ -23,22 +23,22 @@ graders_id = [
 
 projects_info = [
 {
-    "_id": "CEval-random-relevance-saf-2020-06-29",
+    "_id": "CEval-random-relevance-saf-2020-07-06",
     "type": "saf",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-06-29/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-07-06/overview"
     },
     {
-    "_id": "CEval-random-relevance-spot1-2020-06-29",
+    "_id": "CEval-random-relevance-spot1-2020-07-06",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-06-29/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-07-06/overview"
     },
     {
-    "_id": "CEval-random-relevance-spot2-2020-06-29",
+    "_id": "CEval-random-relevance-spot2-2020-07-06",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-06-29/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-07-06/overview"
     },
 {
     "_id": "Continuous Eval Training",

@@ -109,13 +109,15 @@ def control_command_check(graders, ans):
             graders.auto_mode = True
             set_ok = time_delay_set(graders)
             if not set_ok:
+                graders.auto_mode = False
                 print("Set auto mode failed. Try again.")
                 return False
             print("Auto-mode activated.")
+            return auto_activated
         elif graders.auto_mode == True:
             graders.auto_mode = False
             print("Auto-mode de-activated.")
-        return auto_activated
+            return False
 
     elif (ans[0:2] == "-t"):
         _ = time_delay_set(graders)

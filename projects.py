@@ -204,11 +204,12 @@ class base_grader:
                         continue
                     elif num == len_ans:
                         self.web_controller.click_by_id("result" + str(num+1) + "_shownno")
-                    elif num <= len_ans:
+                    elif num < len_ans:
                         self.web_controller.click_by_id("result" + str(num+1) + "_shownyes")
                     num = num + 1
             # press next
             self.web_controller.click_next_btn()
+
         else:
             print("Project type not setup correctly.")
 
