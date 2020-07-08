@@ -32,6 +32,8 @@ class base_grader:
         self.project_id = None
         self.project_type = None
         self.time_delay = 1
+        self.manual_timer = False
+        self.one_manual_timer = False
 
     def renew_status(self):
         self.query_text = self.get_query_text()
@@ -45,12 +47,19 @@ class base_grader:
             self.p_query_text = self.query_text
             self.new_query = True
 
+    def delay_timer(self):
+        print("Delay...")
+        for i in reversed(range(0, self.time_delay)):
+            time.sleep(1)
+            print(i, " seconds")
+
     def get_query_text(self):
         query_text = None
         js_code = """
             var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
             return query_text;
         """
+        print("Loading....\n")
         while (query_text==None):
             try:
                 query_text = self.web_controller.browser.execute_script(js_code)
@@ -225,6 +234,10 @@ class base_grader:
             # insert query and grader info into database
             answer_id = self.insert_db_query()
 
+            # timer
+            if self.manual_timer:
+                self.delay_timer()
+
             # execute the command
             grade_ok = self.grading(ans)
             if not grade_ok:
@@ -256,10 +269,7 @@ class base_grader:
 
         # if query and answer found
         print("Got from: ", grader_name, "\nAns: ", ans)
-        print("Delay...")
-        for i in reversed(range(0, self.time_delay)):
-            time.sleep(1)
-            print(i, " seconds")
+        self.delay_timer()
 
         # grading ans that from database
         self.grading(ans)

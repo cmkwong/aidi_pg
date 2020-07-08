@@ -15,19 +15,20 @@ def num_input_check():
         return None
     return num_input
 
-def time_delay_set(graders):
+def time_delay_set(graders, overtime_bypass=False):
     print("Enter the delay time(Second): ")
     time_delay = num_input_check()
-    if ((time_delay < 0) or (time_delay > 260)):
-        print("Invalid range. (0-260)")
-        time_delay = None
-    if (time_delay is not None):
-        graders.grader.time_delay = time_delay
-        print("Time delay: ", time_delay)
-        return True
+    if not overtime_bypass:
+        if ((time_delay < 0) or (time_delay > 260)):
+            print("Invalid range. (0-260)")
+            return False
     else:
-        print("Time delay cannot set.")
-        return False
+        if (time_delay < 0):
+            print("Timer cannot be negative.")
+            return False
+    graders.grader.time_delay = time_delay
+    print("Time delay: ", time_delay)
+    return True
 
 def print_proj_list():
     print("\n")
@@ -117,10 +118,16 @@ def control_command_check(graders, ans):
     elif (ans[0:2] == "-t"):
         set_ok = time_delay_set(graders)
         if not set_ok:
-            graders.auto_mode = False
-            print("Set auto mode failed. Try again.")
-            return False
+            print("Set timer failed. Try again.")
         return command_checked
+
+    elif (ans[0:3] == "-ft"):
+        if graders.grader.manual_timer == False:
+            graders.grader.manual_timer = True
+            print("Manual timer set. \nType '-ft' again for cancel.")
+        elif graders.grader.manual_timer == True:
+            graders.grader.manual_timer = False
+            print("Manual timer cancel. \nType '-ft' again for activation.")
 
     elif (ans[0:4] == "--rg"):
         graders.grader.db_controller.graders_id_update()
