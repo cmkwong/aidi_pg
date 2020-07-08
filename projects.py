@@ -37,8 +37,11 @@ class base_grader:
 
     def renew_status(self):
         self.query_text = self.get_query_text()
+        if self.query_text == None:
+            return False
         self.current_url = self.web_controller.get_motherTag_url()
         self.new_query = False
+        return True
 
     def update_status(self):
         # increase the query done if it is new query
@@ -59,9 +62,13 @@ class base_grader:
             var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
             return query_text;
         """
-        print("Loading....\n")
+        time_out = time.time()
+        print("Loading Page....5s")
         while (query_text==None):
             try:
+                if (time.time() - time_out) > 5:
+                    print("Time Out")
+                    return None
                 query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
             except:
@@ -225,7 +232,9 @@ class base_grader:
             return False
 
     def execute(self, ans):
-        self.renew_status()
+        renew_ok = self.renew_status()
+        if not renew_ok:
+            return False
         base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
         if (base_command):
             return False
@@ -253,7 +262,9 @@ class base_grader:
 
     def auto_execute(self):
         # auto mode
-        self.renew_status()
+        renew_ok = self.renew_status()
+        if not renew_ok:
+            return False
         if self.project_id is None:
             self.project_id = self.web_controller.get_project_id()
 
@@ -272,7 +283,9 @@ class base_grader:
         self.delay_timer()
 
         # grading ans that from database
-        self.grading(ans)
+        grade_ok = self.grading(ans)
+        if not grade_ok:
+            return False
 
         # update status after finish a grading
         self.update_status()
