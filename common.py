@@ -121,7 +121,7 @@ def control_command_check(graders, ans):
             print("Set timer failed. Try again.")
         return command_checked
 
-    elif (ans[0:3] == "-ft"):
+    elif (ans[0:3] == "-md"):
         if graders.grader.manual_timer == False:
             graders.grader.manual_timer = True
             print("Manual timer set. \nType '-ft' again for cancel.")
