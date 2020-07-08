@@ -23,8 +23,9 @@ class base_grader:
     def __init__(self, web_controller, db_controller):
         self.web_controller = web_controller
         self.db_controller = db_controller
-        self.previous_url = None
         self.current_url = None
+        self.query_text = None
+        self.p_query_text = None
         self.query_done = 0
         self.new_query = False
         self.grader_id = None
@@ -32,16 +33,17 @@ class base_grader:
         self.project_type = None
         self.time_delay = 1
 
-    def update_status(self):
-        # increase the query done if it is new query
-        if (self.current_url != self.previous_url):
-            self.query_done = self.query_done + 1
-            self.previous_url = self.current_url
-            self.new_query = True
-
     def renew_status(self):
+        self.query_text = self.get_query_text()
         self.current_url = self.web_controller.get_motherTag_url()
         self.new_query = False
+
+    def update_status(self):
+        # increase the query done if it is new query
+        if (self.query_text != self.p_query_text):
+            self.query_done = self.query_done + 1
+            self.p_query_text = self.query_text
+            self.new_query = True
 
     def get_query_text(self):
         query_text = None
@@ -64,12 +66,11 @@ class base_grader:
 
     def insert_db_query(self):
         # insert query and answer
-        text = self.get_query_text()
         result_links = self.web_controller.get_links()
         if self.grader_id is None or self.project_id is None:
             self.grader_id = self.web_controller.get_grader_id()
             self.project_id = self.web_controller.get_project_id()
-        query_id = self.db_controller.query_insert(self.project_id, text, result_links)
+        query_id = self.db_controller.query_insert(self.project_id, self.query_text, result_links)
         answer_id = None
         if query_id is not None:
             answer_id = self.db_controller.grader_answer_insert(self.grader_id, query_id, query_link=self.current_url)
@@ -242,12 +243,11 @@ class base_grader:
         self.renew_status()
         if self.project_id is None:
             self.project_id = self.web_controller.get_project_id()
-        text = self.get_query_text()
 
         # read from database
-        ans, grader_name = self.db_controller.find_one_ans(self.project_id, text)
+        ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
         if (ans == None):
-            print("Not Found! Please complete this manually.")
+            print("Not Found! Please complete this manually.\n")
             return False
 
         # press web search

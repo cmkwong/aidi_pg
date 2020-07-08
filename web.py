@@ -112,7 +112,11 @@ class Web:
 
     def get_motherTag_url(self):
         self.back_tag_one()
-        return self.browser.current_url
+        js_code = """
+            var link = window.location["href"];
+            return link;
+        """
+        return self.browser.execute_script(js_code)
 
     def get_html(self):
         self.back_tag_one()

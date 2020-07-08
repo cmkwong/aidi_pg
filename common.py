@@ -62,10 +62,12 @@ class Graders:
         self.auto_mode = False
 
     def setup_project(self, project_index):
+        if self.grader:
+            self.projects_query_done = self.grader.query_done
         self.grader = projects.base_grader(self.web_controller, self.db_controller)
         self.grader.project_type = projects_info[project_index]["type"]
         link = projects_info[project_index]["link"]
-        #link = "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-06-29/grading/zh_HK/s/8830c484a27f24a4b7b10e83587dcac0/r/8830c484a27f24a4b7b10e83587dcac0"
+        #link = ""
         self.grader.web_controller.open_project_link(link)
 
     def decode(self, ans):
@@ -80,7 +82,7 @@ class Graders:
         return (self.projects_query_done + self.grader.query_done)
 
     def print_status(self):
-        print("Done: ", self.get_query_done())
+        print("Done: ", self.get_query_done(), "\n")
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
