@@ -19,8 +19,8 @@ def time_delay_set(graders, overtime_bypass=False):
     print("Enter the delay time(Second): ")
     time_delay = num_input_check()
     if not overtime_bypass:
-        if ((time_delay < 0) or (time_delay > 260)):
-            print("Invalid range. (0-260)")
+        if ((time_delay < 1) or (time_delay > 260)):
+            print("Invalid range. (1-260)")
             return False
     else:
         if (time_delay < 0):
@@ -83,7 +83,7 @@ class Graders:
         return (self.projects_query_done + self.grader.query_done)
 
     def print_status(self):
-        print("Done: ", self.get_query_done(), "\n")
+        print("Done: ", self.get_query_done(), " t-", self.grader.time_delay, "s MD-", self.grader.manual_timer, "\n")
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"

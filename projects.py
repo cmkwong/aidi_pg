@@ -33,7 +33,6 @@ class base_grader:
         self.project_type = None
         self.time_delay = 1
         self.manual_timer = False
-        self.one_manual_timer = False
 
     def renew_status(self):
         self.query_text = self.get_query_text()
