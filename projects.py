@@ -277,12 +277,14 @@ class base_grader:
 
         # if query and answer found
         print("Got from: ", grader_name, "\nAns: ", ans)
-        self.delay_timer()
 
         # grading ans that from database
         grade_ok = self.grading(ans)
         if not grade_ok:
             return False
+
+        self.delay_timer()
+        self.web_controller.click_next_btn()
 
         # update status after finish a grading
         self.update_status()

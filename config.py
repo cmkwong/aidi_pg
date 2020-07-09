@@ -40,7 +40,7 @@ projects_info = [
     "location": "zh_HK",
     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-07-06/overview"
     },
-{
+    {
     "_id": "Continuous Eval Training",
     "type": "eval3",
     "location": "zh_HK",
