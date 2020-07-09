@@ -53,7 +53,7 @@ class base_grader:
         print("Delay...")
         for i in reversed(range(0, self.time_delay)):
             time.sleep(1)
-            print(i, " seconds")
+            print(i, " seconds", end='\r')
 
     def get_query_text(self):
         query_text = None
