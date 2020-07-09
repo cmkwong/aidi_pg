@@ -132,6 +132,14 @@ def control_command_check(graders, ans):
             graders.grader.manual_timer = False
             print("Manual timer cancel. \nType '-md' again for activation.")
 
+    elif (ans[0:5] == "-view"):
+        graders.grader.view = True
+        print("grader-ans show.")
+
+    elif (ans[0:5] == "-hide"):
+        graders.grader.view = False
+        print("grader-ans hide.")
+
     elif (ans[0:4] == "--rg"):
         graders.grader.db_controller.graders_id_update()
         return command_checked

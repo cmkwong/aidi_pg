@@ -33,6 +33,7 @@ class base_grader:
         self.project_type = None
         self.time_delay = 2
         self.manual_timer = False
+        self.view = True
 
     def renew_status(self):
         self.query_text = self.get_query_text()
@@ -265,8 +266,10 @@ class base_grader:
         if self.project_id is None:
             self.project_id = self.web_controller.get_project_id()
 
+        if self.view:
+            print("text: ", self.query_text)
+
         # read from database
-        print("text: ", self.query_text)
         ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
         if (ans == None):
             print("Not Found! Please complete this manually.\n")
@@ -276,8 +279,9 @@ class base_grader:
         self.web_controller.click_web_search()
         self.web_controller.close_other_tags()
 
-        # if query and answer found
-        print("Got from: ", grader_name, "\nAns: ", ans)
+        if self.view:
+            # if query and answer found
+            print("Got from: ", grader_name, "\nAns: ", ans)
 
         # grading ans that from database
         grade_ok = self.grading(ans)
