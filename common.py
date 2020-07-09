@@ -127,10 +127,10 @@ def control_command_check(graders, ans):
     elif (ans[0:3] == "-md"):
         if graders.grader.manual_timer == False:
             graders.grader.manual_timer = True
-            print("Manual timer set. \nType '-ft' again for cancel.")
+            print("Manual timer set. \nType '-md' again for cancel.")
         elif graders.grader.manual_timer == True:
             graders.grader.manual_timer = False
-            print("Manual timer cancel. \nType '-ft' again for activation.")
+            print("Manual timer cancel. \nType '-md' again for activation.")
 
     elif (ans[0:4] == "--rg"):
         graders.grader.db_controller.graders_id_update()

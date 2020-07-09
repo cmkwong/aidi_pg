@@ -136,7 +136,6 @@ class base_grader:
                 self.web_controller.click_by_id("result3_validationno_result3")
             elif (len(ans) == 2):
                 self.web_controller.click_by_id("result3_validationno_result3")
-            self.web_controller.click_next_btn()
             return True
 
         elif (self.project_type == "saf"):
@@ -167,7 +166,6 @@ class base_grader:
                 else:
                     print("--------Not correct ans detected.--------")
                     return False
-            self.web_controller.click_next_btn()
             return True
 
         elif (self.project_type == "eval3"):
@@ -222,8 +220,6 @@ class base_grader:
                     elif num < len_ans:
                         self.web_controller.click_by_id("result" + str(num+1) + "_shownyes")
                     num = num + 1
-            # press next
-            self.web_controller.click_next_btn()
             return True
 
         else:
@@ -242,14 +238,16 @@ class base_grader:
             # insert query and grader info into database
             answer_id = self.insert_db_query()
 
-            # timer
-            if self.manual_timer:
-                self.delay_timer()
 
             # execute the command
             grade_ok = self.grading(ans)
             if not grade_ok:
                 return False
+
+            # timer
+            if self.manual_timer:
+                self.delay_timer()
+            self.web_controller.click_next_btn()
 
             # update ans into db
             self.update_db_ans(answer_id, ans)
