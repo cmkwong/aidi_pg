@@ -31,7 +31,7 @@ class base_grader:
         self.grader_id = None
         self.project_id = None
         self.project_type = None
-        self.time_delay = 1
+        self.time_delay = 2
         self.manual_timer = False
 
     def renew_status(self):
@@ -51,7 +51,7 @@ class base_grader:
 
     def delay_timer(self):
         print("Delay...")
-        for i in reversed(range(0, self.time_delay)):
+        for i in reversed(range(0, self.time_delay+1)):
             time.sleep(1)
             print(i, " seconds", end='\r')
 
@@ -266,6 +266,7 @@ class base_grader:
             self.project_id = self.web_controller.get_project_id()
 
         # read from database
+        print("text: ", self.query_text)
         ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
         if (ans == None):
             print("Not Found! Please complete this manually.\n")
