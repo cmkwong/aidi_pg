@@ -50,6 +50,7 @@ while (not (command_string == "quit")):
 
     if (graders.grader.new_query):
         graders.print_status()
+        graders.grader.new_query = False
 
     # except:
     #     print("Might be your input so fast.")

@@ -62,10 +62,10 @@ class base_grader:
             return query_text;
         """
         time_out = time.time()
-        print("Loading Page....5s")
+        print("Loading Page....10s")
         while (query_text==None):
             try:
-                if (time.time() - time_out) > 5:
+                if (time.time() - time_out) > 10:
                     print("Time Out")
                     return None
                 query_text = self.web_controller.browser.execute_script(js_code)

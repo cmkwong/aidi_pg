@@ -83,7 +83,10 @@ class Graders:
         return (self.projects_query_done + self.grader.query_done)
 
     def print_status(self):
-        print("Done: ", self.get_query_done(), " t-", self.grader.time_delay, "s MD-", self.grader.manual_timer, "\n")
+        seconds = str(self.get_query_done()).strip()
+        delays = str(self.grader.time_delay).strip()
+        md = str(self.grader.manual_timer).strip()
+        print("Done: " + seconds + " t-" + delays + " MD-" + md + "\n")
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
