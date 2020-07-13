@@ -11,7 +11,10 @@ def base_code_check(controller, ans, max_web_search_links):
         return True
     elif (ans[0] == '~'):
         # open three results
-        links = controller.get_links()
+        try:
+            links = controller.get_links()
+        except:
+            links = []
         controller.open_links_new_tags(links, max_web_search_links)
         # open web search
         controller.click_web_search()
