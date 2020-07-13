@@ -17,6 +17,18 @@ graders_id = [
     },
     {
         "_id": 5,
+        "name": "Yau Kuen Choi"
+    },
+    {
+        "_id": 6,
+        "name": "Nices Lai"
+    },
+    {
+        "_id": 7,
+        "name": "Back up"
+    },
+    {
+        "_id": 8,
         "name": "Back up"
     }
 ]
