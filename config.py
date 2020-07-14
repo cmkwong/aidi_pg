@@ -53,10 +53,10 @@ projects_info = [
     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-07-06/overview"
     },
     {
-    "_id": "Query Classification Training July 2020",
-    "type": "classify",
-    "location": "en_US",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/query-classification-training-20200709-custom/overview"
+    "_id": "Search Documents Chinese Tokenizer Evaluation Custom ",
+    "type": "token",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/search-documents-chinese-tokenizer-evaluation-custom/overview"
     },
     {
     "_id": "Continuous Eval Training",

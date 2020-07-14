@@ -1,13 +1,21 @@
 import time
+import tkinter as tk
+from functools import partial
 
 def base_code_check(controller, ans, max_web_search_links):
     if (ans[0] == '`'):
         # web_search
-        controller.click_web_search()
+        try:
+            controller.click_web_search()
+        except:
+            print("Not available '`'")
         return True
     elif (ans[0] == '!'):
         # close other tags
-        controller.close_other_tags()
+        try:
+            controller.close_other_tags()
+        except:
+            print("Not available '!'")
         return True
     elif (ans[0] == '~'):
         # open three results
@@ -15,6 +23,7 @@ def base_code_check(controller, ans, max_web_search_links):
             links = controller.get_links()
         except:
             links = []
+            print("Not available '~'")
         controller.open_links_new_tags(links, max_web_search_links)
         # open web search
         controller.click_web_search()
@@ -61,12 +70,21 @@ class base_grader:
 
     def get_query_text(self):
         query_text = None
-        js_code = """
-            var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
-            return query_text;
-        """
+        if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
+            js_code = """
+                var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
+                return query_text;
+            """
+        elif self.project_type == "token":
+            js_code = """
+                var query_text = document.querySelector("#input-field").querySelector("input").value;
+                return query_text;
+            """
+        else:
+            print("project type in renew function not set yet")
+            return None
         time_out = time.time()
-        print("Loading Page....10s")
+        print("Loading Query....10s")
         while (query_text==None):
             try:
                 if (time.time() - time_out) > 10:
@@ -85,7 +103,10 @@ class base_grader:
 
     def insert_db_query(self):
         # insert query and answer
-        result_links = self.web_controller.get_links()
+        try:
+            result_links = self.web_controller.get_links()
+        except:
+            result_links = []
         if self.grader_id is None or self.project_id is None:
             self.grader_id = self.web_controller.get_grader_id()
             self.project_id = self.web_controller.get_project_id()
@@ -226,11 +247,38 @@ class base_grader:
                     num = num + 1
             return True
 
+        elif (self.project_type == "token"):
+            if (ans[0:3] == '-n-'):
+                # press skip
+                js_code = """
+                    document.getElementById('gradingStateSkip - Poor quality / Ambiguous').click();
+                """
+                self.web_controller.browser.execute_script(js_code)
+                # press token looping
+                self.web_controller.click_tokens_btn()
+            else:
+                # js_code = """
+                #             document.querySelector('#input-field').querySelector("input").value = arguments[0];
+                #         """
+                # self.web_controller.browser.execute_script(js_code, ans)
+                js_code = """
+                    document.getElementById("gradingStatePossible to grade").click();
+                    document.querySelector('#input-field').querySelector("input").value = '';
+                """
+                self.web_controller.browser.execute_script(js_code)
+                # special way to send text into input-field
+                inputElement = self.web_controller.browser.find_element_by_id("input-field").find_elements_by_tag_name("input")[0]
+                inputElement.send_keys(ans)
+
+                #press token looping
+                self.web_controller.click_tokens_btn()
+            return True
+
         else:
             print("Project type not setup correctly.")
             return False
 
-    def execute(self, ans):
+    def spot_wrapper_execute(self, ans):
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
@@ -241,7 +289,6 @@ class base_grader:
 
             # insert query and grader info into database
             answer_id = self.insert_db_query()
-
 
             # execute the command
             grade_ok = self.grading(ans)
@@ -261,7 +308,7 @@ class base_grader:
 
             return True
 
-    def auto_execute(self):
+    def spot_wrapper_auto_execute(self):
         # auto mode
         renew_ok = self.renew_status()
         if not renew_ok:
@@ -298,3 +345,48 @@ class base_grader:
         self.update_status()
 
         return True
+
+    def token_wrapper_execute(self):
+        window = tk.Tk()
+        window.title("Token")
+        window.wm_attributes("-topmost", 1)
+
+        entry = tk.Entry(fg="black", bg="white", width=50)
+
+        def send_handler(self):
+            # get entry text
+            ans = entry.get()
+
+            # grading
+            grade_ok = self.grading(ans)
+            time.sleep(0.5)
+            # click next button
+            self.web_controller.click_next_btn()
+
+            window.focus_force()
+
+        def vague_handler(self):
+            grade_ok = self.grading("-n-")
+            time.sleep(0.5)
+            window.focus_force()
+
+        def read_handler(self):
+            query_text = self.get_query_text()
+            # delete text
+            entry.delete(0, tk.END)
+            entry.insert(0, query_text)
+
+        send_btn = tk.Button(window, text="Grade", fg="green", command=partial(send_handler, self))
+        bad_btn = tk.Button(window, text="Vague", fg="red", command=partial(vague_handler, self))
+        read_btn = tk.Button(window, text="Read", fg="blue", command=partial(read_handler, self))
+
+        bad_btn.grid(row=0, column=0)
+        read_btn.grid(row=0, column=1)
+        send_btn.grid(row=0, column=2)
+        entry.grid(row=0, column=3)
+
+
+        # listen the event
+        window.mainloop()
+        print("GUI program turned-off.")
+

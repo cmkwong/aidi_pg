@@ -154,6 +154,15 @@ class Web:
     def input_text(self, selector_path, text):
         pass
 
+    def click_tokens_btn(self):
+        js_code = """
+            var length = document.querySelectorAll("#labeled-token").length;
+            for (var i=0; i<length; i++) {
+                document.querySelector(".ui.compact.basic.button").click();
+            }
+        """
+        self.browser.execute_script(js_code)
+
     def quite_driver(self):
         self.browser.quit()
 

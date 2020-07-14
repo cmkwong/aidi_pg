@@ -68,15 +68,17 @@ class Graders:
         self.grader = projects.base_grader(self.web_controller, self.db_controller)
         self.grader.project_type = projects_info[project_index]["type"]
         link = projects_info[project_index]["link"]
-        #link = ""
         self.grader.web_controller.open_project_link(link)
+        if projects_info[project_index]["type"] == "token":
+            print("GUI program running....")
+            self.grader.token_wrapper_execute()
 
     def decode(self, ans):
         if (self.auto_mode == False):
-            gradingFinish = self.grader.execute(ans)
+            gradingFinish = self.grader.spot_wrapper_execute(ans)
             return gradingFinish
         elif (self.auto_mode == True):
-            gradingFinish = self.grader.auto_execute()
+            gradingFinish = self.grader.spot_wrapper_auto_execute()
             return gradingFinish
 
     def get_query_done(self):
