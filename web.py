@@ -6,9 +6,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-from config import *
+import config
 import time
 import numpy as np
+import re
 
 class Web:
     def __init__(self, init_url):
@@ -124,12 +125,19 @@ class Web:
         time.sleep(1)
         return html
 
-    def get_project_id(self):
-        js_code = """
-            var name = document.getElementById('project-name').getElementsByTagName('a')[0].innerText;
-            return name;
-        """
-        return self.browser.execute_script(js_code)
+    def get_project_id_from_url(self):
+        project_id = None
+        project_link = self.get_motherTag_url()
+        regex = re.compile(r"/project/\S+?/")
+        matches = regex.finditer(project_link)
+        for match in matches:
+            project_id = project_link[match.span()[0]+9:match.span()[1]-1]
+        return project_id
+        # js_code = """
+        #     var name = document.getElementById('project-name').getElementsByTagName('a')[0].innerText;
+        #     return name;
+        # """
+        # return self.browser.execute_script(js_code)
 
     def get_grader_id(self):
         js_code = """
@@ -137,9 +145,9 @@ class Web:
             return usr_name;
         """
         usr_name = self.browser.execute_script(js_code)
-        for x in graders_id:
-            if usr_name == x["name"]:
-                return x["_id"]
+        for info in config.graders_info:
+            if usr_name == info["name"]:
+                return info["_id"]
         return None
 
     def open_links_new_tags(self, links, max_tags):

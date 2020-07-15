@@ -1,7 +1,5 @@
 import projects
-from config import *
-
-MAX_PROJ_NUM = len(projects_info)
+import config
 
 def num_input_check():
     try:
@@ -34,10 +32,11 @@ def print_proj_list():
     print("\n")
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
-    for index, project in enumerate(projects_info):
-        print((index+1), ": ", project["_id"])
+    for index, project in enumerate(config.projects_info):
+        print((index+1), ": ", project["name"])
 
 def menu_choice():
+    max_proj_num = len(config.projects_info)
     project_index = None
     project_type = None
     while(project_index==None):
@@ -45,12 +44,12 @@ def menu_choice():
         project_index = num_input_check()
         if project_index == None:
             continue
-        if (project_index <= 0 or project_index > MAX_PROJ_NUM):
+        if (project_index <= 0 or project_index > max_proj_num):
             print("Invalid range of Number.")
             project_index = None
             continue
         project_index = project_index - 1
-        project_type = projects_info[project_index]["type"]
+        project_type = config.projects_info[project_index]["type"]
     print("Type of Project: ", project_type, " activated.")
     return project_index
 
@@ -63,13 +62,19 @@ class Graders:
         self.auto_mode = False
 
     def setup_project(self, project_index):
+        # keep the done count if user switch to other project
         if self.grader:
             self.projects_query_done = self.grader.query_done
+        # create new grader
         self.grader = projects.base_grader(self.web_controller, self.db_controller)
-        self.grader.project_type = projects_info[project_index]["type"]
-        link = projects_info[project_index]["link"]
+        # set the project type
+        self.grader.project_type = config.projects_info[project_index]["type"]
+        # open the required project link
+        link = config.projects_info[project_index]["link"]
         self.grader.web_controller.open_project_link(link)
-        if projects_info[project_index]["type"] == "token":
+
+        # run the TOKEN program immediately
+        if config.projects_info[project_index]["type"] == "token":
             print("GUI program running....")
             self.grader.token_wrapper_execute()
 
@@ -133,14 +138,22 @@ def control_command_check(graders, ans):
         elif graders.grader.manual_timer == True:
             graders.grader.manual_timer = False
             print("Manual timer cancel. \nType '-md' again for activation.")
+        return command_checked
 
     elif (ans[0:5] == "-view"):
         graders.grader.view = True
         print("grader-ans show.")
+        return command_checked
 
     elif (ans[0:5] == "-hide"):
         graders.grader.view = False
         print("grader-ans hide.")
+        return command_checked
+
+    elif (ans[0:7] == "-update"):
+        graders.grader.db_controller.update_local_config_from_db()
+        print("Update info OK")
+        return command_checked
 
     elif (ans[0:4] == "--rg"):
         graders.grader.db_controller.graders_id_update()

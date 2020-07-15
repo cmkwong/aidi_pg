@@ -1,6 +1,7 @@
 import time
 import tkinter as tk
 from functools import partial
+import config
 
 def base_code_check(controller, ans, max_web_search_links):
     if (ans[0] == '`'):
@@ -9,6 +10,7 @@ def base_code_check(controller, ans, max_web_search_links):
             controller.click_web_search()
         except:
             print("Not available '`'")
+            return None # None is Error
         return True
     elif (ans[0] == '!'):
         # close other tags
@@ -16,6 +18,7 @@ def base_code_check(controller, ans, max_web_search_links):
             controller.close_other_tags()
         except:
             print("Not available '!'")
+            return None
         return True
     elif (ans[0] == '~'):
         # open three results
@@ -24,12 +27,13 @@ def base_code_check(controller, ans, max_web_search_links):
         except:
             links = []
             print("Not available '~'")
+            return None
         controller.open_links_new_tags(links, max_web_search_links)
         # open web search
         controller.click_web_search()
         return True
     else:
-        return False
+        return False # False = continue
 
 class base_grader:
     def __init__(self, web_controller, db_controller):
@@ -107,10 +111,18 @@ class base_grader:
             result_links = self.web_controller.get_links()
         except:
             result_links = []
+
+        # if either has no grader id or project id
         if self.grader_id is None or self.project_id is None:
             self.grader_id = self.web_controller.get_grader_id()
-            self.project_id = self.web_controller.get_project_id()
+            self.project_id = self.web_controller.get_project_id_from_url()
+            # update the db login info
+            login, pw = self.db_controller.grader_id_to_login_info(self.grader_id)
+            self.db_controller.update_db_config(name=login, pw=pw)
+
         query_id = self.db_controller.query_insert(self.project_id, self.query_text, result_links)
+
+        # insert upper part of answer
         answer_id = None
         if query_id is not None:
             answer_id = self.db_controller.grader_answer_insert(self.grader_id, query_id, query_link=self.current_url)
@@ -256,25 +268,16 @@ class base_grader:
                 self.web_controller.browser.execute_script(js_code)
                 # press token looping
                 self.web_controller.click_tokens_btn()
-            else:
-                # js_code = """
-                #             document.querySelector('#input-field').querySelector("input").value = arguments[0];
-                #         """
-                # self.web_controller.browser.execute_script(js_code, ans)
+            elif (ans[0:3] == '-k-'):
                 js_code = """
                     document.getElementById("gradingStatePossible to grade").click();
-                    document.querySelector('#input-field').querySelector("input").value = '';
                 """
                 self.web_controller.browser.execute_script(js_code)
-                # special way to send text into input-field
-                inputElement = self.web_controller.browser.find_element_by_id("input-field").find_elements_by_tag_name("input")[0]
-                for a in ans:
-                    inputElement.send_keys(a)
-                    #time.sleep(0.01)
 
-                #press token looping
+                # press token looping
                 self.web_controller.click_tokens_btn()
             return True
+
 
         else:
             print("Project type not setup correctly.")
@@ -285,7 +288,7 @@ class base_grader:
         if not renew_ok:
             return False
         base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
-        if (base_command):
+        if ((base_command == True) or (base_command == None)):
             return False
         elif (not base_command):
 
@@ -316,7 +319,7 @@ class base_grader:
         if not renew_ok:
             return False
         if self.project_id is None:
-            self.project_id = self.web_controller.get_project_id()
+            self.project_id = self.web_controller.get_project_id_from_url()
 
         if self.view:
             print("text: ", self.query_text)
@@ -353,18 +356,14 @@ class base_grader:
         window.title("Token")
         window.wm_attributes("-topmost", 1)
 
-        entry = tk.Entry(fg="black", bg="white", width=50)
-
-        def send_handler(self):
+        def grade_handler(self):
             try:
-                # get entry text
-                ans = entry.get()
-
                 # grading
-                grade_ok = self.grading(ans)
-                time.sleep(0.5)
+                grade_ok = self.grading("-k-")
                 # click next button
-                #self.web_controller.click_next_btn()
+                window.focus_force()
+                if grade_ok:
+                    self.web_controller.click_next_btn()
             except:
                 print("grading failed - token")
 
@@ -372,30 +371,20 @@ class base_grader:
 
         def vague_handler(self):
             try:
+                # grading
                 grade_ok = self.grading("-n-")
-                time.sleep(0.5)
+                # click next button
                 window.focus_force()
+                if grade_ok:
+                    self.web_controller.click_next_btn()
             except:
                 print("vague failed - token")
 
-        def read_handler(self):
-            try:
-                query_text = self.get_query_text()
-                # delete text
-                entry.delete(0, tk.END)
-                entry.insert(0, query_text)
-            except:
-                print("read failed - token")
+        send_btn = tk.Button(window, text="Grade", fg="green", command=partial(grade_handler, self))
+        vague_btn = tk.Button(window, text="Vague", fg="red", command=partial(vague_handler, self))
 
-        send_btn = tk.Button(window, text="Grade", fg="green", command=partial(send_handler, self))
-        bad_btn = tk.Button(window, text="Vague", fg="red", command=partial(vague_handler, self))
-        read_btn = tk.Button(window, text="Read", fg="blue", command=partial(read_handler, self))
-
-        bad_btn.grid(row=0, column=0)
-        read_btn.grid(row=0, column=1)
-        send_btn.grid(row=0, column=2)
-        entry.grid(row=0, column=3)
-
+        vague_btn.grid(row=0, column=0)
+        send_btn.grid(row=0, column=1)
 
         # listen the event
         window.mainloop()
