@@ -93,7 +93,7 @@ class base_grader:
                 query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
             except:
-                continue
+                continue # continue looping
         return query_text
 
     def get_query_url(self):
@@ -354,27 +354,36 @@ class base_grader:
         entry = tk.Entry(fg="black", bg="white", width=50)
 
         def send_handler(self):
-            # get entry text
-            ans = entry.get()
+            try:
+                # get entry text
+                ans = entry.get()
 
-            # grading
-            grade_ok = self.grading(ans)
-            time.sleep(0.5)
-            # click next button
-            self.web_controller.click_next_btn()
+                # grading
+                grade_ok = self.grading(ans)
+                time.sleep(0.5)
+                # click next button
+                self.web_controller.click_next_btn()
+            except:
+                print("grading failed - token")
 
             window.focus_force()
 
         def vague_handler(self):
-            grade_ok = self.grading("-n-")
-            time.sleep(0.5)
-            window.focus_force()
+            try:
+                grade_ok = self.grading("-n-")
+                time.sleep(0.5)
+                window.focus_force()
+            except:
+                print("vague failed - token")
 
         def read_handler(self):
-            query_text = self.get_query_text()
-            # delete text
-            entry.delete(0, tk.END)
-            entry.insert(0, query_text)
+            try:
+                query_text = self.get_query_text()
+                # delete text
+                entry.delete(0, tk.END)
+                entry.insert(0, query_text)
+            except:
+                print("read failed - token")
 
         send_btn = tk.Button(window, text="Grade", fg="green", command=partial(send_handler, self))
         bad_btn = tk.Button(window, text="Vague", fg="red", command=partial(vague_handler, self))
