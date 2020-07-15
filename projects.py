@@ -268,7 +268,9 @@ class base_grader:
                 self.web_controller.browser.execute_script(js_code)
                 # special way to send text into input-field
                 inputElement = self.web_controller.browser.find_element_by_id("input-field").find_elements_by_tag_name("input")[0]
-                inputElement.send_keys(ans)
+                for a in ans:
+                    inputElement.send_keys(a)
+                    time.sleep(0.1)
 
                 #press token looping
                 self.web_controller.click_tokens_btn()
