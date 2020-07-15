@@ -35,10 +35,10 @@ graders_id = [
 
 projects_info = [
 {
-    "_id": "CEval-random-relevance-saf-2020-07-06",
+    "_id": "CEval-random-relevance-saf-2020-07-13",
     "type": "saf",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-07-06/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-07-13/overview"
     },
     {
     "_id": "CEval-random-relevance-spot1-2020-07-06",
