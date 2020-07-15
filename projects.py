@@ -364,7 +364,7 @@ class base_grader:
                 grade_ok = self.grading(ans)
                 time.sleep(0.5)
                 # click next button
-                self.web_controller.click_next_btn()
+                #self.web_controller.click_next_btn()
             except:
                 print("grading failed - token")
 
