@@ -270,7 +270,7 @@ class base_grader:
                 inputElement = self.web_controller.browser.find_element_by_id("input-field").find_elements_by_tag_name("input")[0]
                 for a in ans:
                     inputElement.send_keys(a)
-                    time.sleep(0.1)
+                    #time.sleep(0.01)
 
                 #press token looping
                 self.web_controller.click_tokens_btn()
