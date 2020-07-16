@@ -153,7 +153,10 @@ class Web:
     def open_links_new_tags(self, links, max_tags):
         self.back_tag_one()
         for i, link in enumerate(links):
-            self.browser.execute_script("window.open('%s');" % link)
+            try:
+                self.browser.execute_script("window.open('%s');" % link)
+            except:
+                print("A result link cannot open: \n", link)
             if (i+1) == max_tags:
                 self.back_tag_one()
                 break
