@@ -37,6 +37,12 @@ graders_info_admin = [
     },
     {
         "_id": 7,
+        "name": "Ian Tsui",
+        "login": "ian",
+        "pw": "!23456Qwerty"
+    },
+    {
+        "_id": 8,
         "name": "common_user",
         "login": "common_user",
         "pw": "!23456Qwerty"

@@ -110,7 +110,7 @@ class base_grader:
         self.project_id = self.web_controller.get_project_id_from_url()
         # update the db login info
         login, pw = self.db_controller.grader_id_to_login_info(self.grader_id)
-        self.db_controller.update_db_config(name=login, pw=pw)
+        self.db_controller.update_db_config(login=login, pw=pw)
 
     def insert_db_query(self):
         # insert query and answer
