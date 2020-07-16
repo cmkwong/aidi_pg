@@ -33,7 +33,7 @@ def print_proj_list():
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
     for index, project in enumerate(config.projects_info):
-        print((index+1), ": ", project["name"])
+        print((index+1), ": (", project["type"],") ", project["name"])
 
 def menu_choice():
     max_proj_num = len(config.projects_info)
@@ -156,6 +156,13 @@ def control_command_check(graders, ans):
         graders.grader.db_controller.update_local_config_from_db()
         print("Update info OK")
         return command_checked
+
+    elif (ans[0:5] == "-help"):
+        for ptype, info in config.help_command.items():
+            print(ptype, ": ")
+            for index, description in info.items():
+                print(index, ": ", description)
+            print("")
 
     elif (ans[0:4] == "--rg"):
         graders.grader.db_controller.graders_id_update()
