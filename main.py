@@ -15,7 +15,7 @@ graders = common.Graders(web_controller, db_controller)
 
 terminal = app('Terminal')
 first_time = True
-auto_available = True
+graders.auto_available = True
 
 while (not (command_string == "quit")):
 
@@ -39,16 +39,16 @@ while (not (command_string == "quit")):
 
     if graders.auto_mode == True:
         _ = ""
-        if auto_available == True:
-            auto_available = graders.decode(_)
-        if auto_available == False:
+        if graders.auto_available == True:
+            graders.auto_available = graders.decode(_)
+        if graders.auto_available == False:
             print("Answer Input-a: ")
             terminal.activate()  # back to terminal shell for input
             user_command = input()
             command_string = common.control_command_check(graders, user_command)
             if command_string == "command_not_checked":
                 graders.auto_mode = False
-                auto_available = graders.decode(user_command)
+                graders.auto_available = graders.decode(user_command)
                 graders.auto_mode = True
 
     if (graders.grader.new_query):

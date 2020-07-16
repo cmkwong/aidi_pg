@@ -119,6 +119,7 @@ class Database:
         if (query):
             query_id = query["_id"]
         else:
+            print("No such query.")
             return None, None
         db_filter = {
             "query_id": query_id
@@ -138,6 +139,7 @@ class Database:
                 grader_name = "Unknown"
             return ans, grader_name
         else:
+            print("Have query but not have answer yet. ")
             return None, None
 
     def update_local_config_from_db(self):

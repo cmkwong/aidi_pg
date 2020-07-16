@@ -105,6 +105,13 @@ class base_grader:
         query_web_search_url = self.web_controller.browser.execute_script(js_code)
         return query_web_search_url
 
+    def update_grader_info(self):
+        self.grader_id = self.web_controller.get_grader_id()
+        self.project_id = self.web_controller.get_project_id_from_url()
+        # update the db login info
+        login, pw = self.db_controller.grader_id_to_login_info(self.grader_id)
+        self.db_controller.update_db_config(name=login, pw=pw)
+
     def insert_db_query(self):
         # insert query and answer
         try:
@@ -114,11 +121,7 @@ class base_grader:
 
         # if either has no grader id or project id
         if self.grader_id is None or self.project_id is None:
-            self.grader_id = self.web_controller.get_grader_id()
-            self.project_id = self.web_controller.get_project_id_from_url()
-            # update the db login info
-            login, pw = self.db_controller.grader_id_to_login_info(self.grader_id)
-            self.db_controller.update_db_config(name=login, pw=pw)
+            self.update_grader_info()
 
         query_id = self.db_controller.query_insert(self.project_id, self.query_text, result_links)
 
@@ -318,8 +321,10 @@ class base_grader:
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
-        if self.project_id is None:
-            self.project_id = self.web_controller.get_project_id_from_url()
+
+        # if either has no grader id or project id
+        if self.grader_id is None or self.project_id is None:
+            self.update_grader_info()
 
         if self.view:
             print("text: ", self.query_text)

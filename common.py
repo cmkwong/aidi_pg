@@ -60,6 +60,7 @@ class Graders:
         self.grader = None
         self.projects_query_done = 0
         self.auto_mode = False
+        self.auto_available = False
 
     def setup_project(self, project_index):
         # keep the done count if user switch to other project
@@ -117,6 +118,7 @@ def control_command_check(graders, ans):
 
     elif (ans[0:5] == "-auto"):
         graders.auto_mode = True
+        graders.auto_available = True
         print("Auto-mode activated.")
         return auto_activated
 
