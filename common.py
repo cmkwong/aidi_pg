@@ -116,7 +116,7 @@ def control_command_check(graders, ans):
         graders.setup_project(project_index)
         return command_checked
 
-    elif (ans[0:5] == "-auto"):
+    elif (ans[0:5] == "-auto" or ans[0:3] == "--a"):
         graders.auto_mode = True
         graders.auto_available = True
         print("Auto-mode activated.")
@@ -163,6 +163,17 @@ def control_command_check(graders, ans):
             for index, description in info.items():
                 print(index, ": ", description)
             print("")
+        return command_checked
+
+    elif (ans[0:3] == "-df"):
+        graders.grader.find_delay = True
+        print("Delay Find Answer Activated.")
+        return command_checked
+
+    elif (ans[0:4] == "-ndf"):
+        graders.grader.find_delay = False
+        print("Delay Find Answer De-activated.")
+        return command_checked
 
     elif (ans[0:4] == "--rg"):
         graders.grader.db_controller.graders_id_update()

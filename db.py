@@ -8,6 +8,11 @@ import config
 
 db_name = "cmk_testing"
 
+def print_S(string, allowed=True):
+    if allowed:
+        print(string)
+
+
 class Database:
     def __init__(self):
         self.URI = None
@@ -110,7 +115,7 @@ class Database:
         self.db["graders"].insert_many(graders_info_admin)
         print("Renew graders info done.")
 
-    def find_one_ans(self, project_id, text):
+    def find_one_ans(self, project_id, text, print_allowed=True):
         db_filter = {
             "project": project_id,
             "text": text
@@ -119,7 +124,7 @@ class Database:
         if (query):
             query_id = query["_id"]
         else:
-            print("No such query.")
+            print_S("No such query.", print_allowed)
             return None, None
         db_filter = {
             "query_id": query_id
@@ -129,7 +134,7 @@ class Database:
             try:
                 ans = ans_info["grader_answer"]
             except KeyError:
-                print("Have answer query but have no grader answer yet.")
+                print_S("Have answer query but have no grader answer yet.", print_allowed)
                 return None, None
             grader_id = ans_info["grader"]
             grader = self.db["graders"].find_one({"_id": grader_id})
@@ -139,7 +144,7 @@ class Database:
                 grader_name = "Unknown"
             return ans, grader_name
         else:
-            print("Have query but not have answer yet. ")
+            print_S("Have query but not have answer yet. ", print_allowed)
             return None, None
 
     def update_local_config_from_db(self):

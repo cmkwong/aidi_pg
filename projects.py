@@ -48,6 +48,8 @@ class base_grader:
         self.project_id = None
         self.project_type = None
         self.time_delay = 2
+        self.find_delay = False
+        self.find_time_delay = 20
         self.manual_timer = False
         self.view = False
 
@@ -71,6 +73,13 @@ class base_grader:
         for i in reversed(range(0, self.time_delay+1)):
             time.sleep(1)
             print(i, " seconds", end='\r')
+
+    def find_ans_with_delay(self):
+        print("Finding Delay...")
+        for i in reversed(range(0, self.find_time_delay + 1)):
+            time.sleep(1)
+            print(i, " seconds", end='\r')
+
 
     def get_query_text(self):
         query_text = None
@@ -329,8 +338,26 @@ class base_grader:
         if self.view:
             print("text: ", self.query_text)
 
-        # read from database
-        ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
+        ans = None
+        grader_name = "Unknown"
+        # find delay
+        if self.find_delay:
+            # delay to find
+            print("Finding Ans Delay ... Max:", self.find_time_delay)
+            for i in reversed(range(1, self.find_time_delay + 1)):
+                time.sleep(1)
+                print(i, " seconds", end='\r')
+
+                # read from database every 5 seconds
+                if (i % 4) == 0:
+                    ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
+                    if ans != None:
+                        break
+        # not find delay
+        elif not self.find_delay:
+            ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
+
+        # check if there is a ans
         if (ans == None):
             print("Not Found!\n")
             return False
