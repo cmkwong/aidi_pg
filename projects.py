@@ -74,13 +74,6 @@ class base_grader:
             time.sleep(1)
             print(i, " seconds", end='\r')
 
-    def find_ans_with_delay(self):
-        print("Finding Delay...")
-        for i in reversed(range(0, self.find_time_delay + 1)):
-            time.sleep(1)
-            print(i, " seconds", end='\r')
-
-
     def get_query_text(self):
         query_text = None
         if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
