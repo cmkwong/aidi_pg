@@ -53,12 +53,24 @@ class base_grader:
         self.manual_timer = False
         self.view = False
 
+    def update_grader_info(self):
+        self.grader_id = self.web_controller.get_grader_id()
+        self.project_id = self.web_controller.get_project_id_from_url()
+        # update the db login info
+        login, pw = self.db_controller.grader_id_to_login_info(self.grader_id)
+        self.db_controller.update_db_config(login=login, pw=pw)
+
     def renew_status(self):
         self.query_text = self.get_query_text()
         if self.query_text == None:
             return False
         self.current_url = self.web_controller.get_motherTag_url()
         self.new_query = False
+
+        # if either has no grader id or project id
+        if self.grader_id is None or self.project_id is None:
+            self.update_grader_info()
+
         return True
 
     def update_status(self):
@@ -107,40 +119,33 @@ class base_grader:
         query_web_search_url = self.web_controller.browser.execute_script(js_code)
         return query_web_search_url
 
-    def update_grader_info(self):
-        self.grader_id = self.web_controller.get_grader_id()
-        self.project_id = self.web_controller.get_project_id_from_url()
-        # update the db login info
-        login, pw = self.db_controller.grader_id_to_login_info(self.grader_id)
-        self.db_controller.update_db_config(login=login, pw=pw)
-
     def insert_db_query(self):
-        # insert query and answer
-        try:
-            result_links = self.web_controller.get_links()
-        except:
-            result_links = []
-
-        # if either has no grader id or project id
-        if self.grader_id is None or self.project_id is None:
-            self.update_grader_info()
-
-        query_id = self.db_controller.query_insert(self.project_id, self.query_text, result_links)
-
-        # insert upper part of answer
         answer_id = None
-        if query_id is not None:
-            answer_id = self.db_controller.grader_answer_insert(self.grader_id, query_id, query_link=self.current_url)
-        else:
-            print("Error: query insert unsuccessfully.")
+
+        if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
+            # insert query and answer
+            try:
+                result_links = self.web_controller.get_links()
+            except:
+                result_links = []
+
+            query_id = self.db_controller.query_insert(self.project_id, self.query_text, result_links)
+
+            # insert upper part of answer
+            if query_id is not None:
+                answer_id = self.db_controller.grader_answer_insert(self.grader_id, query_id, query_link=self.current_url)
+            else:
+                print("Error: query insert unsuccessfully.")
+
         return answer_id
 
     def update_db_ans(self, answer_id, ans):
-        # update grader answer
-        if answer_id is not None:
-            self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
-        else:
-            print("Error: answer insert unsuccessfully")
+        if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
+            # update grader answer
+            if answer_id is not None:
+                self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
+            else:
+                print("Error: answer insert unsuccessfully")
 
     def grading(self, ans):
         if (self.project_type == "spot12"):
@@ -288,7 +293,7 @@ class base_grader:
             print("Project type not setup correctly.")
             return False
 
-    def spot_wrapper_execute(self, ans):
+    def execute(self, ans):
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
@@ -318,15 +323,11 @@ class base_grader:
 
             return True
 
-    def spot_wrapper_auto_execute(self):
+    def auto_execute(self):
         # auto mode
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
-
-        # if either has no grader id or project id
-        if self.grader_id is None or self.project_id is None:
-            self.update_grader_info()
 
         if self.view:
             print("text: ", self.query_text)
@@ -350,7 +351,7 @@ class base_grader:
         elif not self.find_delay:
             ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
 
-        # check if there is a ans
+        # if no Answer found, return false, auto_available will be false
         if (ans == None):
             print("Not Found!\n")
             return False
@@ -376,7 +377,7 @@ class base_grader:
 
         return True
 
-    def token_wrapper_execute(self):
+    def token_GUI_execute(self):
         window = tk.Tk()
         window.title("Token")
         window.wm_attributes("-topmost", 1)

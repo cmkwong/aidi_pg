@@ -162,9 +162,6 @@ class Web:
                 break
         self.back_tag_one()
 
-    def input_text(self, selector_path, text):
-        pass
-
     def click_tokens_btn(self):
         js_code = """
             var length = document.querySelectorAll("#labeled-token").length;

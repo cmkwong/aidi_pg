@@ -77,14 +77,14 @@ class Graders:
         # run the TOKEN program immediately
         if config.projects_info[project_index]["type"] == "token":
             print("GUI program running....")
-            self.grader.token_wrapper_execute()
+            self.grader.token_GUI_execute()
 
     def decode(self, ans):
         if (self.auto_mode == False):
-            gradingFinish = self.grader.spot_wrapper_execute(ans)
+            gradingFinish = self.grader.execute(ans)
             return gradingFinish
         elif (self.auto_mode == True):
-            gradingFinish = self.grader.spot_wrapper_auto_execute()
+            gradingFinish = self.grader.auto_execute()
             return gradingFinish
 
     def get_query_done(self):
