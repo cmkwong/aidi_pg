@@ -47,9 +47,9 @@ class base_grader:
         self.grader_id = None
         self.project_id = None
         self.project_type = None
-        self.time_delay = 2
+        self.time_delay = 1
         self.find_delay = False
-        self.find_time_delay = 20
+        self.find_time_delay = 60
         self.manual_timer = False
         self.view = False
 
@@ -85,6 +85,18 @@ class base_grader:
         for i in reversed(range(0, self.time_delay+1)):
             time.sleep(1)
             print(i, " seconds", end='\r')
+
+    def find_time_delay_level(self):
+        if self.find_time_delay > 200:
+            return 20
+        elif self.find_time_delay <= 200 and self.find_time_delay > 100:
+            return 10
+        elif self.find_time_delay <= 100 and self.find_time_delay > 60:
+            return 5
+        elif self.find_time_delay <= 60 and self.find_time_delay > 20:
+            return 4
+        elif self.find_time_delay <= 20 and self.find_time_delay > 1:
+            return 2
 
     def get_query_text(self):
         query_text = None
@@ -338,12 +350,13 @@ class base_grader:
         if self.find_delay:
             # delay to find
             print("Finding Ans Delay ... Max:", self.find_time_delay)
-            for i in reversed(range(1, self.find_time_delay + 1)):
+            for i in reversed(range(0, self.find_time_delay)):
                 time.sleep(1)
-                print(i, " seconds", end='\r')
+                print(i+1, " seconds", end='\r')
 
                 # read from database every 5 seconds
-                if (i % 4) == 0:
+                time_interval = self.find_time_delay_level()
+                if ((i+1) % time_interval) == 0:
                     ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
                     if ans != None:
                         break

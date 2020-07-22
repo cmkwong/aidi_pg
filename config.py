@@ -51,22 +51,22 @@ graders_info_admin = [
 
 projects_info_admin = [
 {
-    "name": "CEval-random-relevance-saf-2020-07-13",
+    "name": "CEval-random-relevance-saf-2020-07-20",
     "type": "saf",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-07-13/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-07-20/overview"
     },
     {
-    "name": "CEval-random-relevance-spot1-2020-07-13",
+    "name": "CEval-random-relevance-spot1-2020-07-20",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-07-13/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-07-20/overview"
     },
     {
-    "name": "CEval-random-relevance-spot2-2020-07-13",
+    "name": "CEval-random-relevance-spot2-2020-07-20",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-07-13/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-07-20/overview"
     },
     {
     "name": "search-documents-chinese-tokenizer-evaluation-custom",

@@ -13,7 +13,7 @@ def num_input_check():
         return None
     return num_input
 
-def time_delay_set(graders, overtime_bypass=False):
+def time_delay_set(graders, ans, overtime_bypass=False):
     print("Enter the delay time(Second): ")
     time_delay = num_input_check()
     if not overtime_bypass:
@@ -24,9 +24,15 @@ def time_delay_set(graders, overtime_bypass=False):
         if (time_delay < 0):
             print("Timer cannot be negative.")
             return False
-    graders.grader.time_delay = time_delay
-    print("Time delay: ", time_delay)
-    return True
+    # set time delay
+    if ans == "-t" and len(ans) == 2:
+        graders.grader.time_delay = time_delay
+        print("Time delay: ", time_delay)
+        return True
+    if ans == "-dft" and len(ans) == 4:
+        graders.grader.find_time_delay = time_delay
+        print("Find Ans Time delay: ", time_delay)
+        return True
 
 def print_proj_list():
     print("\n")
@@ -102,38 +108,38 @@ def control_command_check(graders, ans):
     auto_activated = "auto"
     quit_program = "quit"
 
-    if (ans[0:2] == "-l"):
+    if (ans == "-l"):
         url = ans[3:]
         graders.grader.web_controller.open_project_link(url)
         return command_checked
 
-    elif (ans[0:2] == "-q"):
+    elif (ans == "-q"):
         return quit_program
 
-    elif (ans[0:2] == "-p"):
+    elif (ans == "-p"):
         graders.projects_query_done = graders.grader.query_done # keep previous amount of done number
         project_index = menu_choice()
         graders.setup_project(project_index)
         return command_checked
 
-    elif (ans[0:5] == "-auto" or ans[0:3] == "--a"):
+    elif (ans == "-auto" or ans == "--a"):
         graders.auto_mode = True
         graders.auto_available = True
         print("Auto-mode activated.")
         return auto_activated
 
-    elif (ans[0:6] == "-nauto"):
+    elif (ans == "-nauto"):
         graders.auto_mode = False
         print("Auto-mode de-activated.")
         return command_checked
 
-    elif (ans[0:2] == "-t"):
-        set_ok = time_delay_set(graders)
+    elif (ans == "-t"):
+        set_ok = time_delay_set(graders, ans)
         if not set_ok:
             print("Set timer failed. Try again.")
         return command_checked
 
-    elif (ans[0:3] == "-md"):
+    elif (ans == "-md"):
         if graders.grader.manual_timer == False:
             graders.grader.manual_timer = True
             print("Manual timer set. \nType '-md' again for cancel.")
@@ -142,22 +148,22 @@ def control_command_check(graders, ans):
             print("Manual timer cancel. \nType '-md' again for activation.")
         return command_checked
 
-    elif (ans[0:5] == "-view"):
+    elif (ans == "-view"):
         graders.grader.view = True
         print("grader-ans show.")
         return command_checked
 
-    elif (ans[0:5] == "-hide"):
+    elif (ans == "-hide"):
         graders.grader.view = False
         print("grader-ans hide.")
         return command_checked
 
-    elif (ans[0:7] == "-update"):
+    elif (ans == "-update"):
         graders.grader.db_controller.update_local_config_from_db()
         print("Update info OK")
         return command_checked
 
-    elif (ans[0:5] == "-help"):
+    elif (ans == "-help"):
         for ptype, info in config.help_command.items():
             print(ptype, ": ")
             for index, description in info.items():
@@ -165,21 +171,41 @@ def control_command_check(graders, ans):
             print("")
         return command_checked
 
-    elif (ans[0:3] == "-df"):
+    elif (ans == "-df"):
         graders.grader.find_delay = True
         print("Delay Find Answer Activated.")
         return command_checked
 
-    elif (ans[0:4] == "-ndf"):
+    elif (ans == "-ndf"):
         graders.grader.find_delay = False
         print("Delay Find Answer De-activated.")
         return command_checked
 
-    elif (ans[0:4] == "--rg"):
+    elif (ans == "-dft"):
+        set_ok = time_delay_set(graders, ans)
+        if not set_ok:
+            print("Set timer failed. Try again.")
+        return command_checked
+
+    elif (ans == "-lazyconfig"):
+        # view
+        graders.grader.view = True
+        # find ans delay
+        graders.grader.find_delay = True
+        graders.grader.find_time_delay = 60
+        # next delay
+        graders.grader.time_delay = 200
+        # auto mode activate
+        graders.auto_mode = True
+        graders.auto_available = True
+        print("Lazy config set done.")
+        return command_checked
+
+    elif (ans == "--rg"):
         graders.grader.db_controller.graders_id_update()
         return command_checked
 
-    elif (ans[0:4] == "--rp"):
+    elif (ans == "--rp"):
         graders.grader.db_controller.project_info_update()
         return command_checked
 
