@@ -43,6 +43,18 @@ graders_info_admin = [
     },
     {
         "_id": 8,
+        "name": "Raymond Ho",
+        "login": "phoebe",
+        "pw": "!23456Qwerty"
+    },
+    {
+        "_id": 9,
+        "name": "Nicole Lee",
+        "login": "alan",
+        "pw": "!23456Qwerty"
+    },
+    {
+        "_id": 10,
         "name": "common_user",
         "login": "common_user",
         "pw": "!23456Qwerty"

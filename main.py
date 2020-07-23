@@ -42,7 +42,7 @@ while (not (command_string == "quit")):
         if graders.auto_available == True:
             graders.auto_available = graders.decode(_)
         if graders.auto_available == False:
-            print("Answer Input-a: ")
+            print("Answer Input: ")
             terminal.activate()  # back to terminal shell for input
             user_command = input()
             command_string = common.control_command_check(graders, user_command)
