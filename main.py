@@ -27,8 +27,7 @@ while (not (command_string == "quit")):
         graders.setup_project(project_index)
         first_time = False
 
-    # try: # bigger exception, avoid accidently close down
-
+    # try:
     if graders.auto_mode == False:
         print("Answer Input: ")
         terminal.activate()  # back to terminal shell for input
@@ -42,7 +41,7 @@ while (not (command_string == "quit")):
         if graders.auto_available == True:
             graders.auto_available = graders.decode(_)
         if graders.auto_available == False:
-            print("Answer Input: ")
+            print("Answer Input-a: ")
             terminal.activate()  # back to terminal shell for input
             user_command = input()
             command_string = common.control_command_check(graders, user_command)
@@ -56,6 +55,5 @@ while (not (command_string == "quit")):
         graders.grader.new_query = False
 
     # except:
-    #     print("Might be your input so fast.")
-    #     continue
+
 web_controller.quite_driver()

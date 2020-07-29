@@ -4,7 +4,7 @@ from functools import partial
 import config
 
 def base_code_check(controller, ans, max_web_search_links):
-    if (ans[0] == '`'):
+    if (ans == '`'):
         # web_search
         try:
             controller.click_web_search()
@@ -12,7 +12,7 @@ def base_code_check(controller, ans, max_web_search_links):
             print("Not available '`'")
             return None # None is Error
         return True
-    elif (ans[0] == '!'):
+    elif (ans == '!'):
         # close other tags
         try:
             controller.close_other_tags()
@@ -20,7 +20,7 @@ def base_code_check(controller, ans, max_web_search_links):
             print("Not available '!'")
             return None
         return True
-    elif (ans[0] == '~'):
+    elif (ans == '~'):
         # open three results
         try:
             links = controller.get_links()
@@ -32,6 +32,9 @@ def base_code_check(controller, ans, max_web_search_links):
         # open web search
         controller.click_web_search()
         return True
+    elif (ans == ''):
+        print("cannot input empty string")
+        return None
     else:
         return False # False = continue
 
@@ -80,11 +83,22 @@ class base_grader:
             self.p_query_text = self.query_text
             self.new_query = True
 
+    def reopen_current_browser(self):
+        self.web_controller.open_chrome()
+        self.web_controller.init_working_tag()
+        self.web_controller.open_project_link(self.current_url)
+
     def delay_timer(self):
         print("Delay...")
-        for i in reversed(range(0, self.time_delay+1)):
-            time.sleep(1)
-            print(i, " seconds", end='\r')
+        try:
+            for i in reversed(range(0, self.time_delay+1)):
+                time.sleep(1)
+                print(i, " seconds", end='\r')
+        except KeyboardInterrupt:
+            self.reopen_current_browser()
+            print("Timer interrupted. Reopening...")
+            return False
+        return True
 
     def find_time_delay_level(self):
         if self.find_time_delay > 200:
@@ -324,7 +338,9 @@ class base_grader:
 
             # timer
             if self.manual_timer:
-                self.delay_timer()
+                timer_ok = self.delay_timer()
+                if not timer_ok:
+                    return False
             self.web_controller.click_next_btn()
 
             # update ans into db
@@ -348,18 +364,24 @@ class base_grader:
         grader_name = "Unknown"
         # find delay
         if self.find_delay:
-            # delay to find
-            print("Finding Ans Delay ... Max:", self.find_time_delay)
-            for i in reversed(range(0, self.find_time_delay)):
-                time.sleep(1)
-                print(i+1, " seconds", end='\r')
+            try:
+                # delay to find
+                print("Finding Ans Delay ... Max:", self.find_time_delay)
+                for i in reversed(range(0, self.find_time_delay)):
+                    time.sleep(1)
+                    print(i+1, " seconds", end='\r')
 
-                # read from database every 5 seconds
-                time_interval = self.find_time_delay_level()
-                if ((i+1) % time_interval) == 0:
-                    ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
-                    if ans != None:
-                        break
+                    # read from database every 5 seconds
+                    time_interval = self.find_time_delay_level()
+                    if ((i+1) % time_interval) == 0:
+                        ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
+                        if ans != None:
+                            break
+            except KeyboardInterrupt:
+                self.reopen_current_browser()
+                print("Timer interrupted. Reopening...")
+                return False
+
         # not find delay
         elif not self.find_delay:
             ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
@@ -382,7 +404,9 @@ class base_grader:
         if not grade_ok:
             return False
 
-        self.delay_timer()
+        timer_ok = self.delay_timer()
+        if not timer_ok:
+            return False
         self.web_controller.click_next_btn()
 
         # update status after finish a grading
