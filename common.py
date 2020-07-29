@@ -108,7 +108,7 @@ def control_command_check(graders, ans):
     auto_activated = "auto"
     quit_program = "quit"
 
-    if (ans == "-l"):
+    if (ans[0:2] == "-l"):
         url = ans[3:]
         graders.grader.web_controller.open_project_link(url)
         return command_checked
