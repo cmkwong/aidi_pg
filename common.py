@@ -67,6 +67,7 @@ class Graders:
         self.projects_query_done = 0
         self.auto_mode = False
         self.auto_available = False
+        self.print_extra_info = False
 
     def setup_project(self, project_index):
         # keep the done count if user switch to other project
@@ -84,6 +85,16 @@ class Graders:
         if config.projects_info[project_index]["type"] == "token":
             print("GUI program running....")
             self.grader.token_GUI_execute()
+
+        # run classify need extra info provided
+        if config.projects_info[project_index]["type"] == "classify":
+            self.print_extra_info = True
+        else:
+            self.print_extra_info = False
+
+    def print_list(self, str_list):
+        for string in str_list:
+            print(string)
 
     def decode(self, ans):
         if (self.auto_mode == False):

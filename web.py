@@ -41,15 +41,12 @@ class Web:
         self.browser.switch_to.window(self.original_window)
 
     def close_other_tags(self):
+        js_code = "window.close();"
         for window_handle in self.browser.window_handles:
             if window_handle != self.original_window:
                 self.browser.switch_to.window(window_handle)
-                # js_code = """
-                #     window.stop();
-                #     window.close();
-                # """
-                # self.browser.execute_script(js_code)
-                self.browser.close()
+                self.browser.execute_script(js_code)
+                # self.browser.close()
         self.back_tag_one()
 
     def click_by_id_until(self, id):
@@ -59,6 +56,11 @@ class Web:
     def click_by_id(self, id):
         self.back_tag_one()
         js_code = "window.document.getElementById('" + id + "').click();"
+        self.browser.execute_script(js_code)
+
+    def select_query_click(self, query):
+        self.back_tag_one()
+        js_code = "window.document.querySelector('" + query + "').click();"
         self.browser.execute_script(js_code)
 
     def click_by_class(self, class_name):

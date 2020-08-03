@@ -1,6 +1,7 @@
 import time
 import tkinter as tk
 from functools import partial
+import numpy as np
 import config
 
 def base_code_check(controller, ans, max_web_search_links):
@@ -114,7 +115,7 @@ class base_grader:
 
     def get_query_text(self):
         query_text = None
-        if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
+        if self.project_type in ["spot12", "saf", "eval3"]:
             js_code = """
                 var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
                 return query_text;
@@ -122,6 +123,11 @@ class base_grader:
         elif self.project_type == "token":
             js_code = """
                 var query_text = document.querySelector("#input-field").querySelector("input").value;
+                return query_text;
+            """
+        elif self.project_type == "classify":
+            js_code = """
+                var query_text = document.querySelector('#display-section').querySelector('h1').textContent;
                 return query_text;
             """
         else:
@@ -148,7 +154,7 @@ class base_grader:
     def insert_db_query(self):
         answer_id = None
 
-        if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
+        if self.project_type in ["spot12", "saf", "eval3", "classify"]:
             # insert query and answer
             try:
                 result_links = self.web_controller.get_links()
@@ -166,7 +172,7 @@ class base_grader:
         return answer_id
 
     def update_db_ans(self, answer_id, ans):
-        if self.project_type == "spot12" or self.project_type == "saf" or self.project_type == "eval3":
+        if self.project_type in ["spot12", "saf", "eval3", "classify"]:
             # update grader answer
             if answer_id is not None:
                 self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
@@ -314,6 +320,86 @@ class base_grader:
                 self.web_controller.click_tokens_btn()
             return True
 
+        elif (self.project_type == "classify"):
+            if "-m" in ans:
+                comment = ans[ans.find('-m')+3:]
+                comment = comment.replace("\'", '')
+                comment = comment.replace("\"", '')
+                self.web_controller.browser.execute_script("document.querySelector('textarea').value = '%s';" % comment)
+                ans = ans[:ans.find('-m')].replace(' ', '')
+            # topic
+            if ans[0] is 'a':
+                self.web_controller.select_query_click('#query_topicarts_and_entertainment')
+            elif ans[0] is 'b':
+                self.web_controller.select_query_click('#query_topicfood_and_drink')
+            elif ans[0] is 'c':
+                self.web_controller.select_query_click('#query_topicsports')
+            elif ans[0] is 'd':
+                self.web_controller.select_query_click('#query_topichealth_fitness_medicine_and_science')
+            elif ans[0] is 'e':
+                self.web_controller.select_query_click('#query_topicgeneral_retailers_and_marketplaces')
+            elif ans[0] is 'f':
+                self.web_controller.select_query_click('#query_topicbusiness_industry_economics_and_finance')
+            elif ans[0] is 'g':
+                self.web_controller.select_query_click('#query_topiccomputing_technology_telecommunication_and_internet_use')
+            elif ans[0] is 'h':
+                self.web_controller.select_query_click('#query_topiclife')
+            elif ans[0] is 'i':
+                self.web_controller.select_query_click('#query_topicplaces_travel_cars_and_transportation')
+            elif ans[0] is 'j':
+                self.web_controller.select_query_click('#query_topicsociety')
+            elif ans[0] is 'k':
+                self.web_controller.select_query_click('#query_topicother_ambiguous_or_unknown')
+            else:
+                print("--------Not correct ans detected.--------")
+                return False
+            # goal
+            if ans[1] is 'a':
+                self.web_controller.select_query_click('#query_goallearn_about')
+            elif ans[1] is 'b':
+                self.web_controller.select_query_click('#query_goallearn_answer')
+            elif ans[1] is 'c':
+                self.web_controller.select_query_click('#query_goaleshop')
+            elif ans[1] is 'd':
+                self.web_controller.select_query_click('#query_goallocate')
+            elif ans[1] is 'e':
+                self.web_controller.select_query_click('#query_goalbe_entertained')
+            elif ans[1] is 'f':
+                self.web_controller.select_query_click('#query_goallaunch_download')
+            elif ans[1] is 'g':
+                self.web_controller.select_query_click('#query_goalfind_online_service')
+            elif ans[1] is 'h':
+                self.web_controller.select_query_click('#query_goalnavigate')
+            elif ans[1] is 'i':
+                self.web_controller.select_query_click('#query_goalunknown_other')
+            else:
+                print("--------Not correct ans detected.--------")
+                return False
+            if len(ans) > 2:
+                # loop: set the check false
+                js_code = """
+                    for (var i=0;i<21;i++) {
+                        var checked = document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].checked;
+                        if (checked === true) {
+                            document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].click();
+                        }
+                    }
+                """
+                # set some delay because click action takes some time
+                for _ in np.arange(2):
+                    self.web_controller.browser.execute_script(js_code)
+                    time.sleep(0.5)
+                str_ans = "abcdefghijklmnopqrstu"
+                for c in ans[2:]:
+                    pos = str_ans.find(c)
+                    if pos == -1:
+                        print("--------Not correct ans detected.--------")
+                        return False
+                    time.sleep(0.1)
+                    self.web_controller.browser.execute_script("document.querySelectorAll('.ui.checkbox.checkbox-row input')[" + str(pos) + "].click();")
+                    time.sleep(0.1)
+                    self.web_controller.browser.execute_script("document.querySelectorAll('.ui.checkbox.checkbox-row input')[" + str(pos) + "].checked = true;")
+            return True
 
         else:
             print("Project type not setup correctly.")
@@ -341,7 +427,7 @@ class base_grader:
                 timer_ok = self.delay_timer()
                 if not timer_ok:
                     return False
-            self.web_controller.click_next_btn()
+            #self.web_controller.click_next_btn()
 
             # update ans into db
             self.update_db_ans(answer_id, ans)

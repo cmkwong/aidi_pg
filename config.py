@@ -55,6 +55,12 @@ graders_info_admin = [
     },
     {
         "_id": 10,
+        "name": "Ginny Ng",
+        "login": "ginny",
+        "pw": "!23456Qwerty"
+    },
+    {
+        "_id": 11,
         "name": "common_user",
         "login": "common_user",
         "pw": "!23456Qwerty"
@@ -63,22 +69,22 @@ graders_info_admin = [
 
 projects_info_admin = [
 {
-    "name": "CEval-random-relevance-saf-2020-07-26",
+    "name": "CEval-random-relevance-saf-2020-08-02",
     "type": "saf",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-07-26/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-08-02/stats/ungradedByLocale"
     },
     {
-    "name": "CEval-random-relevance-spot1-2020-07-26",
+    "name": "CEval-random-relevance-spot1-2020-08-02",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-07-26/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-08-02/stats/ungradedByLocale"
     },
     {
-    "name": "CEval-random-relevance-spot2-2020-07-26",
+    "name": "CEval-random-relevance-spot2-2020-08-02",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-07-26/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-08-02/overview"
     },
     {
     "name": "search-documents-chinese-tokenizer-evaluation-custom",
@@ -97,7 +103,20 @@ projects_info_admin = [
     "type": "saf",
     "location": "zh_HK",
     "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200727-gs/overview"
+    },
+    {
+    "name": "dr-qa-20200727-QCCert",
+    "type": "classify",
+    "location": "en_US",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200727-QCCert/overview"
+    },
+    {
+    "name": "CEval-random-query-classification-saf-2020-07-03",
+    "type": "classify",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-query-classification-saf-2020-07-03/overview"
     }
+
 ]
 
 help_command = {
@@ -125,6 +144,30 @@ help_command = {
         "-p": "switch to different project type"
     }
 }
+
+classify_extra_info_list = [
+    "\nClassify Menu:",
+    "\t",
+    "\ta. Arts and Entertainment \t\t\t\t\t\ta. Learn About",
+    "\tb. Food and Drink \t\t\t\t\t\t\tb. Learn Answer",
+    "\tc. Sports \t\t\t\t\t\t\t\tc. E-shop",
+    "\td. Health, Fitness, Medicine and Science \t\t\t\td. Locate",
+    "\te. General Retailers and Marketplaces \t\t\t\t\te. Be Entertained",
+    "\tf. Business, Industry, Economics and Finance \t\t\t\tf. Launch/download",
+    "\tg. Computing, Technology, Telecommunications and Internet Use \t\tg. Find Online Service",
+    "\th. Life \t\t\t\t\t\t\t\th. Navigate",
+    "\ti. Places, Travel, Cars and Transportation \t\t\t\ti. Other",
+    "\tj. Society, Education, Gov, Religion, Hist ",
+    "\tk. Other \t\t\t\t\t\t\t\t",
+    "\t",
+    "\ta. Answer(simple)\tb. Answer(text)\t\tc. APP\t\t\td. Book",
+    "\te. Dictionary\t\tf. Flight Status\tg. Home Page\t\th. Image",
+    "\ti. Map\t\t\tj. Movie\t\tk. Music\t\tl. News",
+    "\tm. Podcast\t\tn. Sports\t\to. Stocks\t\tp. TV show",
+    "\tq. Video\t\tr. Weather\t\ts. Wiki\t\t\tt. Other",
+    "\tu. None",
+    "\t"
+]
 
 graders_info = []
 

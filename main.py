@@ -1,6 +1,7 @@
 import web
 import common
 import db
+import config
 from appscript import *
 
 command_string = "command_not_checked"
@@ -29,6 +30,12 @@ while (not (command_string == "quit")):
 
     # try:
     if graders.auto_mode == False:
+
+        # extra print needed
+        if graders.print_extra_info == True:
+            if graders.grader.project_type == "classify":
+                graders.print_list(config.classify_extra_info_list)
+
         print("Answer Input: ")
         terminal.activate()  # back to terminal shell for input
         user_command = input()
@@ -41,6 +48,12 @@ while (not (command_string == "quit")):
         if graders.auto_available == True:
             graders.auto_available = graders.decode(_)
         if graders.auto_available == False:
+
+            # extra print needed
+            if graders.print_extra_info == True:
+                if graders.grader.project_type == "classify":
+                    graders.print_list(config.classify_extra_info_list)
+
             print("Answer Input-a: ")
             terminal.activate()  # back to terminal shell for input
             user_command = input()
