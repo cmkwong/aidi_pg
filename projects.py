@@ -427,7 +427,7 @@ class base_grader:
                 timer_ok = self.delay_timer()
                 if not timer_ok:
                     return False
-            #self.web_controller.click_next_btn()
+            self.web_controller.click_next_btn()
 
             # update ans into db
             self.update_db_ans(answer_id, ans)
