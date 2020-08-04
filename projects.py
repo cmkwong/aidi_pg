@@ -179,7 +179,7 @@ class base_grader:
             else:
                 print("Error: answer insert unsuccessfully")
 
-    def grading(self, ans):
+    def grading(self, ans, auto=False):
         if (self.project_type == "spot12"):
             if len(ans) > 3:
                 print("Wrong length of answer.")
@@ -325,52 +325,53 @@ class base_grader:
                 comment = ans[ans.find('-m')+3:]
                 comment = comment.replace("\'", '')
                 comment = comment.replace("\"", '')
-                self.web_controller.browser.execute_script("document.querySelector('textarea').value = '%s';" % comment)
+                if auto == False:
+                    self.web_controller.browser.execute_script("document.querySelector('textarea').value = '%s';" % comment)
                 ans = ans[:ans.find('-m')].replace(' ', '')
             # topic
-            if ans[0] is 'a':
+            if ans[0] is '1':
                 self.web_controller.select_query_click('#query_topicarts_and_entertainment')
-            elif ans[0] is 'b':
+            elif ans[0] is '2':
                 self.web_controller.select_query_click('#query_topicfood_and_drink')
-            elif ans[0] is 'c':
+            elif ans[0] is '3':
                 self.web_controller.select_query_click('#query_topicsports')
-            elif ans[0] is 'd':
+            elif ans[0] is '4':
                 self.web_controller.select_query_click('#query_topichealth_fitness_medicine_and_science')
-            elif ans[0] is 'e':
+            elif ans[0] is '5':
                 self.web_controller.select_query_click('#query_topicgeneral_retailers_and_marketplaces')
-            elif ans[0] is 'f':
+            elif ans[0] is '6':
                 self.web_controller.select_query_click('#query_topicbusiness_industry_economics_and_finance')
-            elif ans[0] is 'g':
+            elif ans[0] is '7':
                 self.web_controller.select_query_click('#query_topiccomputing_technology_telecommunication_and_internet_use')
-            elif ans[0] is 'h':
+            elif ans[0] is '8':
                 self.web_controller.select_query_click('#query_topiclife')
-            elif ans[0] is 'i':
+            elif ans[0] is '9':
                 self.web_controller.select_query_click('#query_topicplaces_travel_cars_and_transportation')
-            elif ans[0] is 'j':
+            elif ans[0] is 'a':
                 self.web_controller.select_query_click('#query_topicsociety')
-            elif ans[0] is 'k':
+            elif ans[0] is 'b':
                 self.web_controller.select_query_click('#query_topicother_ambiguous_or_unknown')
             else:
                 print("--------Not correct ans detected.--------")
                 return False
             # goal
-            if ans[1] is 'a':
+            if ans[1] is '1':
                 self.web_controller.select_query_click('#query_goallearn_about')
-            elif ans[1] is 'b':
+            elif ans[1] is '2':
                 self.web_controller.select_query_click('#query_goallearn_answer')
-            elif ans[1] is 'c':
+            elif ans[1] is '3':
                 self.web_controller.select_query_click('#query_goaleshop')
-            elif ans[1] is 'd':
+            elif ans[1] is '4':
                 self.web_controller.select_query_click('#query_goallocate')
-            elif ans[1] is 'e':
+            elif ans[1] is '5':
                 self.web_controller.select_query_click('#query_goalbe_entertained')
-            elif ans[1] is 'f':
+            elif ans[1] is '6':
                 self.web_controller.select_query_click('#query_goallaunch_download')
-            elif ans[1] is 'g':
+            elif ans[1] is '7':
                 self.web_controller.select_query_click('#query_goalfind_online_service')
-            elif ans[1] is 'h':
+            elif ans[1] is '8':
                 self.web_controller.select_query_click('#query_goalnavigate')
-            elif ans[1] is 'i':
+            elif ans[1] is '9':
                 self.web_controller.select_query_click('#query_goalunknown_other')
             else:
                 print("--------Not correct ans detected.--------")
@@ -418,7 +419,7 @@ class base_grader:
             answer_id = self.insert_db_query()
 
             # execute the command
-            grade_ok = self.grading(ans)
+            grade_ok = self.grading(ans, auto=False)
             if not grade_ok:
                 return False
 
@@ -486,7 +487,7 @@ class base_grader:
             print("Got from: ", grader_name, "\nAns: ", ans)
 
         # grading ans that from database
-        grade_ok = self.grading(ans)
+        grade_ok = self.grading(ans, auto=True)
         if not grade_ok:
             return False
 
