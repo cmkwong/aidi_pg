@@ -41,12 +41,15 @@ class Web:
         self.browser.switch_to.window(self.original_window)
 
     def close_other_tags(self):
-        js_code = "window.close();"
+        # js_code = "window.close();"
         for window_handle in self.browser.window_handles:
+            # time_out = time.time()
             if window_handle != self.original_window:
                 self.browser.switch_to.window(window_handle)
-                self.browser.execute_script(js_code)
-                # self.browser.close()
+                # if time.time() - time_out <= 2:
+                #     self.browser.execute_script(js_code)
+                # if time.time() - time_out > 2:
+                self.browser.close()
         self.back_tag_one()
 
     def click_by_id_until(self, id):
