@@ -61,6 +61,18 @@ graders_info_admin = [
     },
     {
         "_id": 11,
+        "name": "Vianna Tsang",
+        "login": "vianna",
+        "pw": "!23456Qwerty"
+    },
+    {
+        "_id": 12,
+        "name": "PoHong Yan",
+        "login": "yan",
+        "pw": "!23456Qwerty"
+    },
+    {
+        "_id": 13,
         "name": "common_user",
         "login": "common_user",
         "pw": "!23456Qwerty"
@@ -69,22 +81,22 @@ graders_info_admin = [
 
 projects_info_admin = [
 {
-    "name": "CEval-random-relevance-saf-2020-08-02",
+    "name": "CEval-random-relevance-saf-2020-08-09",
     "type": "saf",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-08-02/stats/ungradedByLocale"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-08-09/stats/ungradedByLocale"
     },
     {
-    "name": "CEval-random-relevance-spot1-2020-08-02",
+    "name": "CEval-random-relevance-spot1-2020-08-09",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-08-02/stats/ungradedByLocale"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-08-09/stats/ungradedByLocale"
     },
     {
-    "name": "CEval-random-relevance-spot2-2020-08-02",
+    "name": "CEval-random-relevance-spot2-2020-08-09",
     "type": "spot12",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-08-02/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-08-09/overview"
     },
     {
     "name": "search-documents-chinese-tokenizer-evaluation-custom",
@@ -93,22 +105,16 @@ projects_info_admin = [
     "link": "https://crowdcollect2.siri.apple.com/main/project/search-documents-chinese-tokenizer-evaluation-custom/overview"
     },
     {
-    "name": "continuousevaltraining",
-    "type": "eval3",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/continuousevaltraining/overview"
-    },
-    {
-    "name": "dr-qa-20200727-gs",
-    "type": "saf",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200727-gs/overview"
-    },
-    {
     "name": "dr-qa-20200727-QCCert",
     "type": "classify",
     "location": "en_US",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200727-QCCert/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200727-QCCert/stats/ungradedByLocale"
+    },
+    {
+    "name": "dr-certifications-072020-custom-4",
+    "type": "classify",
+    "location": "en_US",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-certifications-072020-custom-4/overview"
     },
     {
     "name": "CEval-random-query-classification-saf-2020-07-03",

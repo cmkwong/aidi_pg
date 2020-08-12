@@ -377,11 +377,11 @@ class base_grader:
                 print("--------Not correct ans detected.--------")
                 return False
             if len(ans) > 2:
-                # loop: set the check false
+                # loop: set the check false (reset)
                 js_code = """
                     for (var i=0;i<21;i++) {
                         var checked = document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].checked;
-                        if (checked === true) {
+                        if (checked == true) {
                             document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].click();
                         }
                     }
