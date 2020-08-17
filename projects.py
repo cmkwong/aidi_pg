@@ -56,6 +56,7 @@ class base_grader:
         self.find_time_delay = 60
         self.manual_timer = False
         self.view = False
+        self.full_auto = False
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -89,10 +90,16 @@ class base_grader:
         self.web_controller.init_working_tag()
         self.web_controller.open_project_link(self.current_url)
 
-    def delay_timer(self):
-        print("Delay...")
+    def delay_timer(self, time_used=0):
         try:
-            for i in reversed(range(0, self.time_delay+1)):
+            if self.full_auto:
+                time_delay = self.time_delay + 1 - time_used
+                if time_delay <= 0:
+                    time_delay = 1
+            else:
+                time_delay = self.time_delay + 1
+            print("Delay...")
+            for i in reversed(range(0, time_delay)):
                 time.sleep(1)
                 print(i, " seconds", end='\r')
         except KeyboardInterrupt:
@@ -450,6 +457,7 @@ class base_grader:
         ans = None
         grader_name = "Unknown"
         # find delay
+        find_time_used = 0
         if self.find_delay:
             try:
                 # delay to find
@@ -460,9 +468,10 @@ class base_grader:
 
                     # read from database every 5 seconds
                     time_interval = self.find_time_delay_level()
-                    if ((i+1) % time_interval) == 0:
+                    if (((i+1) % time_interval) == 0) or (((i+1) % self.find_time_delay) == 0):
                         ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
                         if ans != None:
+                            find_time_used = self.find_time_delay - i
                             break
             except KeyboardInterrupt:
                 self.reopen_current_browser()
@@ -491,7 +500,7 @@ class base_grader:
         if not grade_ok:
             return False
 
-        timer_ok = self.delay_timer()
+        timer_ok = self.delay_timer(time_used=find_time_used)
         if not timer_ok:
             return False
         self.web_controller.click_next_btn()

@@ -198,6 +198,23 @@ def control_command_check(graders, ans):
             print("Set timer failed. Try again.")
         return command_checked
 
+    elif (ans == "-fauto"):
+        graders.auto_mode = True
+        graders.auto_available = True
+        graders.grader.full_auto = True
+        graders.grader.find_delay = True
+        graders.grader.find_time_delay = 230
+        print("Full auto activated, max delay:", graders.grader.time_delay)
+        return command_checked
+
+    elif (ans == "-nfauto"):
+        graders.auto_mode = False
+        graders.grader.full_auto = False
+        graders.grader.find_delay = False
+        graders.grader.find_time_delay = 60
+        print("Full auto de-activated")
+        return command_checked
+
     elif (ans == "-lazyconfig"):
         # view
         graders.grader.view = True
