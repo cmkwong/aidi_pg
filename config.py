@@ -3,37 +3,43 @@ graders_info_admin = [
         "_id": 1,
         "name": "Chris Cheung",
         "login": "chris",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 's'
     },
     {
         "_id": 2,
         "name": "Tiffany Chui",
         "login": "tiffany",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 3,
         "name": "TowMing Ng",
         "login": "tomming",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 4,
         "name": "Tobby Chan",
         "login": "tobby",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 5,
         "name": "Yau Kuen Choi",
         "login": "raymond",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 6,
         "name": "Nices Lai",
         "login": "nices",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 7,
@@ -45,7 +51,8 @@ graders_info_admin = [
         "_id": 8,
         "name": "Raymond Ho",
         "login": "phoebe",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 9,
@@ -57,25 +64,29 @@ graders_info_admin = [
         "_id": 10,
         "name": "Ginny Ng",
         "login": "ginny",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 11,
         "name": "Vianna Tsang",
         "login": "vianna",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 12,
         "name": "PoHong Yan",
         "login": "yan",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     },
     {
         "_id": 13,
         "name": "common_user",
         "login": "common_user",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "level": 'n'
     }
 ]
 

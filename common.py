@@ -17,8 +17,8 @@ def time_delay_set(graders, ans, overtime_bypass=False):
     print("Enter the delay time(Second): ")
     time_delay = num_input_check()
     if not overtime_bypass:
-        if ((time_delay < 1) or (time_delay > 260)):
-            print("Invalid range. (1-260)")
+        if ((time_delay < 1) or (time_delay > 15000)):
+            print("Invalid range. (1-15000)")
             return False
     else:
         if (time_delay < 0):
@@ -58,6 +58,17 @@ def menu_choice():
         project_type = config.projects_info[project_index]["type"]
     print("Type of Project: ", project_type, " activated.")
     return project_index
+
+def get_grader_access_level(graders):
+    js_code = """
+        var usr_name = document.getElementsByClassName("user-name")[0].innerText;
+        return usr_name;
+    """
+    usr_name = graders.web_controller.browser.execute_script(js_code)
+    for info in config.graders_info_admin:
+        if usr_name == info["name"]:
+            return info["level"]
+    return None
 
 class Graders:
     def __init__(self, web_controller, db_controller):
@@ -199,13 +210,17 @@ def control_command_check(graders, ans):
         return command_checked
 
     elif (ans == "-fauto"):
-        graders.auto_mode = True
-        graders.auto_available = True
-        graders.grader.full_auto = True
-        graders.grader.find_delay = True
-        graders.grader.find_time_delay = 230
-        print("Full auto activated, max delay:", graders.grader.time_delay)
-        return command_checked
+        level = get_grader_access_level(graders)
+        if level == 's':
+            graders.auto_mode = True
+            graders.auto_available = True
+            graders.grader.full_auto = True
+            graders.grader.find_delay = True
+            graders.grader.find_time_delay = 260
+            print("Full auto activated, time delay after found:", graders.grader.time_delay)
+            return command_checked
+        else:
+            return command_not_checked
 
     elif (ans == "-nfauto"):
         graders.auto_mode = False
