@@ -65,7 +65,7 @@ def get_grader_access_level(graders):
         return usr_name;
     """
     usr_name = graders.web_controller.browser.execute_script(js_code)
-    for info in config.graders_info_admin:
+    for info in config.graders_info:
         if usr_name == info["name"]:
             return info["level"]
     return None
