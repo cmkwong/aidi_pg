@@ -147,11 +147,13 @@ def control_command_check(graders, ans):
     elif (ans == "-auto" or ans == "--a"):
         graders.auto_mode = True
         graders.auto_available = True
+        graders.grader.full_auto = False
         print("Auto-mode activated.")
         return auto_activated
 
     elif (ans == "-nauto"):
         graders.auto_mode = False
+        graders.grader.full_auto = False
         print("Auto-mode de-activated.")
         return command_checked
 
@@ -162,12 +164,13 @@ def control_command_check(graders, ans):
         return command_checked
 
     elif (ans == "-md"):
-        if graders.grader.manual_timer == False:
-            graders.grader.manual_timer = True
-            print("Manual timer set. \nType '-md' again for cancel.")
-        elif graders.grader.manual_timer == True:
-            graders.grader.manual_timer = False
-            print("Manual timer cancel. \nType '-md' again for activation.")
+        graders.grader.manual_timer = True
+        print("Manual timer activated. \nPress -nd to cancel.")
+        return command_checked
+
+    elif (ans == "-nd"):
+        graders.grader.manual_timer = False
+        print("Manual timer cancel. \nPress -md to activated.")
         return command_checked
 
     elif (ans == "-view"):
@@ -216,7 +219,7 @@ def control_command_check(graders, ans):
             graders.auto_available = True
             graders.grader.full_auto = True
             graders.grader.find_delay = True
-            graders.grader.find_time_delay = 260
+            graders.grader.find_time_delay = 330
             print("Full auto activated, time delay after found:", graders.grader.time_delay)
             return command_checked
         else:

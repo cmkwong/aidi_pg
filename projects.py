@@ -141,7 +141,7 @@ class base_grader:
             print("project type in renew function not set yet")
             return None
         time_out = time.time()
-        print("Loading Query....10s")
+        print("Loading...")
         while (query_text==None):
             try:
                 if (time.time() - time_out) > 10:

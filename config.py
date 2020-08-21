@@ -91,25 +91,8 @@ graders_info_admin = [
 ]
 
 # saf spot12 classify eval3 token
-projects_info_admin = [
-{
-    "name": "CEval-random-relevance-saf-2020-08-16",
-    "type": "saf",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-08-16/stats/ungradedByLocale"
-    },
-    {
-    "name": "CEval-random-relevance-spot1-2020-08-16",
-    "type": "spot12",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-08-16/stats/ungradedByLocale"
-    },
-    {
-    "name": "CEval-random-relevance-spot2-2020-08-16",
-    "type": "spot12",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-08-16/overview"
-    },
+projects_info_admin = \
+[
     {
     "name": "CEval-random-query-classification-saf-2020-07-03",
     "type": "classify",
@@ -117,16 +100,22 @@ projects_info_admin = [
     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-query-classification-saf-2020-07-03/overview"
     },
     {
-    "name": "dr-qa-20200817-3",
-    "type": "saf",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200817-3/overview"
-    },
-    {
-    "name": "dr-qa-20200817-1",
+    "name": "CEval-random-query-classification-spot1-2020-07-03",
     "type": "classify",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200817-1/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-query-classification-spot1-2020-07-03/overview"
+    },
+    {
+    "name": "CEval-random-query-classification-spot2-2020-07-03",
+    "type": "classify",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-query-classification-spot2-2020-07-03/overview"
+    },
+    {
+    "name": "dr-qa-20200817-2",
+    "type": "classify",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200817-2/overview"
     }
 ]
 
