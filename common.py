@@ -75,17 +75,14 @@ class Graders:
         self.web_controller = web_controller
         self.db_controller = db_controller
         self.grader = None
-        self.projects_query_done = 0
         self.auto_mode = False
         self.auto_available = False
         self.print_extra_info = False
 
-    def setup_project(self, project_index):
-        # keep the done count if user switch to other project
-        if self.grader:
-            self.projects_query_done = self.grader.query_done
-        # create new grader
-        self.grader = projects.base_grader(self.web_controller, self.db_controller)
+    def setup_project(self, project_index, new_grader=True):
+        if new_grader:
+            # create new grader
+            self.grader = projects.base_grader(self.web_controller, self.db_controller)
         # set the project type
         self.grader.project_type = config.projects_info[project_index]["type"]
         # open the required project link
@@ -115,11 +112,8 @@ class Graders:
             gradingFinish = self.grader.auto_execute()
             return gradingFinish
 
-    def get_query_done(self):
-        return (self.projects_query_done + self.grader.query_done)
-
     def print_status(self):
-        seconds = str(self.get_query_done()).strip()
+        seconds = str(self.grader.query_done).strip()
         delays = str(self.grader.time_delay).strip()
         md = str(self.grader.manual_timer).strip()
         print("Done: " + seconds + " t-" + delays + " MD-" + md + "\n")
@@ -139,9 +133,8 @@ def control_command_check(graders, ans):
         return quit_program
 
     elif (ans == "-p"):
-        graders.projects_query_done = graders.grader.query_done # keep previous amount of done number
         project_index = menu_choice()
-        graders.setup_project(project_index)
+        graders.setup_project(project_index, new_grader=False)
         return command_checked
 
     elif (ans == "-auto" or ans == "--a"):

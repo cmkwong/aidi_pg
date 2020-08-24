@@ -390,13 +390,14 @@ class base_grader:
                         var checked = document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].checked;
                         if (checked == true) {
                             document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].click();
+                            document.querySelectorAll('.ui.checkbox.checkbox-row input')[i].checked = false;
                         }
                     }
                 """
                 # set some delay because click action takes some time
                 for _ in np.arange(2):
                     self.web_controller.browser.execute_script(js_code)
-                    time.sleep(0.5)
+                    time.sleep(0.1)
                 str_ans = "abcdefghijklmnopqrstu"
                 for c in ans[2:]:
                     pos = str_ans.find(c)
