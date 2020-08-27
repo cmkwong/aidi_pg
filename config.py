@@ -94,6 +94,24 @@ graders_info_admin = [
 projects_info_admin = \
 [
     {
+    "name": "CEval-random-relevance-saf-2020-08-23",
+    "type": "saf",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-08-23/overview"
+    },
+    {
+    "name": "CEval-random-relevance-spot1-2020-08-23",
+    "type": "spot12",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-08-23/overview"
+    },
+    {
+    "name": "CEval-random-relevance-spot2-2020-08-23",
+    "type": "spot12",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-08-23/overview"
+    },
+    {
     "name": "CEval-random-query-classification-saf-2020-07-03",
     "type": "classify",
     "location": "zh_HK",

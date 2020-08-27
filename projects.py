@@ -463,13 +463,13 @@ class base_grader:
             try:
                 # delay to find
                 print("Finding Ans Delay ... Max:", self.find_time_delay)
-                for i in reversed(range(0, self.find_time_delay)):
+                for i in reversed(range(0, self.find_time_delay+1)):
                     time.sleep(1)
-                    print(i+1, " seconds", end='\r')
+                    print(i, " seconds", end='\r')
 
                     # read from database every 5 seconds
                     time_interval = self.find_time_delay_level()
-                    if (((i+1) % time_interval) == 0) or (((i+1) % self.find_time_delay) == 0):
+                    if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                         ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
                         if ans != None:
                             find_time_used = self.find_time_delay - i
