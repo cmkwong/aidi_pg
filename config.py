@@ -11,21 +11,21 @@ graders_info_admin = [
         "name": "Tiffany Chui",
         "login": "tiffany",
         "pw": "!23456Qwerty",
-        "level": 'n'
+        "level": 's'
     },
     {
         "_id": 3,
         "name": "TowMing Ng",
         "login": "tomming",
         "pw": "!23456Qwerty",
-        "level": 'n'
+        "level": 's'
     },
     {
         "_id": 4,
         "name": "Tobby Chan",
         "login": "tobby",
         "pw": "!23456Qwerty",
-        "level": 'n'
+        "level": 's'
     },
     {
         "_id": 5,
@@ -94,24 +94,6 @@ graders_info_admin = [
 projects_info_admin = \
 [
     {
-    "name": "CEval-random-relevance-saf-2020-08-23",
-    "type": "saf",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-08-23/overview"
-    },
-    {
-    "name": "CEval-random-relevance-spot1-2020-08-23",
-    "type": "spot12",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-08-23/overview"
-    },
-    {
-    "name": "CEval-random-relevance-spot2-2020-08-23",
-    "type": "spot12",
-    "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-08-23/overview"
-    },
-    {
     "name": "CEval-random-query-classification-saf-2020-07-03",
     "type": "classify",
     "location": "zh_HK",
@@ -130,10 +112,16 @@ projects_info_admin = \
     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-query-classification-spot2-2020-07-03/overview"
     },
     {
-    "name": "dr-qa-20200817-2",
+    "name": "dr-qa-20200817-4",
+    "type": "saf",
+    "location": "zh_HK",
+    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200817-4/"
+    },
+    {
+    "name": "dr-qa-20200827-1",
     "type": "classify",
     "location": "zh_HK",
-    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200817-2/overview"
+    "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200827-1/"
     }
 ]
 

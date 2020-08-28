@@ -83,6 +83,8 @@ class Graders:
         if new_grader:
             # create new grader
             self.grader = projects.base_grader(self.web_controller, self.db_controller)
+        # set the project name
+        self.grader.project_id = config.projects_info[project_index]["name"]
         # set the project type
         self.grader.project_type = config.projects_info[project_index]["type"]
         # open the required project link
