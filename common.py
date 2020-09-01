@@ -102,6 +102,11 @@ class Graders:
         else:
             self.print_extra_info = False
 
+        if config.projects_info[project_index]["type"] == "spot12_ten":
+            self.grader.max_web_search_links = 10
+        else:
+            self.grader.max_web_search_links = 3
+
     def print_list(self, str_list):
         for string in str_list:
             print(string)

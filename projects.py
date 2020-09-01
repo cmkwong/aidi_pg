@@ -57,6 +57,7 @@ class base_grader:
         self.manual_timer = False
         self.view = False
         self.full_auto = False
+        self.max_web_search_links = 3
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -122,7 +123,7 @@ class base_grader:
 
     def get_query_text(self):
         query_text = None
-        if self.project_type in ["spot12", "saf", "eval3"]:
+        if self.project_type in ["spot12", "saf", "eval3", "spot12_ten"]:
             js_code = """
                 var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
                 return query_text;
@@ -161,7 +162,7 @@ class base_grader:
     def insert_db_query(self):
         answer_id = None
 
-        if self.project_type in ["spot12", "saf", "eval3", "classify"]:
+        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten"]:
             # insert query and answer
             try:
                 result_links = self.web_controller.get_links()
@@ -179,7 +180,7 @@ class base_grader:
         return answer_id
 
     def update_db_ans(self, answer_id, ans):
-        if self.project_type in ["spot12", "saf", "eval3", "classify"]:
+        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten"]:
             # update grader answer
             if answer_id is not None:
                 self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
@@ -222,6 +223,43 @@ class base_grader:
                 self.web_controller.click_by_id("result3_validationno_result3")
             elif (len(ans) == 2):
                 self.web_controller.click_by_id("result3_validationno_result3")
+            return True
+
+        elif (self.project_type == "spot12_ten"):
+            if len(ans) > 10:
+                print("Wrong length of answer.")
+                return False
+            num = 1
+            for a in ans:
+                if (a == 'i'):
+                    self.web_controller.click_by_id(
+                        ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
+                elif (a == 'l'):
+                    self.web_controller.click_by_id(
+                        ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
+                elif (a == 'x'):
+                    self.web_controller.click_by_id(
+                        ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
+                else:
+                    self.web_controller.click_by_id(
+                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                    if (a == 'e'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+                    elif (a == 'g'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
+                    elif (a == 'f'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
+                    elif (a == 'b'):
+                        self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
+                    else:
+                        print("--------Not correct ans detected.--------")
+                        return False
+                num = num + 1
+            # the rest ans by 10 is no results
+            no_results_length = 10 - len(ans)
+            for i in range(no_results_length):
+                command_string = "result" + str(num+i) + "_validationno_result" + str(num+i)
+                self.web_controller.click_by_id(command_string)
             return True
 
         elif (self.project_type == "saf"):
@@ -418,7 +456,7 @@ class base_grader:
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
-        base_command = base_code_check(self.web_controller, ans, max_web_search_links=3)
+        base_command = base_code_check(self.web_controller, ans, max_web_search_links=self.max_web_search_links)
         if ((base_command == True) or (base_command == None)):
             return False
         elif (not base_command):
