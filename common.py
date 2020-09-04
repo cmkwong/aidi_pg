@@ -16,7 +16,9 @@ def num_input_check():
 def time_delay_set(graders, ans, overtime_bypass=False):
     print("Enter the delay time(Second): ")
     time_delay = num_input_check()
-    if not overtime_bypass:
+    if time_delay == None:
+        return False
+    elif not overtime_bypass:
         if ((time_delay < 1) or (time_delay > 15000)):
             print("Invalid range. (1-15000)")
             return False
