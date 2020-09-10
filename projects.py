@@ -94,8 +94,9 @@ class base_grader:
         self.web_controller.init_working_tag()
         self.web_controller.open_project_link(self.current_url)
 
-    def beep(self):
-        os.system("say Oh")
+    def beep(self, text):
+        sound = "say " + text
+        os.system(sound)
 
     def delay_timer(self, time_used=0, alarm=True):
         try:
@@ -110,7 +111,7 @@ class base_grader:
                 time.sleep(1)
                 print(i, " seconds", end='\r')
             if alarm:
-                self.beep()
+                self.beep("Times up")
         except KeyboardInterrupt:
             self.reopen_current_browser()
             print("Timer interrupted. Reopening...")
@@ -532,7 +533,7 @@ class base_grader:
         # if no Answer found, return false, auto_available will be false
         if (ans == None):
             if self.alarm:
-                self.beep()
+                self.beep("Not Found")
             print("Not Found!\n")
             return False
 
