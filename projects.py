@@ -95,7 +95,7 @@ class base_grader:
         self.web_controller.open_project_link(self.current_url)
 
     def beep(self):
-        os.system("say Lets do the fucking query")
+        os.system("say Oh")
 
     def delay_timer(self, time_used=0, alarm=True):
         try:
