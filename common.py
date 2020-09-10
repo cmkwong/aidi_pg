@@ -19,8 +19,8 @@ def time_delay_set(graders, ans, overtime_bypass=False):
     if time_delay == None:
         return False
     elif not overtime_bypass:
-        if ((time_delay < 1) or (time_delay > 15000)):
-            print("Invalid range. (1-15000)")
+        if ((time_delay < 0) or (time_delay > 15000)):
+            print("Invalid range. (0-15000)")
             return False
     else:
         if (time_delay < 0):
