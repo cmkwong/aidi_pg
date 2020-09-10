@@ -200,12 +200,12 @@ def control_command_check(graders, ans):
 
     elif (ans == "-df"):
         graders.grader.find_delay = True
-        print("Delay Find Answer Activated.")
+        print("Delay find answer activated.")
         return command_checked
 
     elif (ans == "-ndf"):
         graders.grader.find_delay = False
-        print("Delay Find Answer De-activated.")
+        print("Delay find answer de-activated.")
         return command_checked
 
     elif (ans == "-dft"):
@@ -234,7 +234,17 @@ def control_command_check(graders, ans):
         graders.grader.find_time_delay = 60
         print("Full auto de-activated")
         return command_checked
-
+    
+    elif (ans == "-alarm"):
+        graders.grader.alarm = True
+        print("Alarm sound activated.")
+        return command_checked
+    
+    elif (ans == "-nalarm"):
+        graders.grader.alarm = False
+        print("Alarm sound de-activated.")
+        return command_checked
+        
     elif (ans == "-lazyconfig"):
         # view
         graders.grader.view = True

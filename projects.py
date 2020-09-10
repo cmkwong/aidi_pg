@@ -2,6 +2,7 @@ import time
 import tkinter as tk
 from functools import partial
 import numpy as np
+import os
 import config
 
 def base_code_check(controller, ans, max_web_search_links):
@@ -58,6 +59,9 @@ class base_grader:
         self.view = False
         self.full_auto = False
         self.max_web_search_links = 3
+        # sound alarm
+        self.alarm = True
+        self.beep_times = 2
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -91,7 +95,10 @@ class base_grader:
         self.web_controller.init_working_tag()
         self.web_controller.open_project_link(self.current_url)
 
-    def delay_timer(self, time_used=0):
+    def beep(self, times):
+        os.system("say beep" * times)
+
+    def delay_timer(self, time_used=0, alarm=True):
         try:
             if self.full_auto:
                 time_delay = self.time_delay + 1 - time_used
@@ -103,6 +110,8 @@ class base_grader:
             for i in reversed(range(0, time_delay)):
                 time.sleep(1)
                 print(i, " seconds", end='\r')
+            if alarm:
+                self.beep(self.beep_times)
         except KeyboardInterrupt:
             self.reopen_current_browser()
             print("Timer interrupted. Reopening...")
@@ -471,7 +480,7 @@ class base_grader:
 
             # timer
             if self.manual_timer:
-                timer_ok = self.delay_timer()
+                timer_ok = self.delay_timer(alarm=self.alarm)
                 if not timer_ok:
                     return False
             self.web_controller.click_next_btn()
@@ -523,6 +532,8 @@ class base_grader:
 
         # if no Answer found, return false, auto_available will be false
         if (ans == None):
+            if self.alarm:
+                self.beep(self.beep_times)
             print("Not Found!\n")
             return False
 
@@ -539,7 +550,7 @@ class base_grader:
         if not grade_ok:
             return False
 
-        timer_ok = self.delay_timer(time_used=find_time_used)
+        timer_ok = self.delay_timer(time_used=find_time_used, alarm=False)
         if not timer_ok:
             return False
         self.web_controller.click_next_btn()
