@@ -61,7 +61,6 @@ class base_grader:
         self.max_web_search_links = 3
         # sound alarm
         self.alarm = True
-        self.beep_times = 2
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -95,8 +94,8 @@ class base_grader:
         self.web_controller.init_working_tag()
         self.web_controller.open_project_link(self.current_url)
 
-    def beep(self, times):
-        os.system("say beep" * times)
+    def beep(self):
+        os.system("say Lets do the fucking query")
 
     def delay_timer(self, time_used=0, alarm=True):
         try:
@@ -111,7 +110,7 @@ class base_grader:
                 time.sleep(1)
                 print(i, " seconds", end='\r')
             if alarm:
-                self.beep(self.beep_times)
+                self.beep()
         except KeyboardInterrupt:
             self.reopen_current_browser()
             print("Timer interrupted. Reopening...")
@@ -533,7 +532,7 @@ class base_grader:
         # if no Answer found, return false, auto_available will be false
         if (ans == None):
             if self.alarm:
-                self.beep(self.beep_times)
+                self.beep()
             print("Not Found!\n")
             return False
 
