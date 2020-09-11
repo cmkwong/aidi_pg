@@ -305,9 +305,17 @@ class base_grader:
             max_num = 3
             len_ans = len(ans)
             num = 1
-            if len(ans) > 4:
-                print("Wrong length of answer.")
-                return False
+
+            # checking wrong length
+            if ans[0] != 'n':
+                if len(ans) > 3:
+                    print("Wrong length of answer.")
+                    return False
+            else:
+                if len(ans) > 4:
+                    print("Wrong length of answer.")
+                    return False
+
             if ans[0] == 'v':
                 # press vague
                 self.web_controller.click_by_id("query_vagueyes_vague")
