@@ -150,12 +150,17 @@ def control_command_check(graders, ans):
         graders.auto_mode = True
         graders.auto_available = True
         graders.grader.full_auto = False
+        graders.grader.find_delay = False
+        graders.grader.find_time_delay = 60
         print("Auto-mode activated.")
         return auto_activated
 
     elif (ans == "-nauto"):
         graders.auto_mode = False
         graders.grader.full_auto = False
+        graders.grader.full_auto = False
+        graders.grader.find_delay = False
+        graders.grader.find_time_delay = 60
         print("Auto-mode de-activated.")
         return command_checked
 
@@ -221,7 +226,7 @@ def control_command_check(graders, ans):
             graders.auto_available = True
             graders.grader.full_auto = True
             graders.grader.find_delay = True
-            graders.grader.find_time_delay = 330
+            graders.grader.find_time_delay = 300
             print("Full auto activated, time delay after found:", graders.grader.time_delay)
             return command_checked
         else:
