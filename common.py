@@ -133,145 +133,151 @@ def control_command_check(graders, ans):
     auto_activated = "auto"
     quit_program = "quit"
 
-    if (ans[0:2] == "-l"):
-        url = ans[3:]
-        graders.grader.web_controller.open_project_link(url)
-        return command_checked
+    if ans[0] == '-':
+        if (ans[0:2] == "-l"):
+            url = ans[3:]
+            graders.grader.web_controller.open_project_link(url)
+            return command_checked
 
-    elif (ans == "-q"):
-        return quit_program
+        elif (ans == "-q"):
+            return quit_program
 
-    elif (ans == "-p"):
-        project_index = menu_choice()
-        graders.setup_project(project_index, new_grader=False)
-        return command_checked
+        elif (ans == "-p"):
+            project_index = menu_choice()
+            graders.setup_project(project_index, new_grader=False)
+            return command_checked
 
-    elif (ans == "-auto" or ans == "--a"):
-        graders.auto_mode = True
-        graders.auto_available = True
-        graders.grader.full_auto = False
-        graders.grader.find_delay = False
-        graders.grader.find_time_delay = 60
-        print("Auto-mode activated.")
-        return auto_activated
+        elif (ans == "-auto" or ans == "--a"):
+            level = get_grader_access_level(graders)
+            if level == 's' or level == 'a':
+                graders.auto_mode = True
+                graders.auto_available = True
+                # reset the full-auto
+                graders.grader.full_auto = False
+                graders.grader.find_delay = False
+                graders.grader.find_time_delay = 60
+                print("Auto-mode activated.")
+            return command_checked
 
-    elif (ans == "-nauto"):
-        graders.auto_mode = False
-        graders.grader.full_auto = False
-        graders.grader.full_auto = False
-        graders.grader.find_delay = False
-        graders.grader.find_time_delay = 60
-        print("Auto-mode de-activated.")
-        return command_checked
+        elif (ans == "-nauto"):
+            graders.auto_mode = False
+            # reset the full-auto
+            graders.grader.full_auto = False
+            graders.grader.find_delay = False
+            graders.grader.find_time_delay = 60
+            print("Auto-mode de-activated.")
+            return command_checked
 
-    elif (ans == "-t"):
-        set_ok = time_delay_set(graders, ans)
-        if not set_ok:
-            print("Set timer failed. Try again.")
-        return command_checked
+        elif (ans == "-t"):
+            set_ok = time_delay_set(graders, ans)
+            if not set_ok:
+                print("Set timer failed. Try again.")
+            return command_checked
 
-    elif (ans == "-md"):
-        graders.grader.manual_timer = True
-        print("Manual timer activated. \nPress -nd to cancel.")
-        return command_checked
+        elif (ans == "-md"):
+            graders.grader.manual_timer = True
+            print("Manual timer activated. \nPress -nd to cancel.")
+            return command_checked
 
-    elif (ans == "-nd"):
-        graders.grader.manual_timer = False
-        print("Manual timer cancel. \nPress -md to activated.")
-        return command_checked
+        elif (ans == "-nd"):
+            graders.grader.manual_timer = False
+            print("Manual timer cancel. \nPress -md to activated.")
+            return command_checked
 
-    elif (ans == "-view"):
-        graders.grader.view = True
-        print("grader-ans show.")
-        return command_checked
+        elif (ans == "-view"):
+            graders.grader.view = True
+            print("grader-ans show.")
+            return command_checked
 
-    elif (ans == "-hide"):
-        graders.grader.view = False
-        print("grader-ans hide.")
-        return command_checked
+        elif (ans == "-hide"):
+            graders.grader.view = False
+            print("grader-ans hide.")
+            return command_checked
 
-    elif (ans == "-update"):
-        graders.grader.db_controller.update_local_config_from_db()
-        print("Update info OK")
-        return command_checked
+        elif (ans == "-update"):
+            graders.grader.db_controller.update_local_config_from_db()
+            print("Update info OK")
+            return command_checked
 
-    elif (ans == "-help"):
-        for ptype, info in config.help_command.items():
-            print(ptype, ": ")
-            for index, description in info.items():
-                print(index, ": ", description)
-            print("")
-        return command_checked
+        elif (ans == "-help"):
+            for ptype, info in config.help_command.items():
+                print(ptype, ": ")
+                for index, description in info.items():
+                    print(index, ": ", description)
+                print("")
+            return command_checked
 
-    elif (ans == "-df"):
-        graders.grader.find_delay = True
-        print("Delay find answer activated.")
-        return command_checked
-
-    elif (ans == "-ndf"):
-        graders.grader.find_delay = False
-        print("Delay find answer de-activated.")
-        return command_checked
-
-    elif (ans == "-dft"):
-        set_ok = time_delay_set(graders, ans)
-        if not set_ok:
-            print("Set timer failed. Try again.")
-        return command_checked
-
-    elif (ans == "-fauto"):
-        level = get_grader_access_level(graders)
-        if level == 's':
-            graders.auto_mode = True
-            graders.auto_available = True
-            graders.grader.full_auto = True
+        elif (ans == "-df"):
             graders.grader.find_delay = True
-            graders.grader.find_time_delay = 300
-            print("Full auto activated, time delay after found:", graders.grader.time_delay)
+            print("Delay find answer activated.")
+            return command_checked
+
+        elif (ans == "-ndf"):
+            graders.grader.find_delay = False
+            print("Delay find answer de-activated.")
+            return command_checked
+
+        elif (ans == "-dft"):
+            set_ok = time_delay_set(graders, ans)
+            if not set_ok:
+                print("Set timer failed. Try again.")
+            return command_checked
+
+        elif (ans == "-fauto"):
+            level = get_grader_access_level(graders)
+            if level == 's':
+                graders.auto_mode = True
+                graders.auto_available = True
+                graders.grader.full_auto = True
+                graders.grader.find_delay = True
+                graders.grader.find_time_delay = 300
+                print("Full auto activated, time delay after found:", graders.grader.time_delay)
+            return command_checked
+
+        elif (ans == "-nfauto"):
+            graders.auto_mode = False
+            graders.grader.full_auto = False
+            graders.grader.find_delay = False
+            graders.grader.find_time_delay = 60
+            print("Full auto de-activated")
+            return command_checked
+
+        elif (ans == "-alarm"):
+            graders.grader.alarm = True
+            print("Alarm sound activated.")
+            return command_checked
+
+        elif (ans == "-nalarm"):
+            graders.grader.alarm = False
+            print("Alarm sound de-activated.")
+            return command_checked
+
+        elif (ans == "-lazyconfig"):
+            level = get_grader_access_level(graders)
+            if level == 's':
+                # view
+                graders.grader.view = True
+                # find ans delay
+                graders.grader.find_delay = True
+                graders.grader.find_time_delay = 60
+                # next delay
+                graders.grader.time_delay = 200
+                # auto mode activate
+                graders.auto_mode = True
+                graders.auto_available = True
+                print("Lazy config set done.")
+            return command_checked
+
+        elif (ans == "--rg"):
+            graders.grader.db_controller.graders_id_update()
+            return command_checked
+
+        elif (ans == "--rp"):
+            graders.grader.db_controller.project_info_update()
             return command_checked
         else:
-            return command_not_checked
-
-    elif (ans == "-nfauto"):
-        graders.auto_mode = False
-        graders.grader.full_auto = False
-        graders.grader.find_delay = False
-        graders.grader.find_time_delay = 60
-        print("Full auto de-activated")
-        return command_checked
-    
-    elif (ans == "-alarm"):
-        graders.grader.alarm = True
-        print("Alarm sound activated.")
-        return command_checked
-    
-    elif (ans == "-nalarm"):
-        graders.grader.alarm = False
-        print("Alarm sound de-activated.")
-        return command_checked
-        
-    elif (ans == "-lazyconfig"):
-        # view
-        graders.grader.view = True
-        # find ans delay
-        graders.grader.find_delay = True
-        graders.grader.find_time_delay = 60
-        # next delay
-        graders.grader.time_delay = 200
-        # auto mode activate
-        graders.auto_mode = True
-        graders.auto_available = True
-        print("Lazy config set done.")
-        return command_checked
-
-    elif (ans == "--rg"):
-        graders.grader.db_controller.graders_id_update()
-        return command_checked
-
-    elif (ans == "--rp"):
-        graders.grader.db_controller.project_info_update()
-        return command_checked
-
+            print("Invalid Control Command")
+            return command_checked  # avoid to go further in the ans parser if user type command wrongly
     else:
         return command_not_checked
 
