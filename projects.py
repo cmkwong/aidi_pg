@@ -34,9 +34,9 @@ def base_code_check(controller, ans, max_web_search_links):
         # open web search
         controller.click_web_search()
         return True
-    elif (ans == ''):
-        print("cannot input empty string")
-        return None
+    # elif (ans == ''):
+    #     print("cannot input empty string")
+    #     return None
     else:
         return False # False = continue
 

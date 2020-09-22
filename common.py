@@ -133,6 +133,10 @@ def control_command_check(graders, ans):
     auto_activated = "auto"
     quit_program = "quit"
 
+    if ans == '':
+        print("cannot input empty string")
+        return command_checked
+    
     if ans[0] == '-':
         if (ans[0:2] == "-l"):
             url = ans[3:]
