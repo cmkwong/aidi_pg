@@ -136,7 +136,7 @@ def control_command_check(graders, ans):
     if ans == '':
         print("cannot input empty string")
         return command_checked
-    
+
     if ans[0] == '-':
         if (ans[0:2] == "-l"):
             url = ans[3:]
@@ -234,7 +234,7 @@ def control_command_check(graders, ans):
                 graders.auto_available = True
                 graders.grader.full_auto = True
                 graders.grader.find_delay = True
-                graders.grader.find_time_delay = 300
+                graders.grader.find_time_delay = 320
                 print("Full auto activated, time delay after found:", graders.grader.time_delay)
             return command_checked
 

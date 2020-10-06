@@ -541,7 +541,7 @@ class base_grader:
         # if no Answer found, return false, auto_available will be false
         if (ans == None):
             if self.alarm:
-                self.beep("Not Found")
+                self.beep("Times up")   # Not Found
             print("Not Found!\n")
             return False
 

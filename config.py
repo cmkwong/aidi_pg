@@ -102,40 +102,40 @@ graders_info_admin = [
 projects_info_admin = \
 [
     {
-        "name": "CEval-random-relevance-saf-2020-09-20",
+        "name": "CEval-random-relevance-saf-2020-10-04",
         "type": "saf",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-09-20/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-10-04/overview"
     },
     {
-        "name": "CEval-random-relevance-spot1-2020-09-20",
+        "name": "CEval-random-relevance-spot1-2020-10-04",
         "type": "spot12",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-09-20/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-10-04/overview"
     },
     {
-        "name": "CEval-random-relevance-spot2-2020-09-20",
+        "name": "CEval-random-relevance-spot2-2020-10-04",
         "type": "spot12",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-09-20/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-10-04/overview"
     },
     {
-        "name": "CEval-random-relevance-spot2-2020-09-13",
-        "type": "spot12",
+        "name": "CEval-amp-random-relevance-spot2-2020-09-28",
+        "type": "spot12_ten",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-09-13/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-amp-random-relevance-spot2-2020-09-28/overview"
     },
     # {
-    #     "name": "CEval-amp-random-relevance-spot2-2020-09-12",
-    #     "type": "spot12_ten",
-    #     "location": "zh_HK",
-    #     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-amp-random-relevance-spot2-2020-09-12/overview"
-    # },
-    # {
-    #     "name": "dr-qa-20200914-1",
+    #     "name": "dr-qa-20200921-3",
     #     "type": "saf",
     #     "location": "zh_HK",
-    #     "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200914-1/overview"
+    #     "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200921-3/overview"
+    # },
+    # {
+    #     "name": "dr-qa-20200928-2",
+    #     "type": "eval3",
+    #     "location": "en_US",
+    #     "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200928-2/overview"
     # }
 ]
 
