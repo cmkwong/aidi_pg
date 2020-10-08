@@ -120,6 +120,24 @@ projects_info_admin = \
         "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-10-04/overview"
     },
     {
+        "name": "CEval-random-relevance-saf-2020-09-28",
+        "type": "saf",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-09-28/overview"
+    },
+    {
+        "name": "CEval-random-relevance-spot1-2020-09-28",
+        "type": "spot12",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-09-28/overview"
+    },
+    {
+        "name": "CEval-random-relevance-spot2-2020-09-28",
+        "type": "spot12",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-09-28/overview"
+    },
+    {
         "name": "CEval-amp-random-relevance-spot2-2020-09-28",
         "type": "spot12_ten",
         "location": "zh_HK",
