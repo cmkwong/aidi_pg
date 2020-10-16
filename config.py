@@ -120,29 +120,29 @@ projects_info_admin = \
         "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-10-04/overview"
     },
     {
-        "name": "CEval-random-relevance-saf-2020-09-28",
+        "name": "CEval-random-relevance-saf-2020-10-11",
         "type": "saf",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-09-28/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-10-11/overview"
     },
     {
-        "name": "CEval-random-relevance-spot1-2020-09-28",
+        "name": "CEval-random-relevance-spot1-2020-10-11",
         "type": "spot12",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-09-28/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-10-11/overview"
     },
     {
-        "name": "CEval-random-relevance-spot2-2020-09-28",
+        "name": "CEval-random-relevance-spot2-2020-10-11",
         "type": "spot12",
         "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-09-28/overview"
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-10-11/overview"
     },
-    {
-        "name": "CEval-amp-random-relevance-spot2-2020-09-28",
-        "type": "spot12_ten",
-        "location": "zh_HK",
-        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-amp-random-relevance-spot2-2020-09-28/overview"
-    },
+    # {
+    #     "name": "CEval-amp-random-relevance-spot2-2020-10-11",
+    #     "type": "spot12_ten",
+    #     "location": "zh_HK",
+    #     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-amp-random-relevance-spot2-2020-10-11/overview"
+    # },
     # {
     #     "name": "dr-qa-20200921-3",
     #     "type": "saf",
@@ -158,12 +158,7 @@ projects_info_admin = \
 ]
 
 help_command = {
-    "Guide": {
-        "1.": "Choose the specific project in Menu",
-        "2.": "If project link is outdated, type -l to go to project manually",
-        "3.": "Type -p switch to other project (ensure correct project type)",
-        "4.": "Thanks"
-    },
+
     "spot12/saf/eval3": {
         "`": "Web Search",
         "~": "Web Search + result links",
@@ -177,9 +172,13 @@ help_command = {
         "b": "bad"
     },
     "Control Command": {
-        "-l": "go to that website, -l https://google.com",
         "-q": "quit program",
-        "-p": "switch to different project type"
+        "-p": "switch to different project type",
+        "-done": "set done counter manually",
+        "-t": "set delay time (seconds)",
+        "-md/-nd": "activate timer / de-activate timer",
+        "-alarm/-nalarm": "sound on / sound off",
+
     }
 }
 

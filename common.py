@@ -122,10 +122,10 @@ class Graders:
             return gradingFinish
 
     def print_status(self):
-        seconds = str(self.grader.query_done).strip()
+        done = str(self.grader.query_done).strip()
         delays = str(self.grader.time_delay).strip()
         md = str(self.grader.manual_timer).strip()
-        print("Done: " + seconds + " t-" + delays + " MD-" + md + "\n")
+        print("Done: " + done + " t-" + delays + " MD-" + md + "\n")
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
@@ -138,15 +138,12 @@ def control_command_check(graders, ans):
         return command_checked
 
     if ans[0] == '-':
-        if (ans[0:2] == "-l"):
-            url = ans[3:]
-            graders.grader.web_controller.open_project_link(url)
-            return command_checked
 
-        elif (ans == "-q"):
+        if (ans == "-q"):
             return quit_program
 
         elif (ans == "-p"):
+            graders.grader.db_controller.update_local_config_from_db()
             project_index = menu_choice()
             graders.setup_project(project_index, new_grader=False)
             return command_checked
@@ -196,11 +193,6 @@ def control_command_check(graders, ans):
         elif (ans == "-hide"):
             graders.grader.view = False
             print("grader-ans hide.")
-            return command_checked
-
-        elif (ans == "-update"):
-            graders.grader.db_controller.update_local_config_from_db()
-            print("Update info OK")
             return command_checked
 
         elif (ans == "-help"):
@@ -270,6 +262,16 @@ def control_command_check(graders, ans):
                 graders.auto_mode = True
                 graders.auto_available = True
                 print("Lazy config set done.")
+            return command_checked
+
+        elif (ans == "-done"):
+            print("Please enter the number: ")
+            done = num_input_check()
+            if (done == None):
+                print("Invalid input.")
+            else:
+                print("Successful")
+                graders.grader.query_done = done
             return command_checked
 
         elif (ans == "--rg"):
