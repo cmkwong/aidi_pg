@@ -173,7 +173,7 @@ help_command = {
     },
     "Control Command": {
         "-q": "quit program",
-        "-p": "switch to different project type",
+        "-p": "update and show project menu",
         "-done": "set done counter manually",
         "-t": "set delay time (seconds)",
         "-md/-nd": "activate timer / de-activate timer",
