@@ -3,15 +3,15 @@ import tkinter as tk
 from functools import partial
 import numpy as np
 import os
-import config
+import common
 
-def base_code_check(controller, ans, max_web_search_links):
+def base_code_check(controller, ans, max_web_search_links, tg=None):
     if (ans == '`'):
         # web_search
         try:
             controller.click_web_search()
         except:
-            print("Not available '`'")
+            common.print_at("Not available '`'", tg)
             return None # None is Error
         return True
     elif (ans == '!'):
@@ -19,7 +19,7 @@ def base_code_check(controller, ans, max_web_search_links):
         try:
             controller.close_other_tags()
         except:
-            print("Not available '!'")
+            common.print_at("Not available '!'", tg)
             return None
         return True
     elif (ans == '~'):
@@ -28,15 +28,12 @@ def base_code_check(controller, ans, max_web_search_links):
             links = controller.get_links()
         except:
             links = []
-            print("Not available '~'")
+            common.print_at("Not available '~'", tg)
             return None
         controller.open_links_new_tags(links, max_web_search_links)
         # open web search
         controller.click_web_search()
         return True
-    # elif (ans == ''):
-    #     print("cannot input empty string")
-    #     return None
     else:
         return False # False = continue
 
@@ -61,6 +58,8 @@ class base_grader:
         self.max_web_search_links = 3
         # sound alarm
         self.alarm = True
+        # telegram tg
+        self.tg = None
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -95,8 +94,9 @@ class base_grader:
         self.web_controller.open_project_link(self.current_url)
 
     def beep(self, text):
-        sound = "say " + text
-        os.system(sound)
+        if not self.tg:
+            sound = "say " + text
+            os.system(sound)
 
     def delay_timer(self, time_used=0, alarm=True):
         try:
@@ -106,15 +106,15 @@ class base_grader:
                     time_delay = 1
             else:
                 time_delay = self.time_delay + 1
-            print("Delay...")
+            common.print_at("Delay...", self.tg)
             for i in reversed(range(0, time_delay)):
                 time.sleep(1)
-                print(i, " seconds", end='\r')
+                if not self.tg: print(i, " seconds", end='\r')
             if alarm:
                 self.beep("Times up")
         except KeyboardInterrupt:
             self.reopen_current_browser()
-            print("Timer interrupted. Reopening...")
+            if not self.tg: print("Timer interrupted. Reopening...")
             return False
         return True
 
@@ -130,8 +130,8 @@ class base_grader:
         elif self.find_time_delay <= 20 and self.find_time_delay > 1:
             return 2
 
-    def get_query_text(self):
-        query_text = None
+    def get_query_text(self, filter_query=None, time_out=10):
+        query_text, filter_query = filter_query, filter_query
         if self.project_type in ["spot12", "saf", "eval3", "spot12_ten"]:
             js_code = """
                 var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
@@ -148,14 +148,14 @@ class base_grader:
                 return query_text;
             """
         else:
-            print("project type in renew function not set yet")
+            common.print_at("project type in renew function not set yet", self.tg)
             return None
-        time_out = time.time()
-        print("Loading...")
-        while (query_text==None):
+        refer_time = time.time()
+        common.print_at("Loading...", self.tg)
+        while (query_text==filter_query):
             try:
-                if (time.time() - time_out) > 10:
-                    print("Time Out")
+                if (time.time() - refer_time) > time_out:
+                    common.print_at("Time Out", self.tg)
                     return None
                 query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
@@ -184,7 +184,7 @@ class base_grader:
             if query_id is not None:
                 answer_id = self.db_controller.grader_answer_insert(self.grader_id, query_id, query_link=self.current_url)
             else:
-                print("Error: query insert unsuccessfully.")
+                common.print_at("Error: query insert unsuccessfully.", self.tg)
 
         return answer_id
 
@@ -194,12 +194,34 @@ class base_grader:
             if answer_id is not None:
                 self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
             else:
-                print("Error: answer insert unsuccessfully")
+                common.print_at("Error: answer insert unsuccessfully", self.tg)
+
+    # for tg_bot.py used
+    def send_tg_info(self, old_query_text=None, time_out=10):
+        # get query text (plus condition)
+        query_text = self.get_query_text(filter_query=old_query_text, time_out=time_out)
+        if not query_text:
+            return False
+        # get links
+        try:
+            links = self.web_controller.get_links()
+        except:
+            return False
+        # get links details
+        try:
+            link_details = self.web_controller.get_link_details()
+        except:
+            return False
+        # send data to tg
+        self.tg.bot.send_message(self.tg.chat_id, query_text)
+        for i in range(self.max_web_search_links):
+            self.tg.bot.send_message(self.tg.chat_id, link_details[i] + '\n' + links[i])
+        return query_text
 
     def grading(self, ans, auto=False):
         if (self.project_type == "spot12"):
             if len(ans) > 3:
-                print("Wrong length of answer.")
+                common.print_at("Wrong length of answer.", self.tg)
                 return False
             num = 1
             for a in ans:
@@ -224,7 +246,7 @@ class base_grader:
                     elif (a == 'b'):
                         self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
                     else:
-                        print("--------Not correct ans detected.--------")
+                        common.print_at("--------Not correct ans detected.--------", self.tg)
                         return False
                 num = num + 1
             if (len(ans) == 1):
@@ -236,7 +258,7 @@ class base_grader:
 
         elif (self.project_type == "spot12_ten"):
             if len(ans) > 10:
-                print("Wrong length of answer.")
+                common.print_at("Wrong length of answer.", self.tg)
                 return False
             num = 1
             for a in ans:
@@ -261,7 +283,7 @@ class base_grader:
                     elif (a == 'b'):
                         self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
                     else:
-                        print("--------Not correct ans detected.--------")
+                        common.print_at("--------Not correct ans detected.--------", self.tg)
                         return False
                 num = num + 1
             # the rest ans by 10 is no results
@@ -274,7 +296,7 @@ class base_grader:
         elif (self.project_type == "saf"):
             num = 1
             if len(ans) > 1:
-                print("Wrong length of answer.")
+                common.print_at("Wrong length of answer.", self.tg)
                 return False
             if (ans == 'i'):
                 self.web_controller.click_by_id(
@@ -297,7 +319,7 @@ class base_grader:
                 elif (ans == 'b'):
                     self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
                 else:
-                    print("--------Not correct ans detected.--------")
+                    common.print_at("--------Not correct ans detected.--------", self.tg)
                     return False
             return True
 
@@ -309,11 +331,11 @@ class base_grader:
             # checking wrong length
             if ans[0] != 'n':
                 if len(ans) > 3:
-                    print("Wrong length of answer.")
+                    common.print_at("Wrong length of answer.", self.tg)
                     return False
             else:
                 if len(ans) > 4:
-                    print("Wrong length of answer.")
+                    common.print_at("Wrong length of answer.", self.tg)
                     return False
 
             if ans[0] == 'v':
@@ -352,7 +374,7 @@ class base_grader:
                             # press bad
                             self.web_controller.click_by_id("result" + str(num) + "_relevancebad")
                         else:
-                            print("--------Not correct ans detected.--------")
+                            common.print_at("--------Not correct ans detected.--------", self.tg)
                             return False
                     if num == max_num:
                         continue
@@ -414,7 +436,7 @@ class base_grader:
             elif ans[0] is 'b':
                 self.web_controller.select_query_click('#query_topicother_ambiguous_or_unknown')
             else:
-                print("--------Not correct ans detected.--------")
+                common.print_at("--------Not correct ans detected.--------", self.tg)
                 return False
             # goal
             if ans[1] is '1':
@@ -436,7 +458,7 @@ class base_grader:
             elif ans[1] is '9':
                 self.web_controller.select_query_click('#query_goalunknown_other')
             else:
-                print("--------Not correct ans detected.--------")
+                common.print_at("--------Not correct ans detected.--------", self.tg)
                 return False
             if len(ans) > 2:
                 # loop: set the check false (reset)
@@ -457,7 +479,7 @@ class base_grader:
                 for c in ans[2:]:
                     pos = str_ans.find(c)
                     if pos == -1:
-                        print("--------Not correct ans detected.--------")
+                        common.print_at("--------Not correct ans detected.--------", self.tg)
                         return False
                     time.sleep(0.1)
                     self.web_controller.browser.execute_script("document.querySelectorAll('.ui.checkbox.checkbox-row input')[" + str(pos) + "].click();")
@@ -466,14 +488,14 @@ class base_grader:
             return True
 
         else:
-            print("Project type not setup correctly.")
+            common.print_at("Project type not setup correctly.", self.tg)
             return False
 
     def execute(self, ans):
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
-        base_command = base_code_check(self.web_controller, ans, max_web_search_links=self.max_web_search_links)
+        base_command = base_code_check(self.web_controller, ans, max_web_search_links=self.max_web_search_links, tg=self.tg)
         if ((base_command == True) or (base_command == None)):
             return False
         elif (not base_command):
@@ -493,6 +515,11 @@ class base_grader:
                     return False
             self.web_controller.click_next_btn()
 
+            # press web search if in tg mode
+            if self.tg is not None:
+                self.web_controller.click_web_search()
+                self.web_controller.close_other_tags()
+
             # update ans into db
             self.update_db_ans(answer_id, ans)
 
@@ -508,7 +535,7 @@ class base_grader:
             return False
 
         if self.view:
-            print("text: ", self.query_text)
+            common.print_at("text: " + self.query_text, self.tg)
 
         ans = None
         grader_name = "Unknown"
@@ -517,10 +544,10 @@ class base_grader:
         if self.find_delay:
             try:
                 # delay to find
-                print("Finding Ans Delay ... Max:", self.find_time_delay)
+                common.print_at("Finding Ans Delay ... Max:" + str(self.find_time_delay), self.tg)
                 for i in reversed(range(0, self.find_time_delay+1)):
                     time.sleep(1)
-                    print(i, " seconds", end='\r')
+                    if not self.tg: print(i, " seconds", end='\r')
 
                     # read from database every 5 seconds
                     time_interval = self.find_time_delay_level()
@@ -531,7 +558,7 @@ class base_grader:
                             break
             except KeyboardInterrupt:
                 self.reopen_current_browser()
-                print("Timer interrupted. Reopening...")
+                if not self.tg: print("Timer interrupted. Reopening...")
                 return False
 
         # not find delay
@@ -542,7 +569,7 @@ class base_grader:
         if (ans == None):
             if self.alarm:
                 self.beep("Times up")   # Not Found
-            print("Not Found!\n")
+            common.print_at("Not Found!\n", self.tg)
             return False
 
         # press web search
@@ -551,7 +578,7 @@ class base_grader:
 
         if self.view:
             # if query and answer found
-            print("Got from: ", grader_name, "\nAns: ", ans)
+            common.print_at("Got from: " + str(grader_name) + "\nAns: " + str(ans), self.tg)
 
         # grading ans that from database
         grade_ok = self.grading(ans, auto=True)

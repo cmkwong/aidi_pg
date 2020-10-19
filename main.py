@@ -43,10 +43,10 @@ while (not (command_string == "quit")):
         if command_string == "command_not_checked":
             gradingFinish = graders.decode(user_command)
 
-    if graders.auto_mode == True:
-        _ = ""
+    elif graders.auto_mode == True:
+
         if graders.auto_available == True:
-            graders.auto_available = graders.decode(_)
+            graders.auto_available = graders.decode()
         if graders.auto_available == False:
 
             # extra print needed

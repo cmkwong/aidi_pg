@@ -1,5 +1,12 @@
 import projects
 import config
+import tg_bot
+
+def print_at(txt, tg=None):
+    if tg == None:
+        print(txt)
+    else:
+        tg.bot.send_message(tg.chat_id, txt)
 
 def num_input_check():
     try:
@@ -62,15 +69,19 @@ def menu_choice():
     return project_index
 
 def get_grader_access_level(graders):
-    js_code = """
-        var usr_name = document.getElementsByClassName("user-name")[0].innerText;
-        return usr_name;
-    """
-    usr_name = graders.web_controller.browser.execute_script(js_code)
+    usr_id = graders.web_controller.get_grader_id()
     for info in config.graders_info:
-        if usr_name == info["name"]:
+        if usr_id == info["_id"]:
             return info["level"]
     return None
+
+def get_grader_tg_token(graders):
+    usr_id = graders.web_controller.get_grader_id()
+    for info in config.graders_info:
+        if usr_id == info["_id"]:
+            return info["token"]
+    return None
+
 
 class Graders:
     def __init__(self, web_controller, db_controller):
@@ -111,9 +122,9 @@ class Graders:
 
     def print_list(self, str_list):
         for string in str_list:
-            print(string)
+            print_at(string, self.grader.tg)
 
-    def decode(self, ans):
+    def decode(self, ans=''):
         if (self.auto_mode == False):
             gradingFinish = self.grader.execute(ans)
             return gradingFinish
@@ -125,7 +136,7 @@ class Graders:
         done = str(self.grader.query_done).strip()
         delays = str(self.grader.time_delay).strip()
         md = str(self.grader.manual_timer).strip()
-        print("Done: " + done + " t-" + delays + " MD-" + md + "\n")
+        print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", self.grader.tg)
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
@@ -274,6 +285,19 @@ def control_command_check(graders, ans):
                 graders.grader.query_done = done
             return command_checked
 
+        elif (ans == "-telegram"):
+            token = get_grader_tg_token(graders)
+            print("Telegram Online")
+            tg = tg_bot.Telegram_Bot(token=token)
+            graders.grader.tg = tg
+            try:
+                tg.run(graders)  # Looping
+            except Exception:
+                pass
+            print("Telegram Offline")
+            graders.grader.tg = None
+            return command_checked
+
         elif (ans == "--rg"):
             graders.grader.db_controller.graders_id_update()
             return command_checked
@@ -286,7 +310,3 @@ def control_command_check(graders, ans):
             return command_checked  # avoid to go further in the ans parser if user type command wrongly
     else:
         return command_not_checked
-
-
-
-

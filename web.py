@@ -114,6 +114,34 @@ class Web:
                 links.append(self.browser.execute_script(js_code))
         return links
 
+    def get_link_details(self):
+        self.back_tag_one()
+        # get num of result-set
+        js_code = """
+                    var num = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set').length;
+                    return num;
+                """
+        num_sets = self.browser.execute_script(js_code)
+        # get num of links in each result-set
+        num_links = []
+        for num_set in np.arange(num_sets):
+            raw_string = """
+                var num = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set')[%s].getElementsByTagName('a').length;
+                return num;
+            """
+            js_code = raw_string % (num_set)
+            num_links.append(self.browser.execute_script(js_code))
+        link_details = []
+        for i in np.arange(num_sets):
+            for n in np.arange(num_links[i]):
+                raw_string = """
+                    var html_code = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set')[%s].getElementsByTagName('a')[%s].text;
+                    return html_code;
+                """
+                js_code = raw_string % (i, n)
+                link_details.append(self.browser.execute_script(js_code))
+        return link_details
+
     def get_motherTag_url(self):
         self.back_tag_one()
         js_code = """

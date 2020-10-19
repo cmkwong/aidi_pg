@@ -5,6 +5,7 @@ graders_info_admin = [
         "name": "Chris Cheung",
         "login": "chris",
         "pw": "!23456Qwerty",
+        "token": "1300951567:AAFTj7slDFBW7WzmYayKIVsGQpgpcwSy_8s",
         "level": 's'
     },
     {
@@ -12,6 +13,7 @@ graders_info_admin = [
         "name": "Tiffany Chui",
         "login": "tiffany",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 's'
     },
     {
@@ -19,6 +21,7 @@ graders_info_admin = [
         "name": "TowMing Ng",
         "login": "tomming",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 's'
     },
     {
@@ -26,6 +29,7 @@ graders_info_admin = [
         "name": "Tobby Chan",
         "login": "tobby",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 's'
     },
     {
@@ -33,6 +37,7 @@ graders_info_admin = [
         "name": "Yau Kuen Choi",
         "login": "raymond",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
@@ -40,32 +45,39 @@ graders_info_admin = [
         "name": "Nices Lai",
         "login": "nices",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
         "_id": 7,
         "name": "Ian Tsui",
         "login": "ian",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "token": "",
+        "level": 'n'
     },
     {
         "_id": 8,
         "name": "Raymond Ho",
         "login": "phoebe",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
         "_id": 9,
         "name": "Nicole Lee",
         "login": "alan",
-        "pw": "!23456Qwerty"
+        "pw": "!23456Qwerty",
+        "token": "",
+        "level": 'n'
     },
     {
         "_id": 10,
         "name": "Ginny Ng",
         "login": "ginny",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
@@ -73,6 +85,7 @@ graders_info_admin = [
         "name": "Vianna Tsang",
         "login": "vianna",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
@@ -80,6 +93,7 @@ graders_info_admin = [
         "name": "PoHong Yan",
         "login": "yan",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
@@ -87,6 +101,7 @@ graders_info_admin = [
         "name": "Catherine Chu",
         "login": "catherine",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     },
     {
@@ -94,6 +109,7 @@ graders_info_admin = [
         "name": "common_user",
         "login": "common_user",
         "pw": "!23456Qwerty",
+        "token": "",
         "level": 'n'
     }
 ]
@@ -137,18 +153,36 @@ projects_info_admin = \
         "location": "zh_HK",
         "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-10-11/overview"
     },
+    {
+        "name": "CEval-random-relevance-saf-2020-10-18",
+        "type": "saf",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-saf-2020-10-18/overview"
+    },
+    {
+        "name": "CEval-random-relevance-spot1-2020-10-18",
+        "type": "spot12",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot1-2020-10-18/overview"
+    },
+    {
+        "name": "CEval-random-relevance-spot2-2020-10-18",
+        "type": "spot12",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-random-relevance-spot2-2020-10-18/overview"
+    },
     # {
     #     "name": "CEval-amp-random-relevance-spot2-2020-10-11",
     #     "type": "spot12_ten",
     #     "location": "zh_HK",
     #     "link": "https://crowdcollect2.siri.apple.com/main/project/CEval-amp-random-relevance-spot2-2020-10-11/overview"
     # },
-    # {
-    #     "name": "dr-qa-20200921-3",
-    #     "type": "saf",
-    #     "location": "zh_HK",
-    #     "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20200921-3/overview"
-    # },
+    {
+        "name": "dr-qa-20201019-1",
+        "type": "saf",
+        "location": "zh_HK",
+        "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20201019-1/overview"
+    },
     # {
     #     "name": "dr-qa-20200928-2",
     #     "type": "eval3",
