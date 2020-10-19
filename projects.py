@@ -513,12 +513,13 @@ class base_grader:
                 timer_ok = self.delay_timer(alarm=self.alarm)
                 if not timer_ok:
                     return False
-            self.web_controller.click_next_btn()
 
             # press web search if in tg mode
             if self.tg is not None:
                 self.web_controller.click_web_search()
                 self.web_controller.close_other_tags()
+
+            self.web_controller.click_next_btn()
 
             # update ans into db
             self.update_db_ans(answer_id, ans)

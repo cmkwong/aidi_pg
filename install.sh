@@ -11,4 +11,4 @@ conda install -y -c anaconda beautifulsoup4
 conda install -y -c anaconda dnspython
 conda install -y -c anaconda pymongo
 pip install appscript
-
+pip install pyTelegramBotAPI

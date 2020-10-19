@@ -82,6 +82,18 @@ def get_grader_tg_token(graders):
             return info["token"]
     return None
 
+def resume_standard_mode(graders):
+    # reset auto mode
+    graders.auto_mode = False
+    graders.auto_available = True
+    # reset the full-auto
+    graders.grader.full_auto = False
+    graders.grader.find_delay = False
+    graders.grader.find_time_delay = 60
+    # reset tg mode
+    graders.grader.tg = None
+    return True
+
 
 class Graders:
     def __init__(self, web_controller, db_controller):
@@ -172,11 +184,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-nauto"):
-            graders.auto_mode = False
-            # reset the full-auto
-            graders.grader.full_auto = False
-            graders.grader.find_delay = False
-            graders.grader.find_time_delay = 60
+            resume_standard_mode(graders)
             print("Auto-mode de-activated.")
             return command_checked
 
@@ -201,7 +209,7 @@ def control_command_check(graders, ans):
             print("grader-ans show.")
             return command_checked
 
-        elif (ans == "-hide"):
+        elif (ans == "-nview"):
             graders.grader.view = False
             print("grader-ans hide.")
             return command_checked
@@ -242,10 +250,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-nfauto"):
-            graders.auto_mode = False
-            graders.grader.full_auto = False
-            graders.grader.find_delay = False
-            graders.grader.find_time_delay = 60
+            resume_standard_mode(graders)
             print("Full auto de-activated")
             return command_checked
 
@@ -295,8 +300,8 @@ def control_command_check(graders, ans):
             except Exception:
                 pass
             print("Telegram Offline")
-            graders.grader.tg = None
-            return command_checked
+            resume_standard_mode(graders)
+            return quit_program
 
         elif (ans == "--rg"):
             graders.grader.db_controller.graders_id_update()
