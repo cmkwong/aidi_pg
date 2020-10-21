@@ -2,7 +2,7 @@
 graders_info_admin = [
     {
         "_id": 1,
-        "name": "Chris Cheung",
+        "name": "ChrisCheung",
         "login": "chris",
         "pw": "!23456Qwerty",
         "token": "1300951567:AAFTj7slDFBW7WzmYayKIVsGQpgpcwSy_8s",
@@ -10,7 +10,7 @@ graders_info_admin = [
     },
     {
         "_id": 2,
-        "name": "Tiffany Chui",
+        "name": "TiffanyChui",
         "login": "tiffany",
         "pw": "!23456Qwerty",
         "token": "",
@@ -18,7 +18,7 @@ graders_info_admin = [
     },
     {
         "_id": 3,
-        "name": "TowMing Ng",
+        "name": "TowMingNg",
         "login": "tomming",
         "pw": "!23456Qwerty",
         "token": "",
@@ -26,7 +26,7 @@ graders_info_admin = [
     },
     {
         "_id": 4,
-        "name": "Tobby Chan",
+        "name": "TobbyChan",
         "login": "tobby",
         "pw": "!23456Qwerty",
         "token": "",
@@ -34,7 +34,7 @@ graders_info_admin = [
     },
     {
         "_id": 5,
-        "name": "Yau Kuen Choi",
+        "name": "YauKuenChoi",
         "login": "raymond",
         "pw": "!23456Qwerty",
         "token": "",
@@ -42,7 +42,7 @@ graders_info_admin = [
     },
     {
         "_id": 6,
-        "name": "Nices Lai",
+        "name": "NicesLai",
         "login": "nices",
         "pw": "!23456Qwerty",
         "token": "",
@@ -50,7 +50,7 @@ graders_info_admin = [
     },
     {
         "_id": 7,
-        "name": "Ian Tsui",
+        "name": "IanTsui",
         "login": "ian",
         "pw": "!23456Qwerty",
         "token": "",
@@ -58,7 +58,7 @@ graders_info_admin = [
     },
     {
         "_id": 8,
-        "name": "Raymond Ho",
+        "name": "RaymondHo",
         "login": "phoebe",
         "pw": "!23456Qwerty",
         "token": "",
@@ -66,7 +66,7 @@ graders_info_admin = [
     },
     {
         "_id": 9,
-        "name": "Nicole Lee",
+        "name": "NicoleLee",
         "login": "alan",
         "pw": "!23456Qwerty",
         "token": "",
@@ -74,7 +74,7 @@ graders_info_admin = [
     },
     {
         "_id": 10,
-        "name": "Ginny Ng",
+        "name": "GinnyNg",
         "login": "ginny",
         "pw": "!23456Qwerty",
         "token": "",
@@ -82,7 +82,7 @@ graders_info_admin = [
     },
     {
         "_id": 11,
-        "name": "Vianna Tsang",
+        "name": "ViannaTsang",
         "login": "vianna",
         "pw": "!23456Qwerty",
         "token": "",
@@ -90,7 +90,7 @@ graders_info_admin = [
     },
     {
         "_id": 12,
-        "name": "PoHong Yan",
+        "name": "PoHongYan",
         "login": "yan",
         "pw": "!23456Qwerty",
         "token": "",
@@ -98,7 +98,7 @@ graders_info_admin = [
     },
     {
         "_id": 13,
-        "name": "Catherine Chu",
+        "name": "CatherineChu",
         "login": "catherine",
         "pw": "!23456Qwerty",
         "token": "",

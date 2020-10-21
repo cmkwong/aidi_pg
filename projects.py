@@ -60,6 +60,8 @@ class base_grader:
         self.alarm = True
         # telegram tg
         self.tg = None
+        self.print_allowed = True
+        self.tg_timer_interrupt_signal = False
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -106,10 +108,14 @@ class base_grader:
                     time_delay = 1
             else:
                 time_delay = self.time_delay + 1
-            common.print_at("Delay...", self.tg)
+            common.print_at("Delay...", self.tg, print_allowed=self.print_allowed)
             for i in reversed(range(0, time_delay)):
                 time.sleep(1)
                 if not self.tg: print(i, " seconds", end='\r')
+                # tg stop interrupt
+                if self.tg_timer_interrupt_signal:
+                    self.tg_timer_interrupt_signal = False
+                    return False
             if alarm:
                 self.beep("Times up")
         except KeyboardInterrupt:
@@ -151,7 +157,7 @@ class base_grader:
             common.print_at("project type in renew function not set yet", self.tg)
             return None
         refer_time = time.time()
-        common.print_at("Loading...", self.tg)
+        common.print_at("Loading...", self.tg, print_allowed=self.print_allowed)
         while (query_text==filter_query):
             try:
                 if (time.time() - refer_time) > time_out:
@@ -204,17 +210,22 @@ class base_grader:
             return False
         # get links
         try:
+            web_search_link = self.web_controller.get_web_search_link()
+        except:
+            return False
+        try:
             links = self.web_controller.get_links()
         except:
             return False
-        # get links details
+        # get links text
         try:
             link_details = self.web_controller.get_link_details()
         except:
             return False
         # send data to tg
-        self.tg.bot.send_message(self.tg.chat_id, query_text)
-        for i in range(self.max_web_search_links):
+        self.tg.bot.send_message(self.tg.chat_id, query_text + '\n' + web_search_link)
+        max_index = min(len(links), self.max_web_search_links)
+        for i in range(max_index):
             self.tg.bot.send_message(self.tg.chat_id, link_details[i] + '\n' + links[i])
         return query_text
 
@@ -545,10 +556,13 @@ class base_grader:
         if self.find_delay:
             try:
                 # delay to find
-                common.print_at("Finding Ans Delay ... Max:" + str(self.find_time_delay), self.tg)
+                common.print_at("Finding Ans Delay ... Max:" + str(self.find_time_delay), self.tg, print_allowed=self.print_allowed)
                 for i in reversed(range(0, self.find_time_delay+1)):
                     time.sleep(1)
                     if not self.tg: print(i, " seconds", end='\r')
+                    if self.tg_timer_interrupt_signal:
+                        self.tg_timer_interrupt_signal = False
+                        return False
 
                     # read from database every 5 seconds
                     time_interval = self.find_time_delay_level()

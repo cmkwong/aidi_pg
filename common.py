@@ -2,11 +2,12 @@ import projects
 import config
 import tg_bot
 
-def print_at(txt, tg=None):
-    if tg == None:
-        print(txt)
-    else:
-        tg.bot.send_message(tg.chat_id, txt)
+def print_at(txt, tg=None, print_allowed=True):
+    if print_allowed:
+        if tg == None:
+            print(txt)
+        else:
+            tg.bot.send_message(tg.chat_id, txt)
 
 def num_input_check():
     try:
@@ -92,8 +93,19 @@ def resume_standard_mode(graders):
     graders.grader.find_time_delay = 60
     # reset tg mode
     graders.grader.tg = None
+    # print_allowed
+    graders.grader.print_allowed = True
     return True
 
+def resume_tg_manual_mode(graders):
+    # reset auto mode
+    graders.auto_mode = False
+    graders.auto_available = True
+    # reset the full-auto
+    graders.grader.full_auto = False
+    graders.grader.find_delay = False
+    graders.grader.find_time_delay = 60
+    return True
 
 class Graders:
     def __init__(self, web_controller, db_controller):
@@ -148,7 +160,7 @@ class Graders:
         done = str(self.grader.query_done).strip()
         delays = str(self.grader.time_delay).strip()
         md = str(self.grader.manual_timer).strip()
-        print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", self.grader.tg)
+        print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", self.grader.tg, self.grader.print_allowed)
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
@@ -291,10 +303,11 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-telegram"):
+            resume_standard_mode(graders)
             token = get_grader_tg_token(graders)
-            print("Telegram Online")
             tg = tg_bot.Telegram_Bot(token=token)
             graders.grader.tg = tg
+            print("Telegram Online\nType /s in your telegram chat room")
             try:
                 tg.run(graders)  # Looping
             except Exception:
@@ -302,6 +315,18 @@ def control_command_check(graders, ans):
             print("Telegram Offline")
             resume_standard_mode(graders)
             return quit_program
+
+        elif (ans == "-silence"): # print less mode
+            graders.grader.print_allowed = False
+            graders.grader.view = False
+            print("Print less.")
+            return command_checked
+
+        elif (ans == "-nsilence"): # print more mode
+            graders.grader.print_allowed = True
+            graders.grader.view = True
+            print("Print more.")
+            return command_checked
 
         elif (ans == "--rg"):
             graders.grader.db_controller.graders_id_update()

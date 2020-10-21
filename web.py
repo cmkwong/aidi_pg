@@ -86,6 +86,14 @@ class Web:
         js_code = "window.document.querySelector('" + selector_string + "').click();"
         self.browser.execute_script(js_code)
 
+    def get_web_search_link(self):
+        js_code = """
+                    var link = document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');
+                    return link
+        """
+        link = self.browser.execute_script(js_code)
+        return link
+
     def get_links(self):
         self.back_tag_one()
         # get num of result-set
@@ -164,18 +172,15 @@ class Web:
         for match in matches:
             project_id = project_link[match.span()[0]+9:match.span()[1]-1]
         return project_id
-        # js_code = """
-        #     var name = document.getElementById('project-name').getElementsByTagName('a')[0].innerText;
-        #     return name;
-        # """
-        # return self.browser.execute_script(js_code)
 
     def get_grader_id(self):
         js_code = """
-            var usr_name = document.getElementsByClassName("user-name")[0].innerText;
+            var usr_name = document.querySelector("#ccmenu2-item0").innerText;
             return usr_name;
         """
         usr_name = self.browser.execute_script(js_code)
+        usr_name = usr_name.replace('\n', '')
+        usr_name = usr_name.replace(' ', '')
         for info in config.graders_info:
             if usr_name == info["name"]:
                 return info["_id"]

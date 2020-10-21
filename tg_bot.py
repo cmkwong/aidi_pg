@@ -14,21 +14,23 @@ class Telegram_Bot:
 
     def auto_run(self, graders):
         # start auto running first
-        self.bot.send_message(self.chat_id, "Auto-mode activated\nAuto-running ... ")
-        while graders.auto_available == True:
-            graders.auto_available = graders.decode()
-            graders.auto_mode = graders.auto_available
+        if graders.auto_mode == True:
+            self.bot.send_message(self.chat_id, "Auto-mode activated\nAuto-running ... ")
+            while self.gradingFinish:
+                self.gradingFinish = graders.decode()
 
-            if (graders.grader.new_query):
-                graders.print_status()
-                graders.grader.new_query = False
+                if (graders.grader.new_query):
+                    graders.print_status()
+                    graders.grader.new_query = False
 
-        if graders.auto_available is False:
-            self.current_query_text = graders.grader.send_tg_info(old_query_text=self.old_query_text,
-                                                                  time_out=10)
-            # inside grader.py, need to set False for user input manually
-            graders.auto_mode = False
-            self.bot.send_message(self.chat_id, "input-a:")
+            if self.gradingFinish is False:
+                self.current_query_text = graders.grader.send_tg_info(old_query_text=self.old_query_text,
+                                                                      time_out=10)
+                self.next_query_check()
+                # inside grader.py, need to set False for user input manually
+                graders.auto_mode = False
+                graders.auto_available = False
+                self.bot.send_message(self.chat_id, "input-a:")
 
     def next_query_check(self):
         if self.current_query_text is False:
@@ -65,7 +67,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['nauto'])
         def auto_deactivate(message):
             self.auto_user = False
-            common.resume_standard_mode(graders)
+            common.resume_tg_manual_mode(graders)
             self.bot.send_message(message.chat.id, "Auto-mode de-activated.")
 
         @self.bot.message_handler(commands=['fauto'])
@@ -89,12 +91,12 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['nfauto'])
         def nfauto_deactivate(message):
             self.auto_user = False
-            common.resume_standard_mode(graders)
+            common.resume_tg_manual_mode(graders)
             self.bot.send_message(message.chat.id, "Full auto de-activated")
 
         @self.bot.message_handler(commands=['t'])
         def set_time_delay(message):
-            msg = self.bot.reply_to(message, "Enter number: ")
+            msg = self.bot.reply_to(message, "Enter delay time(s): ")
             self.bot.register_next_step_handler(msg, enter_time)
 
         def enter_time(message):
@@ -107,7 +109,7 @@ class Telegram_Bot:
 
         @self.bot.message_handler(commands=['done'])
         def set_done_count(message):
-            msg = self.bot.reply_to(message, "Enter number: ")
+            msg = self.bot.reply_to(message, "Enter done count: ")
             self.bot.register_next_step_handler(msg, set_done)
 
         def set_done(message):
@@ -124,9 +126,36 @@ class Telegram_Bot:
             self.bot.send_message(message.chat.id, "grader-ans show.")
 
         @self.bot.message_handler(commands=['nview'])
-        def view_grading(message):
+        def not_view_grading(message):
             graders.grader.view = False
-            self.bot.send_message(message.chat.id, "grader-ans hide.")
+            self.bot.send_message(message.chat.id, "grader-ans hide")
+
+        @self.bot.message_handler(commands=['silence'])
+        def silence(message):
+            graders.grader.print_allowed = False
+            graders.grader.view = False
+            self.bot.send_message(message.chat.id, "Silence On")
+
+        @self.bot.message_handler(commands=['nsilence'])
+        def not_silence(message):
+            graders.grader.print_allowed = True
+            graders.grader.view = False
+            self.bot.send_message(message.chat.id, "Silence Off")
+
+        @self.bot.message_handler(commands=['md'])
+        def delay_on(message):
+            graders.grader.manual_timer = True
+            self.bot.send_message(message.chat.id, "Delay On")
+
+        @self.bot.message_handler(commands=['nd'])
+        def delay_off(message):
+            graders.grader.manual_timer = False
+            self.bot.send_message(message.chat.id, "Delay Off\n-nd to cancel")
+
+        @self.bot.message_handler(commands=['stop'])
+        def stop_timer(message):
+            graders.grader.tg_timer_interrupt_signal = True
+            self.bot.send_message(message.chat.id, "Timer Interrupted")
 
         @self.bot.message_handler(commands=['s'])
         def start_tg(message):
@@ -167,14 +196,14 @@ class Telegram_Bot:
                     if self.gradingFinish:
                         # waiting until next query next query
                         self.gradingFinish = False
-                        self.bot.send_message(self.chat_id, "Graded OK")
                         self.old_query_text = self.current_query_text
                         if graders.auto_mode == False:
                             self.current_query_text = graders.grader.send_tg_info(old_query_text=self.old_query_text, time_out=10)
                             self.next_query_check()
-                    self.bot.send_message(self.chat_id, "Input:")
+                    if graders.auto_mode == False:
+                        self.bot.send_message(self.chat_id, "Input:")
 
-                # auto: loop finding, print, if not found, showing next query
-                self.auto_run(graders)
+                    # auto: loop finding, print, if not found, showing next query
+                    self.auto_run(graders)
 
         self.bot.polling()
