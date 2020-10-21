@@ -16,20 +16,19 @@ class Telegram_Bot:
         # start auto running first
         if graders.auto_mode == True:
             self.bot.send_message(self.chat_id, "Auto-mode activated\nAuto-running ... ")
-            while self.gradingFinish:
-                self.gradingFinish = graders.decode()
+            while graders.auto_available:
+                graders.auto_available = graders.decode()
 
                 if (graders.grader.new_query):
                     graders.print_status()
                     graders.grader.new_query = False
 
-            if self.gradingFinish is False:
+            if graders.auto_available is False:
                 self.current_query_text = graders.grader.send_tg_info(old_query_text=self.old_query_text,
                                                                       time_out=10)
                 self.next_query_check()
                 # inside grader.py, need to set False for user input manually
                 graders.auto_mode = False
-                graders.auto_available = False
                 self.bot.send_message(self.chat_id, "input-a:")
 
     def next_query_check(self):
@@ -63,6 +62,8 @@ class Telegram_Bot:
 
                     # auto: loop finding, print, if not found, showing next query
                     self.auto_run(graders)
+                else:
+                    self.bot.send_message(message.chat.id, "Invalid Command")
 
         @self.bot.message_handler(commands=['nauto'])
         def auto_deactivate(message):
@@ -87,6 +88,8 @@ class Telegram_Bot:
 
                     # auto: loop finding, print, if not found, showing next query
                     self.auto_run(graders)
+                else:
+                    self.bot.send_message(message.chat.id, "Invalid Command")
 
         @self.bot.message_handler(commands=['nfauto'])
         def nfauto_deactivate(message):
@@ -156,6 +159,13 @@ class Telegram_Bot:
         def stop_timer(message):
             graders.grader.tg_timer_interrupt_signal = True
             self.bot.send_message(message.chat.id, "Timer Interrupted")
+
+        @self.bot.message_handler(commands=['status'])
+        def check_status(message):
+            done = str(graders.grader.query_done).strip()
+            delays = str(graders.grader.time_delay).strip()
+            md = str(graders.grader.manual_timer).strip()
+            self.bot.send_message(message.chat.id, "Done: " + done + " t-" + delays + " MD-" + md)
 
         @self.bot.message_handler(commands=['s'])
         def start_tg(message):

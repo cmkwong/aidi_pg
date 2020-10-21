@@ -208,11 +208,12 @@ class base_grader:
         query_text = self.get_query_text(filter_query=old_query_text, time_out=time_out)
         if not query_text:
             return False
-        # get links
+        # get web search links
         try:
             web_search_link = self.web_controller.get_web_search_link()
         except:
             return False
+        # get results links
         try:
             links = self.web_controller.get_links()
         except:
@@ -222,11 +223,16 @@ class base_grader:
             link_details = self.web_controller.get_link_details()
         except:
             return False
-        # send data to tg
-        self.tg.bot.send_message(self.tg.chat_id, query_text + '\n' + web_search_link)
+        # combined into one text
         max_index = min(len(links), self.max_web_search_links)
+        text = query_text + '\n' + \
+               "web search link: " + web_search_link + '\n' + \
+               "No. of Results: " + str(max_index)
         for i in range(max_index):
-            self.tg.bot.send_message(self.tg.chat_id, link_details[i] + '\n' + links[i])
+            text = text + "\n-*-*-*-*-*-*-*-*--*-*-\n"
+            text = text + '\n' + link_details[i] + '\n' + links[i]
+        # send message to tg
+        self.tg.bot.send_message(self.tg.chat_id, text)
         return query_text
 
     def grading(self, ans, auto=False):
