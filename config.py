@@ -199,6 +199,17 @@ projects_info_admin = \
     # }
 ]
 
+# saf spot12 spot12_ten classify eval3 token
+ghost_projects_info_admin = \
+[
+      {
+          "name": "dr-qa-20201102-custom-2",
+          "type": "eval3",
+          "location": "en_US",
+          "link": "https://crowdcollect2.siri.apple.com/main/project/dr-qa-20201102-custom-2/overview"
+      },
+]
+
 help_command = {
 
     "spot12/saf/eval3": {
@@ -251,3 +262,5 @@ classify_extra_info_list = [
 graders_info = []
 
 projects_info = []
+
+ghost_projects_info = []

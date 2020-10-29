@@ -51,6 +51,13 @@ def print_proj_list():
     for index, project in enumerate(config.projects_info):
         print((index+1), ": (", project["type"],") ", project["name"])
 
+def print_ghost_proj_list():
+    print("\n")
+    print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
+    print("Please choose the required project Number: ")
+    for index, project in enumerate(config.ghost_projects_info):
+        print((index+1), ": (", project["type"],") ", project["name"])
+
 def get_project_list_text():
     txt = ''
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
@@ -74,6 +81,24 @@ def menu_choice():
             continue
         project_index = project_index - 1
         project_type = config.projects_info[project_index]["type"]
+    print("Type of Project: ", project_type, " activated.")
+    return project_index
+
+def ghost_menu_choice():
+    max_proj_num = len(config.ghost_projects_info)
+    project_index = None
+    project_type = None
+    while(project_index==None):
+        print_ghost_proj_list()
+        project_index = num_input_check()
+        if project_index == None:
+            continue
+        if (project_index <= 0 or project_index > max_proj_num):
+            print("Invalid range of Number.")
+            project_index = None
+            continue
+        project_index = project_index - 1
+        project_type = config.ghost_projects_info[project_index]["type"]
     print("Type of Project: ", project_type, " activated.")
     return project_index
 
@@ -202,6 +227,12 @@ def control_command_check(graders, ans):
         elif (ans == "-p"):
             graders.grader.db_controller.update_local_config_from_db()
             project_index = menu_choice()
+            graders.setup_project(project_index, new_grader=False)
+            return command_checked
+
+        elif (ans == "-gp"):
+            graders.grader.db_controller.update_local_config_from_db()
+            project_index = ghost_menu_choice()
             graders.setup_project(project_index, new_grader=False)
             return command_checked
 
@@ -357,6 +388,11 @@ def control_command_check(graders, ans):
         elif (ans == "--rp"):
             graders.grader.db_controller.project_info_update()
             return command_checked
+
+        elif (ans == "--rgp"):
+            graders.grader.db_controller.ghost_project_info_update()
+            return command_checked
+
         else:
             print("Invalid Control Command")
             return command_checked  # avoid to go further in the ans parser if user type command wrongly

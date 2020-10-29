@@ -110,6 +110,11 @@ class Database:
         self.db["projects"].insert_many(projects_info_admin)
         print("Renew projects info done.")
 
+    def ghost_project_info_update(self):
+        self.db["ghost_projects"].drop()
+        self.db["ghost_projects"].insert_many(ghost_projects_info_admin)
+        print("Renew ghost projects info done.")
+
     def graders_id_update(self):
         self.db["graders"].drop()
         self.db["graders"].insert_many(graders_info_admin)
@@ -151,6 +156,7 @@ class Database:
         # clean the data
         config.graders_info = []
         config.projects_info = []
+        config.ghost_projects_info = []
 
         # get from database both graders and projects
         for grader in self.db["graders"].find({}):
@@ -158,3 +164,6 @@ class Database:
 
         for project in self.db["projects"].find({}):
             config.projects_info.append(project)
+
+        for project in self.db["ghost_projects"].find({}):
+            config.ghost_projects_info.append(project)
