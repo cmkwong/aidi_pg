@@ -149,16 +149,24 @@ class Graders:
         self.auto_available = False
         self.print_extra_info = False
 
-    def setup_project(self, project_index, new_grader=True):
+    def setup_project(self, project_index, new_grader=True, ghost_menu=False):
+        if ghost_menu:
+            name = config.ghost_projects_info[project_index]["name"]
+            type = config.ghost_projects_info[project_index]["type"]
+            link = config.ghost_projects_info[project_index]["link"]
+        else:
+            name = config.projects_info[project_index]["name"]
+            type = config.projects_info[project_index]["type"]
+            link = config.projects_info[project_index]["link"]
+
         if new_grader:
             # create new grader
             self.grader = projects.base_grader(self.web_controller, self.db_controller)
         # set the project name
-        self.grader.project_id = config.projects_info[project_index]["name"]
+        self.grader.project_id = name
         # set the project type
-        self.grader.project_type = config.projects_info[project_index]["type"]
+        self.grader.project_type = type
         # open the required project link
-        link = config.projects_info[project_index]["link"]
         self.grader.web_controller.open_project_link(link)
         # if tg mode, then help to click required location
         if self.grader.tg is not None:
@@ -166,7 +174,7 @@ class Graders:
 
         # situations depend different project type
         # run the TOKEN program immediately
-        if config.projects_info[project_index]["type"] == "token":
+        if type == "token":
             if self.grader.tg is None:
                 print("GUI program running....")
                 self.grader.token_GUI_execute()
@@ -175,7 +183,7 @@ class Graders:
                 return False
 
         # run classify need extra info provided
-        if config.projects_info[project_index]["type"] == "classify":
+        if type == "classify":
             if self.grader.tg is None:
                 self.print_extra_info = True
             else:
@@ -184,7 +192,7 @@ class Graders:
         else:
             self.print_extra_info = False
 
-        if config.projects_info[project_index]["type"] == "spot12_ten":
+        if type == "spot12_ten":
             self.grader.max_web_search_links = 10
         else:
             self.grader.max_web_search_links = 3
@@ -233,7 +241,7 @@ def control_command_check(graders, ans):
         elif (ans == "-gp"):
             graders.grader.db_controller.update_local_config_from_db()
             project_index = ghost_menu_choice()
-            graders.setup_project(project_index, new_grader=False)
+            graders.setup_project(project_index, new_grader=False, ghost_menu=True)
             return command_checked
 
         elif (ans == "-auto" or ans == "--a"):
