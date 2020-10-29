@@ -229,7 +229,7 @@ class base_grader:
                "web search link: " + web_search_link + '\n' + \
                "No. of Results: " + str(max_index)
         for i in range(max_index):
-            text = text + "\n-*-*-*-*-*-*-*-*--*-*-\n"
+            text = text + "\n\n-*-*-*-*-*- " + str(i+1) + " -*-*-*--*-*-"
             text = text + '\n' + link_details[i] + '\n' + links[i]
         # send message to tg
         self.tg.bot.send_message(self.tg.chat_id, text)

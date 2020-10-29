@@ -51,6 +51,14 @@ def print_proj_list():
     for index, project in enumerate(config.projects_info):
         print((index+1), ": (", project["type"],") ", project["name"])
 
+def get_project_list_text():
+    txt = ''
+    txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
+    txt += "Please choose the required project Number: \n"
+    for index, project in enumerate(config.projects_info):
+        txt = txt + str(index+1) + ": (" + project["type"] + ") " + project["name"] + '\n'
+    return txt
+
 def menu_choice():
     max_proj_num = len(config.projects_info)
     project_index = None
@@ -127,15 +135,27 @@ class Graders:
         # open the required project link
         link = config.projects_info[project_index]["link"]
         self.grader.web_controller.open_project_link(link)
+        # if tg mode, then help to click required location
+        if self.grader.tg is not None:
+            self.web_controller.click_start_project(project_index)
 
+        # situations depend different project type
         # run the TOKEN program immediately
         if config.projects_info[project_index]["type"] == "token":
-            print("GUI program running....")
-            self.grader.token_GUI_execute()
+            if self.grader.tg is None:
+                print("GUI program running....")
+                self.grader.token_GUI_execute()
+            else:
+                print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
+                return False
 
         # run classify need extra info provided
         if config.projects_info[project_index]["type"] == "classify":
-            self.print_extra_info = True
+            if self.grader.tg is None:
+                self.print_extra_info = True
+            else:
+                print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
+                return False
         else:
             self.print_extra_info = False
 
@@ -143,6 +163,8 @@ class Graders:
             self.grader.max_web_search_links = 10
         else:
             self.grader.max_web_search_links = 3
+
+        return True
 
     def print_list(self, str_list):
         for string in str_list:
@@ -316,13 +338,13 @@ def control_command_check(graders, ans):
             resume_standard_mode(graders)
             return quit_program
 
-        elif (ans == "-silence"): # print less mode
+        elif (ans == "-mute"): # print less mode
             graders.grader.print_allowed = False
             graders.grader.view = False
             print("Print less.")
             return command_checked
 
-        elif (ans == "-nsilence"): # print more mode
+        elif (ans == "-nmute"): # print more mode
             graders.grader.print_allowed = True
             graders.grader.view = True
             print("Print more.")

@@ -86,6 +86,32 @@ class Web:
         js_code = "window.document.querySelector('" + selector_string + "').click();"
         self.browser.execute_script(js_code)
 
+    def click_start_project(self, project_index):
+        check_txt = """
+            var start_txt = document.querySelector("#start").innerText;
+            return start_txt
+        """
+        start_txt = None
+        refer_time = time.time()
+        while not start_txt:
+            try:
+                if (time.time() - refer_time) > 10:
+                    return False
+                start_txt = self.browser.execute_script(check_txt)
+                time.sleep(0.5)
+            except:
+                continue # continue looping
+        js_code = ''
+        raw_string = """
+                    document.querySelector('.selection').querySelector('.menu').getElementsByTagName('div')[%s].click();
+                    document.querySelector("#start").click();
+                """
+        if config.projects_info[project_index]["location"] == "zh_HK":
+            js_code = raw_string % 1
+        elif config.projects_info[project_index]["location"] == "en_US":
+            js_code = raw_string % 0
+        self.browser.execute_script(js_code)
+
     def get_web_search_link(self):
         js_code = """
                     var link = document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');

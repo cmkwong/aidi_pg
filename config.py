@@ -106,6 +106,14 @@ graders_info_admin = [
     },
     {
         "_id": 14,
+        "name": "KelsieYip",
+        "login": "kelsie",
+        "pw": "!23456Qwerty",
+        "token": "",
+        "level": 'n'
+    },
+    {
+        "_id": 15,
         "name": "common_user",
         "login": "common_user",
         "pw": "!23456Qwerty",
