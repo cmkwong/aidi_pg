@@ -208,29 +208,25 @@ class base_grader:
         query_text = self.get_query_text(filter_query=old_query_text, time_out=time_out)
         if not query_text:
             return False
-        # get web search links
         try:
+            # get search date
+            search_date = self.web_controller.get_search_date()
+            # get web search links
             web_search_link = self.web_controller.get_web_search_link()
-        except:
-            return False
-        # get results links
-        try:
+            # get results links
             links = self.web_controller.get_links()
-        except:
-            return False
-        # get links text
-        try:
+            # get links text
             link_details = self.web_controller.get_link_details()
         except:
             return False
         # combined into one text
         max_index = min(len(links), self.max_web_search_links)
-        text = query_text + '\n' + \
+        text = search_date + '\n\n' + query_text + '\n' + \
                "web search link: " + web_search_link + '\n' + \
                "No. of Results: " + str(max_index)
         for i in range(max_index):
             text = text + "\n\n-*-*-*-*-*- " + str(i+1) + " -*-*-*--*-*-"
-            text = text + '\n' + link_details[i] + '\n' + links[i]
+            text = text + '\n' + link_details[i][:600] + '\n' + links[i]
         # send message to tg
         self.tg.bot.send_message(self.tg.chat_id, text)
         return query_text

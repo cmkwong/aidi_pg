@@ -42,7 +42,8 @@ class Telegram_Bot:
 
         @self.bot.message_handler(commands=['q'])
         def quit_tg(message):
-            self.bot.send_message(message.chat.id, "Mac disconnected. Bye.")
+            graders.grader.tg_timer_interrupt_signal = True
+            self.bot.send_message(message.chat.id, "Telegram disconnected. Bye.")
             raise Exception("Quite Telegram")
 
         @self.bot.message_handler(commands=['p'])
@@ -183,6 +184,16 @@ class Telegram_Bot:
             delays = str(graders.grader.time_delay).strip()
             md = str(graders.grader.manual_timer).strip()
             self.bot.send_message(message.chat.id, "Done: " + done + " t-" + delays + " MD-" + md)
+
+        @self.bot.message_handler(commands=['help'])
+        def help(message):
+            help_text = ''
+            for ptype, info in config.help_command.items():
+                help_text = help_text + ptype + ": \n"
+                for index, description in info.items():
+                    help_text += index + ": " + description + '\n'
+                help_text += '\n'
+            self.bot.send_message(message.chat.id, help_text)
 
         @self.bot.message_handler(commands=['s'])
         def start_tg(message):

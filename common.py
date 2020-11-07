@@ -368,14 +368,17 @@ def control_command_check(graders, ans):
             token = get_grader_tg_token(graders)
             tg = tg_bot.Telegram_Bot(token=token)
             graders.grader.tg = tg
-            print("Telegram Online\nType /s in your telegram chat room")
+            print("Telegram Online\n"
+                  "Type /s in your telegram chat room\n"
+                  "Type /q in your telegram chat room if you want to quit telegram")
             try:
                 tg.run(graders)  # Looping
             except Exception:
                 pass
             print("Telegram Offline")
+            graders.grader.tg_timer_interrupt_signal = False
             resume_standard_mode(graders)
-            return quit_program
+            return command_checked
 
         elif (ans == "-mute"): # print less mode
             graders.grader.print_allowed = False

@@ -120,7 +120,7 @@ class Web:
         link = self.browser.execute_script(js_code)
         return link
 
-    def get_links(self):
+    def get_links__discard(self):
         self.back_tag_one()
         # get num of result-set
         js_code = """
@@ -148,7 +148,7 @@ class Web:
                 links.append(self.browser.execute_script(js_code))
         return links
 
-    def get_link_details(self):
+    def get_link_details__discard(self):
         self.back_tag_one()
         # get num of result-set
         js_code = """
@@ -175,6 +175,44 @@ class Web:
                 js_code = raw_string % (i, n)
                 link_details.append(self.browser.execute_script(js_code))
         return link_details
+
+    def get_links(self):
+        self.back_tag_one()
+        js_code = """
+            list = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
+            filter_list = [];
+            for (let i=0; i<list.length; i++) {
+                if (getComputedStyle(list[i],'::after').content === "counter(section)") {
+                    filter_list.push(list[i].querySelector('a').getAttribute('href'));
+                }
+            }
+            return filter_list;
+        """
+        links = self.browser.execute_script(js_code)
+        return links
+
+    def get_link_details(self):
+        self.back_tag_one()
+        js_code = """
+                    list = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
+                    filter_list = [];
+                    for (let i=0; i<list.length; i++) {
+                        if (getComputedStyle(list[i],'::after').content === "counter(section)") {
+                            filter_list.push(list[i].querySelector('a').text);
+                        }
+                    }
+                    return filter_list;
+                """
+        link_details = self.browser.execute_script(js_code)
+        return link_details
+
+    def get_search_date(self):
+        js_code = """
+            var text = document.querySelector(".message.blue").querySelector("p").firstChild.textContent;
+            return text;
+        """
+        search_date = self.browser.execute_script(js_code)
+        return search_date
 
     def get_motherTag_url(self):
         self.back_tag_one()

@@ -224,14 +224,24 @@ help_command = {
         "f": "fair",
         "b": "bad"
     },
-    "Control Command": {
+    "Mac Control Command": {
         "-q": "quit program",
         "-p": "update and show project menu",
         "-done": "set done counter manually",
         "-t": "set delay time (seconds)",
         "-md/-nd": "activate timer / de-activate timer",
         "-alarm/-nalarm": "sound on / sound off",
-
+    },
+    "Telegram Control Command": {
+        "/status": "check done count",
+        "/p": "switch to project menu",
+        "/done": "set done count manually",
+        "/stop": "interrupt the timer",
+        "/t": "set delay time (seconds)",
+        "/md /nd": "activate timer / de-activate timer",
+        "/mute": "silence on",
+        "/nmute": "silence off",
+        "/q": "turn off telegram"
     }
 }
 
