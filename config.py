@@ -236,7 +236,7 @@ help_command = {
         "/status": "check done count",
         "/p": "switch to project menu",
         "/done": "set done count manually",
-        "/stop": "interrupt the timer",
+        "/stop": "interrupt the timer (= Ctrl+C)",
         "/t": "set delay time (seconds)",
         "/md /nd": "activate timer / de-activate timer",
         "/mute": "silence on",

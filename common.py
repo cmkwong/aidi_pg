@@ -370,7 +370,8 @@ def control_command_check(graders, ans):
             graders.grader.tg = tg
             print("Telegram Online\n"
                   "Type /s in your telegram chat room\n"
-                  "Type /q in your telegram chat room if you want to quit telegram")
+                  "Type /q in your telegram chat room if you want to quit telegram\n"
+                  "DO NOT turn off this MAC WIFI")
             try:
                 tg.run(graders)  # Looping
             except Exception:
