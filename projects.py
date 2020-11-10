@@ -62,6 +62,7 @@ class base_grader:
         self.tg = None
         self.print_allowed = True
         self.tg_timer_interrupt_signal = False
+        self.timer_running = False
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -101,6 +102,7 @@ class base_grader:
             os.system(sound)
 
     def delay_timer(self, time_used=0, alarm=True):
+        self.timer_running = True
         try:
             if self.full_auto:
                 time_delay = self.time_delay + 1 - time_used
@@ -115,13 +117,16 @@ class base_grader:
                 # tg stop interrupt
                 if self.tg_timer_interrupt_signal:
                     self.tg_timer_interrupt_signal = False
+                    self.timer_running = False
                     return False
             if alarm:
                 self.beep("Times up")
         except KeyboardInterrupt:
             self.reopen_current_browser()
             if not self.tg: print("Timer interrupted. Reopening...")
+            self.timer_running = False
             return False
+        self.timer_running = False
         return True
 
     def find_time_delay_level(self):
@@ -559,11 +564,13 @@ class base_grader:
             try:
                 # delay to find
                 common.print_at("Finding Ans Delay ... Max:" + str(self.find_time_delay), self.tg, print_allowed=self.print_allowed)
+                self.timer_running = True
                 for i in reversed(range(0, self.find_time_delay+1)):
                     time.sleep(1)
                     if not self.tg: print(i, " seconds", end='\r')
                     if self.tg_timer_interrupt_signal:
                         self.tg_timer_interrupt_signal = False
+                        self.timer_running = False
                         return False
 
                     # read from database every 5 seconds
@@ -572,10 +579,13 @@ class base_grader:
                         ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
                         if ans != None:
                             find_time_used = self.find_time_delay - i
+                            self.timer_running = False
                             break
+                self.timer_running = False
             except KeyboardInterrupt:
                 self.reopen_current_browser()
                 if not self.tg: print("Timer interrupted. Reopening...")
+                self.timer_running = False
                 return False
 
         # not find delay

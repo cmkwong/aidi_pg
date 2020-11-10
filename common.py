@@ -377,7 +377,6 @@ def control_command_check(graders, ans):
             except Exception:
                 pass
             print("Telegram Offline")
-            graders.grader.tg_timer_interrupt_signal = False
             resume_standard_mode(graders)
             return command_checked
 
