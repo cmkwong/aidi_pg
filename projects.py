@@ -174,6 +174,24 @@ class base_grader:
                 continue # continue looping
         return query_text
 
+    def get_links_and_details(self, time_out=10):
+        refer_time = time.time()
+        links = []
+        link_details = []
+        while (len(links) == 0):
+            try:
+                if (time.time() - refer_time) > time_out:
+                    return None
+                # get links
+                links = self.web_controller.get_links()
+                # get links text
+                link_details = self.web_controller.get_link_details()
+                time.sleep(0.5)
+            except:
+                continue  # continue looping
+        return links, link_details
+
+
     def get_query_url(self):
         js_code = "document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href')"
         query_web_search_url = self.web_controller.browser.execute_script(js_code)
@@ -209,6 +227,7 @@ class base_grader:
 
     # for tg_bot.py used
     def send_tg_info(self, old_query_text=None, time_out=10):
+        length_links = 0
         # get query text (plus condition)
         query_text = self.get_query_text(filter_query=old_query_text, time_out=time_out)
         if not query_text:
@@ -218,10 +237,8 @@ class base_grader:
             search_date = self.web_controller.get_search_date()
             # get web search links
             web_search_link = self.web_controller.get_web_search_link()
-            # get results links
-            links = self.web_controller.get_links()
-            # get links text
-            link_details = self.web_controller.get_link_details()
+            # get links and its details
+            links, link_details = self.get_links_and_details(time_out=10)
         except:
             return False
         # combined into one text
