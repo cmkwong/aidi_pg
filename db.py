@@ -151,7 +151,7 @@ class Database:
             try:
                 ans_info = self.find_most_reliable(ans_infos)
                 ans = ans_info["grader_answer"]
-            except KeyError:
+            except KeyError or TypeError:
                 print_S("Have answer query but have no grader answer yet.", print_allowed)
                 return None, None
             grader_id = ans_info["grader"]
