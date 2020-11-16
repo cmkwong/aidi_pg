@@ -120,6 +120,18 @@ class Database:
         self.db["graders"].insert_many(graders_info_admin)
         print("Renew graders info done.")
 
+    def find_most_reliable(self, ans_infos):
+        reliability = 0
+        required_ans = None
+        for i, ans_info in enumerate(ans_infos):
+            grader_number = ans_info['grader']
+            for grader_info in config.graders_info:
+                if grader_info["_id"] == grader_number:
+                    if grader_info["reliability"] > reliability:
+                        reliability = grader_info["reliability"]
+                        required_ans = ans_info
+        return required_ans
+
     def find_one_ans(self, project_id, text, print_allowed=True):
         db_filter = {
             "project": project_id,
@@ -134,9 +146,10 @@ class Database:
         db_filter = {
             "query_id": query_id
         }
-        ans_info = self.db["answers"].find_one(db_filter)
-        if (ans_info):
+        ans_infos = self.db["answers"].find(db_filter)
+        if (ans_infos):
             try:
+                ans_info = self.find_most_reliable(ans_infos)
                 ans = ans_info["grader_answer"]
             except KeyError:
                 print_S("Have answer query but have no grader answer yet.", print_allowed)
