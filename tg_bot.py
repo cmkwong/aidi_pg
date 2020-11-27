@@ -106,7 +106,7 @@ class Telegram_Bot:
                     graders.auto_available = True
                     graders.grader.full_auto = True
                     graders.grader.find_delay = True
-                    graders.grader.find_time_delay = 320
+                    graders.grader.find_time_delay = 300
                     self.bot.send_message(self.chat_id, "Full auto activated, time delay after found:" + str(graders.grader.time_delay))
 
                     # auto: loop finding, print, if not found, showing next query
