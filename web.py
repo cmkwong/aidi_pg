@@ -120,34 +120,6 @@ class Web:
         link = self.browser.execute_script(js_code)
         return link
 
-    def get_links__discard(self):
-        self.back_tag_one()
-        # get num of result-set
-        js_code = """
-                    var num = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set').length;
-                    return num;
-                """
-        num_sets = self.browser.execute_script(js_code)
-        # get num of links in each result-set
-        num_links = []
-        for num_set in np.arange(num_sets):
-            raw_string = """
-                var num = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set')[%s].getElementsByTagName('a').length;
-                return num;
-            """
-            js_code = raw_string % (num_set)
-            num_links.append(self.browser.execute_script(js_code))
-        links = []
-        for i in np.arange(num_sets):
-            for n in np.arange(num_links[i]):
-                raw_string = """
-                    var link = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set')[%s].getElementsByTagName('a')[%s].getAttribute('href');
-                    return link;
-                """
-                js_code = raw_string % (i, n)
-                links.append(self.browser.execute_script(js_code))
-        return links
-
     def get_link_details__discard(self):
         self.back_tag_one()
         # get num of result-set
@@ -270,6 +242,47 @@ class Web:
             }
         """
         self.browser.execute_script(js_code)
+
+    def select_date_from_calender(self, month, date, time_out=10):
+        """
+        :param month: String
+        :param date: Int
+        """
+        month_ok = False
+        cc_month = None
+        check_cur_month_code = """
+            var month = document.querySelector('.cur_month').innerText.trim();
+            return month;
+            """
+        click_next_month_btn_code = """
+            document.querySelector('.flatpickr-next-month').click()
+            """
+        click_date_code = """
+            document.querySelector('.flatpickr-wrapper').querySelectorAll('.flatpickr-day:not(.prevMonthDay):not(.nextMonthDay)')[%s].click();
+            document.querySelector('.flatpickr-wrapper').querySelectorAll('.flatpickr-day:not(.prevMonthDay):not(.nextMonthDay)')[%s].click();
+        """
+        # check if it is current month in first time
+        refer_time = time.time()
+        while not cc_month:
+            try:
+                if (time.time() - refer_time) > time_out:
+                    print("Time Out")
+                    return False
+                cc_month = self.browser.execute_script(check_cur_month_code)
+            except:
+                continue
+        if month == cc_month:
+            month_ok = True
+        # loop for current month
+        while not month_ok:
+            self.browser.execute_script(click_next_month_btn_code)
+            if month == self.browser.execute_script(check_cur_month_code):
+                month_ok = True
+        # click the current date
+        click_date_code = click_date_code % (date - 1, date - 1)
+        self.browser.execute_script(click_date_code)
+        self.back_tag_one()
+        return True
 
     def quite_driver(self):
         self.browser.quit()

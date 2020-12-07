@@ -1,6 +1,7 @@
 import projects
 import config
 import tg_bot
+import datetime
 
 def print_at(txt, tg=None, print_allowed=True):
     if print_allowed:
@@ -103,7 +104,10 @@ def ghost_menu_choice():
     return project_index
 
 def get_grader_access_level(graders):
-    usr_id = graders.web_controller.get_grader_id()
+    try:
+        usr_id = graders.web_controller.get_grader_id()
+    except:
+        return None
     for info in config.graders_info:
         if usr_id == info["_id"]:
             return info["level"]
@@ -390,6 +394,14 @@ def control_command_check(graders, ans):
             graders.grader.print_allowed = True
             graders.grader.view = True
             print("Print more.")
+            return command_checked
+
+        elif (ans == "-report"):
+            # get the current date
+            now = datetime.datetime.now()
+            month, day = config.MONTHS[now.month], now.day
+            graders.web_controller.browser.get("https://crowdcollect2.siri.apple.com/reports/productivity")
+            selected_ok = graders.web_controller.select_date_from_calender(month, day)
             return command_checked
 
         elif (ans == "--rg"):

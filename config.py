@@ -35,6 +35,7 @@ help_command = {
         "-t": "set delay time (seconds)",
         "-md/-nd": "activate timer / de-activate timer",
         "-alarm/-nalarm": "sound on / sound off",
+        "-report": "access the current report"
     },
     "Telegram Control Command": {
         "/status": "check done count",
@@ -72,6 +73,21 @@ classify_extra_info_list = [
     "\tu. None",
     "\t"
 ]
+
+MONTHS = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December",
+}
 
 graders_info = []
 
