@@ -20,8 +20,6 @@ class Web:
         chrome_options.add_extension(r'appleconnect.crx')
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
         self.browser.get(self.init_url)
-        # Alert(self.browser).accept()
-        # Alert(self.browser).dismiss()
 
     def open_safari(self, executable_path='/usr/bin/safaridriver'):
         self.browser = webdriver.Safari(executable_path=executable_path)
@@ -289,6 +287,13 @@ class Web:
                 document.querySelector(".ui.compact.basic.button").click();
             }
         """
+        self.browser.execute_script(js_code)
+
+    def zoom_browser(self, percentage):
+        js_code = """
+            document.body.style.zoom=%s;
+        """
+        js_code = js_code % percentage
         self.browser.execute_script(js_code)
 
     def check_current_report(self, month, date, time_out=10):

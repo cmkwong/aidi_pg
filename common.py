@@ -60,16 +60,15 @@ def print_ghost_proj_list():
         print((index+1), ": (", project["type"],") ", project["name"])
 
 def print_report(report):
-    print("\n")
-    print("-*-*-*-*-*-*-*-*-*- Summary *-*-*-*-*-*-*-*-*-*-*-*-\n")
-    print("{:>60}{:>12}{:>12}{:>12}".format("Project Name", "Done", "WH", "BH"))
+    print("\n{:>96}\n".format("-*-*-*-*-*-*-*-*-*- Summary *-*-*-*-*-*-*-*-*-*-*-*-"))
+    print("{:>60}{:>12}{:>12}{:>12}\n".format("Project Name", "Done", "WH", "BH"))
     TD, TWH, TBH = 0,0.0,0.0
     for key, value in report.items():
         TD = TD + value[0]
         TWH = TWH + value[1]
         TBH = TBH + value[2]
         print("{:>60}{:>12}{:>12}{:>12}".format(key, value[0], value[1], value[2]))
-    print("\n====================================================")
+    print("\n{:>96}".format("===================================================="))
     print("{:>60}{:>12}{:>12}{:>12}".format("Total:", str(TD), "{:.1f}".format(TWH), "{:.1f}".format(TBH)))
 
 def get_project_list_text():
@@ -415,6 +414,7 @@ def control_command_check(graders, ans):
             month, day = config.MONTHS[now.month], now.day
             graders.web_controller.browser.get("https://crowdcollect2.siri.apple.com/reports/productivity")
             graders.web_controller.check_current_report(month, day)
+            graders.web_controller.zoom_browser(0.7)
             return command_checked
 
         elif (ans == "-text"):
