@@ -222,6 +222,54 @@ class Web:
                 return info["_id"]
         return None
 
+    def get_report_data(self):
+        get_pj_groups = """
+            var pj_list = [];
+            var pj_groups = document.querySelectorAll('.dropdown-wrapper')[0].querySelectorAll('.menu .item');
+            for (var i=0; i<pj_groups.length; i++) {
+                pj_list.push(pj_groups[i].textContent.trim());
+            }
+            return pj_list;
+        """
+        click_pj_group = """
+            document.querySelectorAll('.dropdown-wrapper')[0].querySelectorAll('.menu .item')[%s].click();
+        """
+        click_pj = """
+            document.querySelectorAll('.dropdown-wrapper')[1].querySelectorAll('.menu .item')[%s].click();
+        """
+        get_pjs = """
+            var pjs = document.querySelectorAll('.dropdown-wrapper')[1].querySelectorAll('.menu .item');
+            return pjs;
+        """
+        get_pj_name = """
+            var pj_name = document.querySelectorAll('.dropdown-wrapper')[1].querySelectorAll('.menu .item')[%s].innerText.trim();
+            return pj_name;
+        """
+        get_done = """
+            return parseInt(document.querySelector(".highcharts-data-labels").querySelectorAll('tspan.highcharts-text-outline')[0].textContent.trim());
+        """
+        get_working_hrs = """
+            return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[7].textContent.trim());
+        """
+        get_breaking_hrs = """
+            return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[9].textContent.trim());
+        """
+        report = {}
+        pj_groups = self.browser.execute_script(get_pj_groups)
+        if len(pj_groups) == 0:
+            return False
+        for i in range(len(pj_groups)):
+            self.browser.execute_script(click_pj_group % i)
+            pjs = self.browser.execute_script(get_pjs)
+            for j in range(1, len(pjs)):
+                self.browser.execute_script(click_pj % j)
+                pj_name = self.browser.execute_script(get_pj_name % j)
+                done = self.browser.execute_script(get_done)
+                working_hrs = self.browser.execute_script(get_working_hrs)
+                breaking_hrs = self.browser.execute_script(get_breaking_hrs)
+                report[pj_name] = [done, working_hrs, breaking_hrs]
+        return report
+
     def open_links_new_tags(self, links, max_tags):
         self.back_tag_one()
         for i, link in enumerate(links):
@@ -243,7 +291,7 @@ class Web:
         """
         self.browser.execute_script(js_code)
 
-    def select_date_from_calender(self, month, date, time_out=10):
+    def check_current_report(self, month, date, time_out=10):
         """
         :param month: String
         :param date: Int
@@ -283,6 +331,7 @@ class Web:
         self.browser.execute_script(click_date_code)
         self.back_tag_one()
         return True
+
 
     def quite_driver(self):
         self.browser.quit()

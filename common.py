@@ -59,6 +59,19 @@ def print_ghost_proj_list():
     for index, project in enumerate(config.ghost_projects_info):
         print((index+1), ": (", project["type"],") ", project["name"])
 
+def print_report(report):
+    print("\n")
+    print("-*-*-*-*-*-*-*-*-*- Summary *-*-*-*-*-*-*-*-*-*-*-*-\n")
+    print("{:>60}{:>12}{:>12}{:>12}".format("Project Name", "Done", "WH", "BH"))
+    TD, TWH, TBH = 0,0.0,0.0
+    for key, value in report.items():
+        TD = TD + value[0]
+        TWH = TWH + value[1]
+        TBH = TBH + value[2]
+        print("{:>60}{:>12}{:>12}{:>12}".format(key, value[0], value[1], value[2]))
+    print("\n====================================================")
+    print("{:>60}{:>12}{:>12}{:>12}".format("Total:", str(TD), "{:.1f}".format(TWH), "{:.1f}".format(TBH)))
+
 def get_project_list_text():
     txt = ''
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
@@ -401,7 +414,18 @@ def control_command_check(graders, ans):
             now = datetime.datetime.now()
             month, day = config.MONTHS[now.month], now.day
             graders.web_controller.browser.get("https://crowdcollect2.siri.apple.com/reports/productivity")
-            selected_ok = graders.web_controller.select_date_from_calender(month, day)
+            graders.web_controller.check_current_report(month, day)
+            return command_checked
+
+        elif (ans == "-text"):
+            try:
+                report = graders.grader.web_controller.get_report_data()
+                if report:
+                    print_report(report)
+                else:
+                    print("No report")
+            except:
+                print("Type -report first.")
             return command_checked
 
         elif (ans == "--rg"):
