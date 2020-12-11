@@ -244,7 +244,7 @@ class Web:
             return pj_name;
         """
         get_done = """
-            return parseInt(document.querySelector(".highcharts-data-labels").querySelectorAll('tspan.highcharts-text-outline')[0].textContent.trim());
+            return parseInt(document.querySelector(".highcharts-data-labels").querySelectorAll('tspan.highcharts-text-outline')[0].textContent.replace(',','').trim());
         """
         get_working_hrs = """
             return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[7].textContent.trim());
