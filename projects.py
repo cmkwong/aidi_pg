@@ -45,6 +45,7 @@ class base_grader:
         self.query_text = None
         self.p_query_text = None
         self.query_done = 0
+        self.done_upper_limit = -1  # stop when done reach the custom limit and reset once reached
         self.new_query = False
         self.grader_id = None
         self.project_id = None
@@ -53,14 +54,14 @@ class base_grader:
         self.find_delay = False
         self.find_time_delay = 60
         self.manual_timer = False
-        self.view = False
+        self.view = False               # print grader answer
         self.full_auto = False
         self.max_web_search_links = 3
         # sound alarm
         self.alarm = True
         # telegram tg
         self.tg = None
-        self.print_allowed = True
+        self.print_allowed = True       # most likely is just for telegram, mute and nmute command to control
         self.tg_timer_interrupt_signal = False
         self.timer_running = False
 
@@ -83,6 +84,15 @@ class base_grader:
             self.update_grader_info()
 
         return True
+
+    def check_limit_reached(self):
+        # check if the done reached the custom limit
+        if (self.query_done >= self.done_upper_limit) and (self.done_upper_limit > 0):
+            common.print_at("Upper Limit Reached.", self.tg)
+            self.beep("Times up")
+            self.done_upper_limit = -1 # reset
+            return True
+        return False
 
     def update_status(self):
         # increase the query done if it is new query

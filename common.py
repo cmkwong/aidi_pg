@@ -379,6 +379,16 @@ def control_command_check(graders, ans):
                 graders.grader.query_done = done
             return command_checked
 
+        elif (ans == "-limit"):
+            print("Please enter the number: ")
+            limit = num_input_check()
+            if (limit == None):
+                print("Invalid input.")
+            else:
+                print("Successful")
+                graders.grader.done_upper_limit = limit
+            return command_checked
+
         elif (ans == "-telegram"):
             resume_standard_mode(graders)
             token = get_grader_tg_token(graders)
