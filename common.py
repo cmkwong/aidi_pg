@@ -208,7 +208,7 @@ class Graders:
         else:
             self.print_extra_info = False
 
-        if type == "spot12_ten":
+        if type in ["spot12_ten", "deepscrap"]:
             self.grader.max_web_search_links = 10
         else:
             self.grader.max_web_search_links = 3

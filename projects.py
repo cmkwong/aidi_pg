@@ -88,7 +88,7 @@ class base_grader:
     def check_limit_reached(self):
         # check if the done reached the custom limit
         if (self.query_done >= self.done_upper_limit) and (self.done_upper_limit > 0):
-            common.print_at("Upper Limit Reached.", self.tg)
+            common.print_at("Limit Reached.\n", self.tg)
             self.beep("Times up")
             self.done_upper_limit = -1 # reset
             return True
@@ -153,7 +153,7 @@ class base_grader:
 
     def get_query_text(self, filter_query=None, time_out=10):
         query_text, filter_query = filter_query, filter_query
-        if self.project_type in ["spot12", "saf", "eval3", "spot12_ten"]:
+        if self.project_type in ["spot12", "saf", "eval3", "spot12_ten", "deepscrap"]:
             js_code = """
                 var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
                 return query_text;
@@ -210,7 +210,7 @@ class base_grader:
     def insert_db_query(self):
         answer_id = None
 
-        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten"]:
+        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten", "deepscrap"]:
             # insert query and answer
             try:
                 result_links = self.web_controller.get_links()
@@ -228,7 +228,7 @@ class base_grader:
         return answer_id
 
     def update_db_ans(self, answer_id, ans):
-        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten"]:
+        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten", "deepscrap"]:
             # update grader answer
             if answer_id is not None:
                 self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)
@@ -336,6 +336,58 @@ class base_grader:
             for i in range(no_results_length):
                 command_string = "result" + str(num+i) + "_validationno_result" + str(num+i)
                 self.web_controller.click_by_id(command_string)
+            return True
+
+        elif (self.project_type == "deepscrap"):
+            # checking wrong length
+            if ans[0] != 'n':
+                if len(ans) > 10:
+                    common.print_at("Wrong length of answer.", self.tg)
+                    return False
+            else:
+                if len(ans) > 11 or len(ans) == 1:
+                    common.print_at("Wrong length of answer.", self.tg)
+                    return False
+
+            if ans[0] == 'v':
+                # press vague
+                self.web_controller.click_by_id("query_vagueyes_vague")
+            else:
+                self.web_controller.click_by_id("query_vagueno")
+                if ans[0] == 'n':
+                    # press query inappropriate
+                    self.web_controller.click_by_id("query_appropriatefalse")
+                    ans = ans[1:]
+                else:
+                    self.web_controller.click_by_id("query_appropriatetrue")
+                num = 1
+                for a in ans:
+                    if (a == 'i'):
+                        self.web_controller.click_by_id(
+                            ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
+                    elif (a == 'l'):
+                        self.web_controller.click_by_id(
+                            ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
+                    elif (a == 'x'):
+                        self.web_controller.click_by_id(
+                            ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
+                    else:
+                        self.web_controller.click_by_id(
+                            ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+                        if (a == 'e'):
+                            self.web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+                        elif (a == 'g'):
+                            self.web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
+                        elif (a == 'f'):
+                            self.web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
+                        elif (a == 'b'):
+                            self.web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
+                        else:
+                            common.print_at("--------Not correct ans detected.--------", self.tg)
+                            return False
+                    self.web_controller.click_by_id(("result" + str(num+1) + "_shownyes"))
+                    num = num + 1
+                self.web_controller.click_by_id(("result" + str(num) + "_shownno"))
             return True
 
         elif (self.project_type == "saf"):

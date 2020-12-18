@@ -66,7 +66,7 @@ while (not (command_string == "quit")):
     if (graders.grader.new_query):
         graders.print_status()
         limit_reached = graders.grader.check_limit_reached()
-        if limit_reached:
+        if limit_reached:  # check for limit reach, if do, assign auto_available=false
             graders.auto_available = False
         graders.grader.new_query = False
 
