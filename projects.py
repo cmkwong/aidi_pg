@@ -4,6 +4,7 @@ from functools import partial
 import numpy as np
 import os
 import common
+import config
 
 def base_code_check(controller, ans, max_web_search_links, tg=None):
     if (ans == '`'):
@@ -153,7 +154,7 @@ class base_grader:
 
     def get_query_text(self, filter_query=None, time_out=10):
         query_text, filter_query = filter_query, filter_query
-        if self.project_type in ["spot12", "saf", "eval3", "spot12_ten", "deepscrap"]:
+        if self.project_type in config.GET_QUERY_TEXT_PROJS:
             js_code = """
                 var query_text = document.getElementsByClassName("iframe")[0].getElementsByTagName("iframe").item(0).contentDocument.getElementsByClassName("search-input form-control")[0].getAttribute("value");
                 return query_text;
@@ -210,7 +211,7 @@ class base_grader:
     def insert_db_query(self):
         answer_id = None
 
-        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten", "deepscrap"]:
+        if self.project_type in config.UPDATE_DB_PROJS:
             # insert query and answer
             try:
                 result_links = self.web_controller.get_links()
@@ -228,7 +229,7 @@ class base_grader:
         return answer_id
 
     def update_db_ans(self, answer_id, ans):
-        if self.project_type in ["spot12", "saf", "eval3", "classify", "spot12_ten", "deepscrap"]:
+        if self.project_type in config.UPDATE_DB_PROJS:
             # update grader answer
             if answer_id is not None:
                 self.db_controller.grader_answer_update(self.grader_id, answer_id, answer=ans)

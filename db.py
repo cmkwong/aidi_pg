@@ -1,7 +1,6 @@
 import pymongo
 import datetime
 import time
-from config import *
 import re
 import dns
 import config
@@ -107,17 +106,17 @@ class Database:
 
     def project_info_update(self):
         self.db["projects"].drop()
-        self.db["projects"].insert_many(projects_info_admin)
+        self.db["projects"].insert_many(config.projects_info_admin)
         print("Renew projects info done.")
 
     def ghost_project_info_update(self):
         self.db["ghost_projects"].drop()
-        self.db["ghost_projects"].insert_many(ghost_projects_info_admin)
+        self.db["ghost_projects"].insert_many(config.ghost_projects_info_admin)
         print("Renew ghost projects info done.")
 
     def graders_id_update(self):
         self.db["graders"].drop()
-        self.db["graders"].insert_many(graders_info_admin)
+        self.db["graders"].insert_many(config.graders_info_admin)
         print("Renew graders info done.")
 
     def find_most_reliable(self, ans_infos):

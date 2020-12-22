@@ -12,6 +12,15 @@ projects_info_admin = [
 ghost_projects_info_admin = [
 
 ]
+# projects that get query text in inner box
+GET_QUERY_TEXT_PROJS = ["spot12", "saf", "eval3", "spot12_ten", "deepscrap"]
+
+# projects need to access the database
+UPDATE_DB_PROJS = ["spot12", "saf", "eval3", "classify", "spot12_ten", "deepscrap"]
+
+# projects that need to open 10 results webpages
+MAX_TEN_RESULTS_PROJS = ["spot12_ten", "deepscrap"]
+MAX_ONE_RESULTS_PROJS = ["saf"]
 
 help_command = {
 

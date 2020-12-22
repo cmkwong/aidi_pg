@@ -208,8 +208,10 @@ class Graders:
         else:
             self.print_extra_info = False
 
-        if type in ["spot12_ten", "deepscrap"]:
+        if type in config.MAX_TEN_RESULTS_PROJS:
             self.grader.max_web_search_links = 10
+        elif type in config.MAX_ONE_RESULTS_PROJS:
+            self.grader.max_web_search_links = 1
         else:
             self.grader.max_web_search_links = 3
 

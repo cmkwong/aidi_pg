@@ -193,6 +193,19 @@ class Telegram_Bot:
             md = str(graders.grader.manual_timer).strip()
             self.bot.send_message(message.chat.id, "Done: " + done + " t-" + delays + " MD-" + md)
 
+        @self.bot.message_handler(commands=['limit'])
+        def set_limit_number(message):
+            msg = self.bot.reply_to(message, "Enter limit number: ")
+            self.bot.register_next_step_handler(msg, set_limit)
+
+        def set_limit(message):
+            limit = message.text
+            if not limit.isdigit():
+                self.bot.send_message(message.chat.id, "This is not a number")
+                return False
+            graders.grader.done_upper_limit = int(limit)
+            self.bot.send_message(message.chat.id, "Limit set")
+
         @self.bot.message_handler(commands=['help'])
         def help(message):
             help_text = ''
@@ -237,6 +250,12 @@ class Telegram_Bot:
                     if (graders.grader.new_query):
                         graders.print_status()
                         graders.grader.new_query = False
+                        # # check if limit reach
+                        # limit_reached = graders.grader.check_limit_reached()
+                        # if limit_reached:
+                        #     self.auto_user = False
+                        #     graders.auto_mode = False
+                        #     graders.auto_available = False
 
                     # I dont want typing control command will come into here, so i set the condition if grading finished
                     if self.gradingFinish:
