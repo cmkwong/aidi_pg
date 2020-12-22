@@ -71,6 +71,7 @@ def print_report(report):
     print("\n{:>96}".format("===================================================="))
     print("{:>60}{:>12}{:>12}{:>12}".format("Total:", str(TD), "{:.1f}".format(TWH), "{:.1f}".format(TBH)))
 
+# for tg project list
 def get_project_list_text():
     txt = ''
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
@@ -167,11 +168,9 @@ class Graders:
 
     def setup_project(self, project_index, new_grader=True, ghost_menu=False):
         if ghost_menu:
-            name = config.ghost_projects_info[project_index]["name"]
             type = config.ghost_projects_info[project_index]["type"]
             link = config.ghost_projects_info[project_index]["link"]
         else:
-            name = config.projects_info[project_index]["name"]
             type = config.projects_info[project_index]["type"]
             link = config.projects_info[project_index]["link"]
 
@@ -179,7 +178,7 @@ class Graders:
             # create new grader
             self.grader = projects.base_grader(self.web_controller, self.db_controller)
         # set the project name
-        self.grader.project_id = name
+        self.grader.project_id = self.web_controller.get_project_id_from_url(link)
         # set the project type
         self.grader.project_type = type
         # open the required project link

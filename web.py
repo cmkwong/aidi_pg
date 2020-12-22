@@ -198,9 +198,8 @@ class Web:
         time.sleep(1)
         return html
 
-    def get_project_id_from_url(self):
+    def get_project_id_from_url(self, project_link=None):
         project_id = None
-        project_link = self.get_motherTag_url()
         regex = re.compile(r"/project/\S+?/")
         matches = regex.finditer(project_link)
         for match in matches:
