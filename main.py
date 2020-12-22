@@ -6,6 +6,7 @@ from appscript import *
 
 command_string = "command_not_checked"
 user_command = None
+VERSION = "0.0.1"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
 web_controller = web.Web(init_url=default_url)
@@ -15,20 +16,25 @@ db_controller = db.Database()
 graders = common.Graders(web_controller, db_controller)
 
 terminal = app('Terminal')
-first_time = True
+FIRST_TIME = True
 graders.auto_available = True
+MAIN_LOOP_COUNT = 0
 
 while (not (command_string == "quit")):
 
-    if first_time:
+    # need the user re-open the program
+    if MAIN_LOOP_COUNT % 50 == 0:
+        if VERSION != graders.db_controller.get_most_updated_version():
+            raise Exception("Outdated Version")
+
+    if FIRST_TIME:
         # update the local info from remote database
         db_controller.update_local_config_from_db()
         # ask user choose projects
         project_index = common.menu_choice()
         graders.setup_project(project_index)
-        first_time = False
+        FIRST_TIME = False
 
-    # try:
     if graders.auto_mode == False:
 
         # extra print needed
@@ -70,6 +76,6 @@ while (not (command_string == "quit")):
             graders.auto_available = False
         graders.grader.new_query = False
 
-    # except:
+    MAIN_LOOP_COUNT += 1
 
 web_controller.quite_driver()

@@ -439,17 +439,21 @@ def control_command_check(graders, ans):
                 print("Type -report first.")
             return command_checked
 
-        elif (ans == "--rg"):
-            graders.grader.db_controller.graders_id_update()
-            return command_checked
-
-        elif (ans == "--rp"):
-            graders.grader.db_controller.project_info_update()
-            return command_checked
-
-        elif (ans == "--rgp"):
-            graders.grader.db_controller.ghost_project_info_update()
-            return command_checked
+        # elif (ans == "--rg"):
+        #     graders.grader.db_controller.graders_id_update()
+        #     return command_checked
+        #
+        # elif (ans == "--rp"):
+        #     graders.grader.db_controller.project_info_update()
+        #     return command_checked
+        #
+        # elif (ans == "--rgp"):
+        #     graders.grader.db_controller.ghost_project_info_update()
+        #     return command_checked
+        #
+        # elif (ans == "--rv"):
+        #     graders.grader.db_controller.version_update()
+        #     return command_checked
 
         else:
             print("Invalid Control Command")

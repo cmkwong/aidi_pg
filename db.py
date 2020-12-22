@@ -104,20 +104,25 @@ class Database:
         }}
         self.db["answers"].update_one(target, new_dict)
 
-    def project_info_update(self):
-        self.db["projects"].drop()
-        self.db["projects"].insert_many(config.projects_info_admin)
-        print("Renew projects info done.")
-
-    def ghost_project_info_update(self):
-        self.db["ghost_projects"].drop()
-        self.db["ghost_projects"].insert_many(config.ghost_projects_info_admin)
-        print("Renew ghost projects info done.")
-
-    def graders_id_update(self):
-        self.db["graders"].drop()
-        self.db["graders"].insert_many(config.graders_info_admin)
-        print("Renew graders info done.")
+    # def project_info_update(self):
+    #     self.db["projects"].drop()
+    #     self.db["projects"].insert_many(config.projects_info_admin)
+    #     print("Renew projects info done.")
+    #
+    # def ghost_project_info_update(self):
+    #     self.db["ghost_projects"].drop()
+    #     self.db["ghost_projects"].insert_many(config.ghost_projects_info_admin)
+    #     print("Renew ghost projects info done.")
+    #
+    # def graders_id_update(self):
+    #     self.db["graders"].drop()
+    #     self.db["graders"].insert_many(config.graders_info_admin)
+    #     print("Renew graders info done.")
+    #
+    # def version_update(self):
+    #     self.db["version"].drop()
+    #     self.db["version"].insert_one(config.version_admin)
+    #     print("Renew version done.")
 
     def find_most_reliable(self, ans_infos):
         reliability = 0
@@ -163,6 +168,9 @@ class Database:
         else:
             print_S("Have query but not have answer yet. ", print_allowed)
             return None, None
+
+    def get_most_updated_version(self):
+        return self.db["versions_control"].find_one()['version']
 
     def update_local_config_from_db(self):
         # clean the data

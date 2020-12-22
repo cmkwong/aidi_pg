@@ -1,17 +1,23 @@
-# s = super user; a = auto user; n = no access;
-graders_info_admin = [
+# # s = super user; a = auto user; n = no access;
+# graders_info_admin = [
+#
+# ]
+#
+# # saf spot12 spot12_ten classify eval3 token
+# projects_info_admin = [
+#
+# ]
+#
+# # saf spot12 spot12_ten classify eval3 token
+# ghost_projects_info_admin = [
+#
+# ]
+#
+# # control version
+# version_admin = {
+#     "version": "0.0.1"
+# }
 
-]
-
-# saf spot12 spot12_ten classify eval3 token
-projects_info_admin = [
-
-]
-
-# saf spot12 spot12_ten classify eval3 token
-ghost_projects_info_admin = [
-
-]
 # projects that get query text in inner box
 GET_QUERY_TEXT_PROJS = ["spot12", "saf", "eval3", "spot12_ten", "deepscrap"]
 
