@@ -3,12 +3,12 @@
 #
 # ]
 #
-# # saf spot12 spot12_ten classify eval3 token
+# # saf spot12 amp classify eval3 token
 # projects_info_admin = [
 #
 # ]
 #
-# # saf spot12 spot12_ten classify eval3 token
+# # saf spot12 amp classify eval3 token
 # ghost_projects_info_admin = [
 #
 # ]
@@ -19,13 +19,13 @@
 # }
 
 # projects that get query text in inner box
-GET_QUERY_TEXT_PROJS = ["spot12", "saf", "eval3", "spot12_ten", "deepscrap"]
+GET_QUERY_TEXT_PROJS = ["spot12", "saf", "eval3", "amp", "deepscrape"]
 
 # projects need to access the database
-UPDATE_DB_PROJS = ["spot12", "saf", "eval3", "classify", "spot12_ten", "deepscrap"]
+UPDATE_DB_PROJS = ["spot12", "saf", "eval3", "classify", "amp", "deepscrape"]
 
 # projects that need to open 10 results webpages
-MAX_TEN_RESULTS_PROJS = ["spot12_ten", "deepscrap"]
+MAX_TEN_RESULTS_PROJS = ["amp", "deepscrape"]
 MAX_ONE_RESULTS_PROJS = ["saf"]
 
 help_command = {
@@ -50,7 +50,8 @@ help_command = {
         "-t": "set delay time (seconds)",
         "-md/-nd": "activate timer / de-activate timer",
         "-alarm/-nalarm": "sound on / sound off",
-        "-report": "access the current report"
+        "-report": "access the current report",
+        "-text": "print the summary of report"
     },
     "Telegram Control Command": {
         "/status": "check done count",
