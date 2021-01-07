@@ -419,7 +419,7 @@ def control_command_check(graders, ans):
             print("Print more.")
             return command_checked
 
-        elif (ans == "-report"):
+        elif (ans == "-report") or (ans == "-re"):
             # get the current date
             now = datetime.datetime.now()
             month, day = config.MONTHS[now.month], now.day

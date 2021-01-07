@@ -48,9 +48,11 @@ help_command = {
         "-p": "update and show project menu",
         "-done": "set done counter manually",
         "-t": "set delay time (seconds)",
-        "-md/-nd": "activate timer / de-activate timer",
-        "-alarm/-nalarm": "sound on / sound off",
-        "-report": "access the current report",
+        "-md": "activate timer",
+        "-nd": "de-activate timer",
+        "-alarm": "sound on",
+        "-nalarm": "sound off",
+        "-report/-re": "access the report page",
         "-text": "print the summary of report"
     },
     "Telegram Control Command": {
