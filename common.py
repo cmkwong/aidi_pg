@@ -209,6 +209,8 @@ class Graders:
 
         if type in config.MAX_TEN_RESULTS_PROJS:
             self.grader.max_web_search_links = 10
+        elif type in config.MAX_FIVE_RESULTS_PROJS:
+            self.grader.max_web_search_links = 5
         elif type in config.MAX_ONE_RESULTS_PROJS:
             self.grader.max_web_search_links = 1
         else:

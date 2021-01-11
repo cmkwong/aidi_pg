@@ -268,7 +268,7 @@ class base_grader:
 
     def grading(self, ans, auto=False):
         if (self.project_type == "spot12"):
-            if len(ans) > 3:
+            if len(ans) > self.max_web_search_links:
                 common.print_at("Wrong length of answer.", self.tg)
                 return False
             num = 1
@@ -304,8 +304,8 @@ class base_grader:
                 self.web_controller.click_by_id("result3_validationno_result3")
             return True
 
-        elif (self.project_type == "spot12_ten"):
-            if len(ans) > 10:
+        elif (self.project_type == "amp") or (self.project_type == "maps"):
+            if len(ans) > self.max_web_search_links:
                 common.print_at("Wrong length of answer.", self.tg)
                 return False
             num = 1
@@ -335,16 +335,16 @@ class base_grader:
                         return False
                 num = num + 1
             # the rest ans by 10 is no results
-            no_results_length = 10 - len(ans)
+            no_results_length = self.max_web_search_links - len(ans)
             for i in range(no_results_length):
                 command_string = "result" + str(num+i) + "_validationno_result" + str(num+i)
                 self.web_controller.click_by_id(command_string)
             return True
 
-        elif (self.project_type == "deepscrap"):
+        elif (self.project_type == "deepscrape"):
             # checking wrong length
             if ans[0] != 'n':
-                if len(ans) > 10:
+                if len(ans) > self.max_web_search_links:
                     common.print_at("Wrong length of answer.", self.tg)
                     return False
             else:

@@ -6,7 +6,7 @@ from appscript import *
 
 command_string = "command_not_checked"
 user_command = None
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
 web_controller = web.Web(init_url=default_url)
