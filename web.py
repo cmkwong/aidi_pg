@@ -208,7 +208,7 @@ class Web:
 
     def get_grader_id(self):
         js_code = """
-            var usr_name = document.querySelector("#ccmenu2-item0").innerText;
+            var usr_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
             return usr_name;
         """
         usr_name = self.browser.execute_script(js_code)
