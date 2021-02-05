@@ -95,7 +95,7 @@ def menu_choice():
             continue
         project_index = project_index - 1
         project_type = config.projects_info[project_index]["type"]
-    print("Type of Project: ", project_type, " activated.")
+    print("Type of Project:", project_type)
     return project_index
 
 def ghost_menu_choice():
@@ -430,7 +430,7 @@ def control_command_check(graders, ans):
             graders.web_controller.zoom_browser(0.7)
             return command_checked
 
-        elif (ans == "-text"):
+        elif (ans == "-txt"):
             try:
                 report = graders.grader.web_controller.get_report_data()
                 if report:
@@ -438,7 +438,7 @@ def control_command_check(graders, ans):
                 else:
                     print("No report")
             except:
-                print("Type -report first.")
+                print("Disabled")
             return command_checked
 
         # elif (ans == "--rg"):

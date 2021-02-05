@@ -220,26 +220,28 @@ class Web:
         return None
 
     def get_report_data(self):
-        get_pj_groups = """
-            var pj_list = [];
-            var pj_groups = document.querySelectorAll('.dropdown-wrapper')[0].querySelectorAll('.menu .item');
-            for (var i=0; i<pj_groups.length; i++) {
-                pj_list.push(pj_groups[i].textContent.trim());
-            }
-            return pj_list;
+        click_pj_groups_icon = """
+            document.querySelectorAll('.icon.sf-symbol-chevron-down')[0].click();
+        """
+        get_pj_groups_len = """
+            var l = document.querySelector('.listbox').querySelectorAll('li').length;
+            return l;
         """
         click_pj_group = """
-            document.querySelectorAll('.dropdown-wrapper')[0].querySelectorAll('.menu .item')[%s].click();
+            document.querySelector('.listbox').querySelectorAll('li')[%s].click();
+        """
+        click_pj_icon = """
+            document.querySelectorAll('.icon.sf-symbol-chevron-down')[1].click();
+        """
+        get_pjs_len = """
+            var l = document.querySelector('.listbox').querySelectorAll('li').length;
+            return l;
         """
         click_pj = """
-            document.querySelectorAll('.dropdown-wrapper')[1].querySelectorAll('.menu .item')[%s].click();
-        """
-        get_pjs = """
-            var pjs = document.querySelectorAll('.dropdown-wrapper')[1].querySelectorAll('.menu .item');
-            return pjs;
+            document.querySelector('.listbox').querySelectorAll('li')[%s].click();
         """
         get_pj_name = """
-            var pj_name = document.querySelectorAll('.dropdown-wrapper')[1].querySelectorAll('.menu .item')[%s].innerText.trim();
+            var pj_name = document.querySelector('.highcharts-xaxis-labels').textContent;
             return pj_name;
         """
         get_done = """
@@ -252,15 +254,17 @@ class Web:
             return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[9].textContent.trim());
         """
         report = {}
-        pj_groups = self.browser.execute_script(get_pj_groups)
-        if len(pj_groups) == 0:
+        self.browser.execute_script(click_pj_groups_icon)
+        pj_groups_length = int(self.browser.execute_script(get_pj_groups_len))
+        if pj_groups_length == 0:
             return False
-        for i in range(len(pj_groups)):
+        for i in range(pj_groups_length):
             self.browser.execute_script(click_pj_group % i)
-            pjs = self.browser.execute_script(get_pjs)
-            for j in range(1, len(pjs)):
+            self.browser.execute_script(click_pj_icon)
+            pjs_len = int(self.browser.execute_script(get_pjs_len))
+            for j in range(1, pjs_len):
                 self.browser.execute_script(click_pj % j)
-                pj_name = self.browser.execute_script(get_pj_name % j)
+                pj_name = self.browser.execute_script(get_pj_name)
                 done = self.browser.execute_script(get_done)
                 working_hrs = self.browser.execute_script(get_working_hrs)
                 breaking_hrs = self.browser.execute_script(get_breaking_hrs)

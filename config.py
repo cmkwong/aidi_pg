@@ -54,7 +54,7 @@ help_command = {
         "-alarm": "sound on",
         "-nalarm": "sound off",
         "-report/-re": "access the report page",
-        "-text": "print the summary of report"
+        "-txt": "print the summary of report(Disabled)"
     },
     "Telegram Control Command": {
         "/status": "check done count",
