@@ -50,14 +50,14 @@ def print_proj_list():
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
     for index, project in enumerate(config.projects_info):
-        print((index+1), ": (", project["type"],") ", project["name"])
+        print((index+1), ": (", project["type"],")\t", project["name"])
 
 def print_ghost_proj_list():
     print("\n")
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
     for index, project in enumerate(config.ghost_projects_info):
-        print((index+1), ": (", project["type"],") ", project["name"])
+        print((index+1), ": (", project["type"],")\t", project["name"])
 
 def print_report(report):
     print("\n{:>96}\n".format("-*-*-*-*-*-*-*-*-*- Summary *-*-*-*-*-*-*-*-*-*-*-*-"))

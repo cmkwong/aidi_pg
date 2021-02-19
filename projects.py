@@ -689,14 +689,16 @@ class base_grader:
             # if query and answer found
             common.print_at("Got from: " + str(grader_name) + "\nAns: " + str(ans), self.tg)
 
+        # timer delay
+        timer_ok = self.delay_timer(time_used=find_time_used, alarm=False)
+        if not timer_ok:
+            return False
+
         # grading ans that from database
         grade_ok = self.grading(ans, auto=True)
         if not grade_ok:
             return False
 
-        timer_ok = self.delay_timer(time_used=find_time_used, alarm=False)
-        if not timer_ok:
-            return False
         self.web_controller.click_next_btn()
 
         # update status after finish a grading
