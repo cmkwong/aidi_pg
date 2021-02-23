@@ -65,6 +65,8 @@ class base_grader:
         self.print_allowed = True       # most likely is just for telegram, mute and nmute command to control
         self.tg_timer_interrupt_signal = False
         self.timer_running = False
+        # training mode, if so, find ans from most popular one
+        self.training = False
 
     def update_grader_info(self):
         self.grader_id = self.web_controller.get_grader_id()
@@ -638,8 +640,7 @@ class base_grader:
         if self.view:
             common.print_at("text: " + self.query_text, self.tg)
 
-        ans = None
-        grader_name = "Unknown"
+        Answer = None
         # find delay
         find_time_used = 0
         if self.find_delay:
@@ -658,8 +659,11 @@ class base_grader:
                     # read from database every 5 seconds
                     time_interval = self.find_time_delay_level()
                     if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
-                        ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text, print_allowed=False)
-                        if ans != None:
+                        if self.training:
+                            Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg, print_allowed=self.print_allowed)
+                        else:
+                            Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg, print_allowed=self.print_allowed)
+                        if Answer != None:
                             find_time_used = self.find_time_delay - i
                             self.timer_running = False
                             break
@@ -672,10 +676,13 @@ class base_grader:
 
         # not find delay
         elif not self.find_delay:
-            ans, grader_name = self.db_controller.find_one_ans(self.project_id, self.query_text)
+            if self.training:
+                Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg)
+            else:
+                Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg)
 
         # if no Answer found, return false, auto_available will be false
-        if (ans == None):
+        if (Answer == None):
             if self.alarm:
                 self.beep("Times up")   # Not Found
             common.print_at("Not Found!\n", self.tg)
@@ -687,7 +694,10 @@ class base_grader:
 
         if self.view:
             # if query and answer found
-            common.print_at("Got from: " + str(grader_name) + "\nAns: " + str(ans), self.tg)
+            if self.training:
+                common.print_popular_ans_detail(Answer, self.tg)
+            else: # if not training
+                common.print_at("Got from: " + str(Answer.grader_name) + "\nAns: " + str(Answer.ans), self.tg)
 
         # timer delay
         timer_ok = self.delay_timer(time_used=find_time_used, alarm=False)
@@ -695,7 +705,7 @@ class base_grader:
             return False
 
         # grading ans that from database
-        grade_ok = self.grading(ans, auto=True)
+        grade_ok = self.grading(Answer.ans, auto=True)
         if not grade_ok:
             return False
 

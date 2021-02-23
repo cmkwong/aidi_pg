@@ -193,6 +193,16 @@ class Telegram_Bot:
             md = str(graders.grader.manual_timer).strip()
             self.bot.send_message(message.chat.id, "Done: " + done + " t-" + delays + " MD-" + md)
 
+        @self.bot.message_handler(commands=['train'])
+        def set_train_mode(message):
+            graders.grader.training = True
+            self.bot.send_message(message.chat.id, "Train mode activated.")
+
+        @self.bot.message_handler(commands=['ntrain'])
+        def set_ntrain_mode(message):
+            graders.grader.training = False
+            self.bot.send_message(message.chat.id, "Train mode de-activated.")
+
         @self.bot.message_handler(commands=['limit'])
         def set_limit_number(message):
             msg = self.bot.reply_to(message, "Enter limit number: ")

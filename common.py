@@ -10,6 +10,34 @@ def print_at(txt, tg=None, print_allowed=True):
         else:
             tg.bot.send_message(tg.chat_id, txt)
 
+def print_popular_detail(detail, tg):
+    grader_list_text = ''
+    for grader_name, value in detail.items():
+        grader_list_text += "{:<30} {:<4} {:<40}\n".format(grader_name, value['ans'], str(value["time"]))
+    print_at(grader_list_text, tg)
+
+def print_popular_ans_dist(ans_dist, tg):
+    ans_dist_text = ''
+    for number, value in ans_dist.items():
+        ans_dist_text += "Result" + str(number) + ':\t'
+        for ans, freq in value.items():
+            ans_dist_text += ans + ':' + str(freq) + '\t'
+        ans_dist_text += '\n'
+    print_at(ans_dist_text, tg)
+
+def print_popular_ans_detail(Answer, tg):
+    print_popular_detail(Answer.detail, tg)
+    print_popular_ans_dist(Answer.ans_dist, tg)
+    print_at("Final Ans: " + Answer.ans + "\n", tg)
+
+def print_conflict(conflict, graders):
+    for i in range(conflict.total):
+        # print_popular_detail(conflict.details[i], graders.grader.tg)
+        print_popular_ans_dist(conflict.ans_dists[i], graders.grader.tg)
+        print_at("{}\nAns: {}: Your Ans: {}\nlink: {}\n".format(
+            conflict.texts[i], conflict.anss[i], conflict.usr_anss[i], conflict.links[i]), graders.grader.tg)
+    print_at("Total: {}".format(conflict.total), graders.grader.tg)
+
 def num_input_check():
     try:
         num_input = input()
@@ -439,6 +467,27 @@ def control_command_check(graders, ans):
                     print("No report")
             except:
                 print("Disabled")
+            return command_checked
+
+        elif (ans == "-train"):
+            graders.grader.training = True
+            print("Training mode activated.")
+            return command_checked
+
+        elif (ans == "-ntrain"):
+            graders.grader.training = False
+            print("Training mode de-activated.")
+            return command_checked
+
+        elif (ans == "-conflict"):
+            level = get_grader_access_level(graders)
+            if level == 's':
+                print("Input project ID: ")
+                project_id = input()
+                usr_id = graders.web_controller.get_grader_id()
+                conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg, print_allowed=True)
+                if conflict:
+                    print_conflict(conflict, graders)
             return command_checked
 
         # elif (ans == "--rg"):
