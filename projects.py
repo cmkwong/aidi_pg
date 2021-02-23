@@ -660,9 +660,9 @@ class base_grader:
                     time_interval = self.find_time_delay_level()
                     if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                         if self.training:
-                            Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg, print_allowed=self.print_allowed)
+                            Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg, print_allowed=False)
                         else:
-                            Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg, print_allowed=self.print_allowed)
+                            Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg, print_allowed=False)
                         if Answer != None:
                             find_time_used = self.find_time_delay - i
                             self.timer_running = False

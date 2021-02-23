@@ -204,7 +204,7 @@ class Database:
         if (query):
             query_id = query["_id"]
         else:
-            common.print_at("No such query.", tg, not tg and print_allowed)
+            common.print_at("No such query.", tg, print_allowed)
             return None
         ans_infos = self._find_all_ans_by_query_id(query_id)
         return ans_infos
