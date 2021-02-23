@@ -203,6 +203,23 @@ class Telegram_Bot:
             graders.grader.training = False
             self.bot.send_message(message.chat.id, "Train mode de-activated.")
 
+        @self.bot.message_handler(commands=['conflict'])
+        def set_project_id_for_conflict(message):
+            if self.tg_available == False:
+                self.bot.send_message(message.chat.id, "Please type /s first")
+            else:
+                level = common.get_grader_access_level(graders)
+                if level == 's':
+                    msg = self.bot.reply_to(message, "Enter Project ID ")
+                    self.bot.register_next_step_handler(msg, check_conflict)
+
+        def check_conflict(message):
+            project_id = message.text
+            usr_id = graders.web_controller.get_grader_id()
+            conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg,print_allowed=True)
+            if conflict:
+                common.print_conflict(conflict, self)
+
         @self.bot.message_handler(commands=['limit'])
         def set_limit_number(message):
             msg = self.bot.reply_to(message, "Enter limit number: ")

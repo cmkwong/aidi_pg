@@ -217,7 +217,7 @@ class Database:
         # Find ans_infos that store all the query related to that project id and text
         ans_infos = self._find_ans_infos(project_id=project_id, text=text, tg=tg, print_allowed=print_allowed)
         if not ans_infos:
-            common.print_at("Have query but not have answer yet. ", print_allowed)
+            common.print_at("Have query but not have answer yet. ", tg, print_allowed)
             return None
         try:
             ans_info = self._find_most_reliable(ans_infos)

@@ -30,13 +30,14 @@ def print_popular_ans_detail(Answer, tg):
     print_popular_ans_dist(Answer.ans_dist, tg)
     print_at("Final Ans: " + Answer.ans + "\n", tg)
 
-def print_conflict(conflict, graders):
+def print_conflict(conflict, tg):
+    print_text = ''
     for i in range(conflict.total):
-        # print_popular_detail(conflict.details[i], graders.grader.tg)
-        print_popular_ans_dist(conflict.ans_dists[i], graders.grader.tg)
+        # print_popular_detail(conflict.details[i], tg)
+        print_popular_ans_dist(conflict.ans_dists[i], tg)
         print_at("{}\nAns: {}: Your Ans: {}\nlink: {}\n".format(
-            conflict.texts[i], conflict.anss[i], conflict.usr_anss[i], conflict.links[i]), graders.grader.tg)
-    print_at("Total: {}".format(conflict.total), graders.grader.tg)
+            conflict.texts[i], conflict.anss[i], conflict.usr_anss[i], conflict.links[i]), tg)
+    print_at("Total conflict: {}".format(conflict.total), tg)
 
 def num_input_check():
     try:
@@ -487,7 +488,7 @@ def control_command_check(graders, ans):
                 usr_id = graders.web_controller.get_grader_id()
                 conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg, print_allowed=True)
                 if conflict:
-                    print_conflict(conflict, graders)
+                    print_conflict(conflict, graders.grader.tg)
             return command_checked
 
         # elif (ans == "--rg"):
