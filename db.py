@@ -257,7 +257,7 @@ class Database:
                 Answer = self._loop_for_most_popular_from_ans_infos(ans_infos, grader_by_id)
                 grader_name = self.db["graders"].find_one({"_id": usr_id})["name"]
                 grader_ans = Answer.detail[grader_name]['ans']
-                if grader_ans != Answer.ans:
+                if grader_ans != Answer.ans and grader_ans != '':
                     conflict.texts.append(text)
                     conflict.anss.append(Answer.ans)
                     conflict.usr_anss.append(grader_ans)

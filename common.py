@@ -10,34 +10,39 @@ def print_at(txt, tg=None, print_allowed=True):
         else:
             tg.bot.send_message(tg.chat_id, txt)
 
-def print_popular_detail(detail, tg):
+def output_popular_detail(detail):
     grader_list_text = ''
     for grader_name, value in detail.items():
         grader_list_text += "{:<30} {:<4} {:<40}\n".format(grader_name, value['ans'], str(value["time"]))
-    print_at(grader_list_text, tg)
+    grader_list_text += '\n'
+    return grader_list_text
 
-def print_popular_ans_dist(ans_dist, tg):
+def output_popular_ans_dist(ans_dist):
     ans_dist_text = ''
     for number, value in ans_dist.items():
         ans_dist_text += "Result" + str(number) + ':\t'
         for ans, freq in value.items():
             ans_dist_text += ans + ':' + str(freq) + '\t'
         ans_dist_text += '\n'
-    print_at(ans_dist_text, tg)
+    return ans_dist_text
 
 def print_popular_ans_detail(Answer, tg):
-    print_popular_detail(Answer.detail, tg)
-    print_popular_ans_dist(Answer.ans_dist, tg)
-    print_at("Final Ans: " + Answer.ans + "\n", tg)
+    print_text = ''
+    grader_list_text = output_popular_detail(Answer.detail)
+    ans_dist_text = output_popular_ans_dist(Answer.ans_dist)
+    print_text += grader_list_text + ans_dist_text
+    print_text += "Final Ans: " + Answer.ans + "\n"
+    print_at(print_text, tg)
 
 def print_conflict(conflict, tg):
     print_text = ''
     for i in range(conflict.total):
-        # print_popular_detail(conflict.details[i], tg)
-        print_popular_ans_dist(conflict.ans_dists[i], tg)
-        print_at("{}\nAns: {}: Your Ans: {}\nlink: {}\n".format(
-            conflict.texts[i], conflict.anss[i], conflict.usr_anss[i], conflict.links[i]), tg)
-    print_at("Total conflict: {}".format(conflict.total), tg)
+        ans_dist_text = output_popular_ans_dist(conflict.ans_dists[i])
+        print_text += ans_dist_text
+        print_text += "{}\nAns: {}: Your Ans: {}\nlink: {}\n".format(
+            conflict.texts[i], conflict.anss[i], conflict.usr_anss[i], conflict.links[i])
+    print_text += "Total conflict: {}".format(conflict.total)
+    print_at(print_text, tg)
 
 def num_input_check():
     try:
