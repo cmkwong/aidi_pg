@@ -39,7 +39,7 @@ def print_conflict(conflict, tg):
     for i in range(conflict.total):
         ans_dist_text = output_popular_ans_dist(conflict.ans_dists[i])
         print_text += ans_dist_text
-        print_text += "{}\nAns: {}: Your Ans: {}\nlink: {}\n".format(
+        print_text += "{}\nAns: {}: Your Ans: {}\nlink: {}\n\n".format(
             conflict.texts[i], conflict.anss[i], conflict.usr_anss[i], conflict.links[i])
     print_text += "Total conflict: {}".format(conflict.total)
     print_at(print_text, tg)

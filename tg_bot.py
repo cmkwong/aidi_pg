@@ -38,12 +38,18 @@ class Telegram_Bot:
         else:
             self.tg_available = True
 
+    def stop_timer(self, graders, chat_id):
+        if graders.grader.timer_running:
+            graders.grader.tg_timer_interrupt_signal = True
+            self.bot.send_message(chat_id, "Timer Interrupted")
+            return True
+        return False
+
     def run(self, graders):
 
         @self.bot.message_handler(commands=['q'])
         def quit_tg(message):
-            while graders.grader.timer_running:
-                graders.grader.tg_timer_interrupt_signal = True
+            self.stop_timer(graders, message.chat.id)
             self.bot.send_message(message.chat.id, "Telegram disconnected. Bye.")
             raise Exception("Quite Telegram")
 
@@ -64,9 +70,9 @@ class Telegram_Bot:
             self.bot.send_message(message.chat.id, "Type of Project: " + project_type + " activated.")
             graders.setup_project(project_index, new_grader=False)
             # reset the grader
+            self.stop_timer(graders, message.chat.id)
             common.resume_tg_manual_mode(graders)
             self.chat_id = False
-
 
         @self.bot.message_handler(commands=['auto'])
         def auto_activate(message):
@@ -180,10 +186,8 @@ class Telegram_Bot:
 
         @self.bot.message_handler(commands=['stop'])
         def stop_timer(message):
-            if graders.grader.timer_running:
-                graders.grader.tg_timer_interrupt_signal = True
-                self.bot.send_message(message.chat.id, "Timer Interrupted")
-            else:
+            stopped = self.stop_timer(graders, message.chat.id)
+            if not stopped:
                 self.bot.send_message(message.chat.id, "Timer is not running")
 
         @self.bot.message_handler(commands=['status'])
