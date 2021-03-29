@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 import config
+import common
 import time
 import numpy as np
 import re
@@ -68,6 +69,18 @@ class Web:
         self.back_tag_one()
         js_code = "window.document.getElementsByClassName('" + class_name + "').click();"
         self.browser.execute_script(js_code)
+
+    def click_all_links(self, max_web_search_links):
+        # open three results
+        try:
+            links = self.get_links()
+        except:
+            links = []
+            return False
+        self.open_links_new_tags(links, max_web_search_links)
+        # open web search
+        self.click_web_search()
+        return True
 
     def click_web_search(self):
         self.back_tag_one()

@@ -25,7 +25,7 @@ while (not (command_string == "quit")):
     # need the user re-open the program
     if MAIN_LOOP_COUNT % 50 == 0:
         if VERSION != graders.db_controller.get_most_updated_version():
-            raise Exception("Outdated Version")
+            raise Exception("Outdated Version, re-open program.")
 
     if FIRST_TIME:
         # update the local info from remote database

@@ -24,17 +24,11 @@ def base_code_check(controller, ans, max_web_search_links, tg=None):
             return None
         return True
     elif (ans == '~'):
-        # open three results
-        try:
-            links = controller.get_links()
-        except:
-            links = []
+        click_all_links_ok = controller.click_all_links(max_web_search_links)
+        if not click_all_links_ok:
             common.print_at("Not available '~'", tg)
             return None
-        controller.open_links_new_tags(links, max_web_search_links)
-        # open web search
-        controller.click_web_search()
-        return True
+        return click_all_links_ok
     else:
         return False # False = continue
 
@@ -605,6 +599,11 @@ class base_grader:
             # insert query and grader info into database
             answer_id = self.insert_db_query()
 
+            # press web search if in tg mode
+            if self.tg is not None:
+                self.web_controller.click_all_links(self.max_web_search_links)
+                self.web_controller.close_other_tags()
+
             # execute the command
             grade_ok = self.grading(ans, auto=False)
             if not grade_ok:
@@ -615,11 +614,6 @@ class base_grader:
                 timer_ok = self.delay_timer(alarm=self.alarm)
                 if not timer_ok:
                     return False
-
-            # press web search if in tg mode
-            if self.tg is not None:
-                self.web_controller.click_web_search()
-                self.web_controller.close_other_tags()
 
             self.web_controller.click_next_btn()
 
@@ -688,10 +682,6 @@ class base_grader:
             common.print_at("Not Found!\n", self.tg)
             return False
 
-        # press web search
-        self.web_controller.click_web_search()
-        self.web_controller.close_other_tags()
-
         if self.view:
             # if query and answer found
             if self.training:
@@ -704,11 +694,16 @@ class base_grader:
         if not timer_ok:
             return False
 
+        # press web search
+        self.web_controller.click_all_links(self.max_web_search_links)
+        self.web_controller.close_other_tags()
+
         # grading ans that from database
         grade_ok = self.grading(Answer.ans, auto=True)
         if not grade_ok:
             return False
 
+        # press next
         self.web_controller.click_next_btn()
 
         # update status after finish a grading

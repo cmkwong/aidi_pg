@@ -80,11 +80,8 @@ def time_delay_set(graders, ans, overtime_bypass=False):
         return True
 
 def print_proj_list():
-    print("\n")
-    print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
-    print("Please choose the required project Number: ")
-    for index, project in enumerate(config.projects_info):
-        print((index+1), ": (", project["type"],")\t", project["name"])
+    proj_txt = get_project_list_text()
+    print(proj_txt)
 
 def print_ghost_proj_list():
     print("\n")
@@ -111,7 +108,7 @@ def get_project_list_text():
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(config.projects_info):
-        txt = txt + str(index+1) + ": (" + project["type"] + ") " + project["name"] + '\n'
+        txt += "{}: ({})\t{}\n".format(str(index+1), project["type"], project["name"])
     return txt
 
 def menu_choice():
