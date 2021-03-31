@@ -40,14 +40,9 @@ class Web:
         self.browser.switch_to.window(self.original_window)
 
     def close_other_tags(self):
-        # js_code = "window.close();"
         for window_handle in self.browser.window_handles:
-            # time_out = time.time()
             if window_handle != self.original_window:
                 self.browser.switch_to.window(window_handle)
-                # if time.time() - time_out <= 2:
-                #     self.browser.execute_script(js_code)
-                # if time.time() - time_out > 2:
                 self.browser.close()
         self.back_tag_one()
 
@@ -122,6 +117,26 @@ class Web:
         elif config.projects_info[project_index]["location"] == "en_US":
             js_code = raw_string % 0
         self.browser.execute_script(js_code)
+
+    def flash_all_tags(self, max_web_search_links):
+        # get links
+        try:
+            links = self.get_links()
+        except:
+            links = []
+            return False
+        # open the links one-by-one
+        links = links[:max_web_search_links]
+        for link in links:
+            try:
+                self.browser.execute_script("window.open('%s');" % link)
+                self.close_other_tags()
+            except:
+                print("A result link cannot open: \n", link)
+        # open web search
+        self.click_web_search()
+        self.close_other_tags()
+        return True
 
     def get_web_search_link(self):
         js_code = """

@@ -601,8 +601,7 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.click_all_links(self.max_web_search_links)
-                self.web_controller.close_other_tags()
+                self.web_controller.flash_all_tags(self.max_web_search_links)
 
             # execute the command
             grade_ok = self.grading(ans, auto=False)
@@ -695,8 +694,7 @@ class base_grader:
             return False
 
         # press web search
-        self.web_controller.click_all_links(self.max_web_search_links)
-        self.web_controller.close_other_tags()
+        self.web_controller.flash_all_tags(self.max_web_search_links)
 
         # grading ans that from database
         grade_ok = self.grading(Answer.ans, auto=True)
