@@ -71,7 +71,7 @@ class Telegram_Bot:
             graders.setup_project(project_index, new_grader=False)
             # reset the grader
             self.stop_timer(graders, message.chat.id)
-            common.resume_tg_manual_mode(graders)
+            common.resume_tg_manual_mode(graders) # cancel auto mode
             self.tg_available = False
 
         @self.bot.message_handler(commands=['auto'])

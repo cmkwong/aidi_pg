@@ -25,8 +25,8 @@ GET_QUERY_TEXT_PROJS = ["spot12", "saf", "eval3", "amp", "deepscrape", "maps"]
 UPDATE_DB_PROJS = ["spot12", "saf", "eval3", "classify", "amp", "deepscrape", "maps"]
 
 # projects that need to open 10 results webpages
-MAX_TEN_RESULTS_PROJS = ["amp", "deepscrape"]
-MAX_FIVE_RESULTS_PROJS = ["maps"]
+MAX_TEN_RESULTS_PROJS = ["deepscrape"]
+MAX_FIVE_RESULTS_PROJS = ["amp", "maps"]
 MAX_ONE_RESULTS_PROJS = ["saf"]
 
 help_command = {
