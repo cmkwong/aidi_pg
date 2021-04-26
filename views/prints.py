@@ -1,4 +1,4 @@
-from ..models import conflictModel
+from models import conflictModel
 
 def print_list(grader, str_list):
     for string in str_list:

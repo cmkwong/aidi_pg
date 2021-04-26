@@ -1,4 +1,4 @@
-from .. import config
+import config
 
 def get_grader_access_level(graders):
     try:

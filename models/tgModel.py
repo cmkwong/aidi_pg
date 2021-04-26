@@ -1,4 +1,4 @@
-import infoModel
+from models import infoModel
 
 # for tg_bot.py used
 def send_tg_info(grader, old_query_text=None, time_out=10):

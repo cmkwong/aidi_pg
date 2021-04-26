@@ -1,5 +1,5 @@
-from .. import config
-from ..utils.inputs import *
+import config
+from utils.inputs import *
 
 def print_ghost_proj_list():
     print("\n")

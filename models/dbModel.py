@@ -1,5 +1,5 @@
-from .. import config
-from ..views.prints import *
+import config
+from views.prints import *
 
 def update_grader_info(web_controller, db_controller):
     grader_id = web_controller.get_grader_id()

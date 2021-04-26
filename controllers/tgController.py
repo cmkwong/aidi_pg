@@ -1,8 +1,8 @@
 import telebot
-import common
 import config
-from ..models import tgModel
-from ..views.prints import *
+from models import tgModel, menuModel
+from controllers import gradingController, authController
+from views.prints import *
 
 class Telegram_Bot:
     def __init__(self, token):
@@ -58,7 +58,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['p'])
         def select_project(message):
             graders.db_controller.update_local_config_from_db()
-            project_list_txt = common.get_project_list_text()
+            project_list_txt = menuModel.get_project_list_text()
             msg = self.bot.reply_to(message, project_list_txt + "\nEnter project Number: ")
             self.bot.register_next_step_handler(msg, set_project)
 
@@ -73,7 +73,7 @@ class Telegram_Bot:
             graders.setup_project(project_index, new_grader=False)
             # reset the grader
             self.stop_timer(graders, message.chat.id)
-            common.resume_tg_manual_mode(graders) # cancel auto mode
+            gradingController.resume_tg_manual_mode(graders) # cancel auto mode
             self.tg_available = False
 
         @self.bot.message_handler(commands=['auto'])
@@ -81,7 +81,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = common.get_grader_access_level(graders)
+                level = authController.get_grader_access_level(graders)
                 if level == 's' or level == 'a':
                     self.auto_user = True
                     graders.auto_mode = True
@@ -99,7 +99,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['nauto'])
         def auto_deactivate(message):
             self.auto_user = False
-            common.resume_tg_manual_mode(graders)
+            gradingController.resume_tg_manual_mode(graders)
             self.bot.send_message(message.chat.id, "Auto-mode de-activated.")
 
         @self.bot.message_handler(commands=['fauto'])
@@ -107,7 +107,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = common.get_grader_access_level(graders)
+                level = authController.get_grader_access_level(graders)
                 if level == 's':
                     self.auto_user = True
                     graders.auto_mode = True
@@ -125,7 +125,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['nfauto'])
         def nfauto_deactivate(message):
             self.auto_user = False
-            common.resume_tg_manual_mode(graders)
+            gradingController.resume_tg_manual_mode(graders)
             self.bot.send_message(message.chat.id, "Full auto de-activated")
 
         @self.bot.message_handler(commands=['t'])
@@ -214,7 +214,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = common.get_grader_access_level(graders)
+                level = authController.get_grader_access_level(graders)
                 if level == 's':
                     msg = self.bot.reply_to(message, "Enter Project ID ")
                     self.bot.register_next_step_handler(msg, check_conflict)
@@ -224,7 +224,7 @@ class Telegram_Bot:
             usr_id = graders.web_controller.get_grader_id()
             conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg,print_allowed=True)
             if conflict:
-                common.print_conflict(conflict, self)
+                print_conflict(conflict, self)
 
         @self.bot.message_handler(commands=['limit'])
         def set_limit_number(message):

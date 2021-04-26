@@ -1,10 +1,10 @@
 import time
 import tkinter as tk
 from functools import partial
-from .. import config
-from ..models import gradingModel, dbModel, infoModel
-from ..views.prints import *
-from ..utils import inputs, sounds
+import config
+from models import gradingModel, dbModel, infoModel
+from views.prints import *
+from utils import inputs, sounds
 
 def base_code_check(controller, ans, max_web_search_links, tg=None):
     if (ans == '`'):

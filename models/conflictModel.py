@@ -1,5 +1,3 @@
-from ..views.prints import *
-
 def output_popular_ans_dist(ans_dist):
     ans_dist_text = ''
     for number, value in ans_dist.items():

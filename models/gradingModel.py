@@ -1,5 +1,5 @@
-from ..views.prints import *
-from ..utils import sounds
+from views.prints import *
+from utils import sounds
 import time
 import numpy as np
 

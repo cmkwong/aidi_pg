@@ -1,8 +1,8 @@
-from .. import config
-from ..models import menuModel, reportModel
-import authController, gradingController, tgController
-from ..utils.inputs import *
-from ..views.prints import *
+import config
+from models import menuModel, reportModel
+from controllers import authController, gradingController, tgController
+from utils.inputs import *
+from views.prints import *
 import datetime
 
 def control_command_check(graders, ans):
@@ -10,7 +10,7 @@ def control_command_check(graders, ans):
     command_not_checked = "command_not_checked"
     quit_program = "quit"
 
-    if ans == '' and graders.grader.project_type != 'valid':
+    if ans == '':
         print("cannot input empty string")
         return command_checked
 

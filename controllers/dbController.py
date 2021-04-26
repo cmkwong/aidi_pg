@@ -2,8 +2,8 @@ import pymongo
 import datetime
 import time
 import collections
-from ..views.prints import *
-from .. import config
+from views.prints import *
+import config
 
 db_name = "cmk_testing"
 

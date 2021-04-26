@@ -1,6 +1,6 @@
 import time
-from .. import config
-from ..views.prints import *
+import config
+from views.prints import *
 
 def get_query_text(project_type, tg, web_controller, print_allowed, filter_query=None, time_out=10):
     query_text, filter_query = filter_query, filter_query
