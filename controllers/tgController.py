@@ -1,6 +1,8 @@
 import telebot
 import common
 import config
+from ..models import tgModel
+from ..views.prints import *
 
 class Telegram_Bot:
     def __init__(self, token):
@@ -20,7 +22,7 @@ class Telegram_Bot:
                 graders.auto_available = graders.decode()
 
                 if (graders.grader.new_query):
-                    graders.print_status()
+                    print_status(graders.grader)
                     graders.grader.new_query = False
 
             if graders.auto_available is False:
@@ -255,7 +257,7 @@ class Telegram_Bot:
                 self.tg_available = False
             else:
                 self.bot.send_message(self.chat_id, "Got the chat ID")
-                self.current_query_text = graders.grader.send_tg_info()
+                self.current_query_text = tgModel.send_tg_info(graders.grader)
                 self.next_query_check()
 
         @self.bot.message_handler(func=lambda message: True)
@@ -269,7 +271,7 @@ class Telegram_Bot:
                     # extra print needed
                     if graders.print_extra_info == True:
                         if graders.grader.project_type == "classify":
-                            graders.print_list(config.classify_extra_info_list)
+                            print_list(graders.grader, config.classify_extra_info_list)
                     user_command = message.text
                     self.gradingFinish = graders.decode(user_command)
 
@@ -279,7 +281,7 @@ class Telegram_Bot:
                         graders.auto_available = True
 
                     if (graders.grader.new_query):
-                        graders.print_status()
+                        print_status(graders.grader)
                         graders.grader.new_query = False
                         # # check if limit reach
                         # limit_reached = graders.grader.check_limit_reached()
@@ -294,7 +296,7 @@ class Telegram_Bot:
                         self.gradingFinish = False
                         self.old_query_text = self.current_query_text
                         if graders.auto_mode == False:
-                            self.current_query_text = graders.grader.send_tg_info(old_query_text=self.old_query_text, time_out=10)
+                            self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text, time_out=10)
                             self.next_query_check()
                     if graders.auto_mode == False:
                         self.bot.send_message(self.chat_id, "Input:")

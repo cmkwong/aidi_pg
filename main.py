@@ -1,7 +1,7 @@
-import web
-import common
-import db
 import config
+from controllers import gradingController, commandController, dbController, webController
+from models import gradingModel, menuModel
+from views.prints import *
 from appscript import *
 
 command_string = "command_not_checked"
@@ -9,11 +9,11 @@ user_command = None
 VERSION = "0.0.5"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
-web_controller = web.Web(init_url=default_url)
+db_controller = dbController.Database()
+web_controller = webController.Web(init_url=default_url)
 web_controller.open_chrome()
 web_controller.init_working_tag()
-db_controller = db.Database()
-graders = common.Graders(web_controller, db_controller)
+graders = gradingController.Graders(web_controller, db_controller)
 
 terminal = app('Terminal')
 FIRST_TIME = True
@@ -31,7 +31,7 @@ while (not (command_string == "quit")):
         # update the local info from remote database
         db_controller.update_local_config_from_db()
         # ask user choose projects
-        project_index = common.menu_choice()
+        project_index = menuModel.menu_choice()
         graders.setup_project(project_index)
         FIRST_TIME = False
 
@@ -40,12 +40,12 @@ while (not (command_string == "quit")):
         # extra print needed
         if graders.print_extra_info == True:
             if graders.grader.project_type == "classify":
-                graders.print_list(config.classify_extra_info_list)
+                print_list(graders.grader, config.classify_extra_info_list)
 
         print("Answer Input: ")
         terminal.activate()  # back to terminal shell for input
         user_command = input()
-        command_string = common.control_command_check(graders, user_command)
+        command_string = commandController.control_command_check(graders, user_command)
         if command_string == "command_not_checked":
             gradingFinish = graders.decode(user_command)
 
@@ -58,20 +58,20 @@ while (not (command_string == "quit")):
             # extra print needed
             if graders.print_extra_info == True:
                 if graders.grader.project_type == "classify":
-                    graders.print_list(config.classify_extra_info_list)
+                    print_list(graders.grader, config.classify_extra_info_list)
 
             print("Answer Input-a: ")
             terminal.activate()  # back to terminal shell for input
             user_command = input()
-            command_string = common.control_command_check(graders, user_command)
+            command_string = commandController.control_command_check(graders, user_command)
             if command_string == "command_not_checked":
                 graders.auto_mode = False
                 graders.auto_available = graders.decode(user_command)
                 graders.auto_mode = True
 
     if (graders.grader.new_query):
-        graders.print_status()
-        limit_reached = graders.grader.check_limit_reached()
+        print_status(graders.grader)
+        limit_reached = gradingModel.check_limit_reached(graders.grader)
         if limit_reached:  # check for limit reach, if do, assign auto_available=false
             graders.auto_available = False
         graders.grader.new_query = False

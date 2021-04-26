@@ -22,7 +22,7 @@
 GET_QUERY_TEXT_PROJS = ["spot12", "saf", "eval3", "amp", "deepscrape", "maps"]
 
 # projects need to access the database
-UPDATE_DB_PROJS = ["spot12", "saf", "eval3", "classify", "amp", "deepscrape", "maps"]
+UPDATE_DB_PROJS = ["spot12", "saf", "eval3", "classify", "amp", "deepscrape", "maps", "valid"]
 
 # projects that need to open 10 results webpages
 MAX_TEN_RESULTS_PROJS = ["deepscrape"]

@@ -2,8 +2,8 @@ import pymongo
 import datetime
 import time
 import collections
-import common
-import config
+from ..views.prints import *
+from .. import config
 
 db_name = "cmk_testing"
 
@@ -21,7 +21,8 @@ class Database:
     def update_db_config(self, login="common_user", pw="!23456Qwerty"):
         self.login = login
         self.pw = pw
-        self.URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (self.login, self.pw, db_name)
+        self.URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (
+        self.login, self.pw, db_name)
         self.client = pymongo.MongoClient(self.URI)
         self.db = self.client[db_name]
 
@@ -45,7 +46,7 @@ class Database:
             return None
         count = self.db["querys"].count_documents(db_filter)
         # insert one query
-        if count is 0: # meaning no query duplicated
+        if count is 0:  # meaning no query duplicated
             my_dict = {
                 "project": project_id,
                 "text": text,
@@ -74,12 +75,12 @@ class Database:
         db_filter = {
             "grader": grader_id,
             "query_id": query_id
-            #"_id": ans_id
+            # "_id": ans_id
         }
         count = self.db["answers"].count_documents(db_filter)
         if count is 0:
             my_dict = {
-                #"_id": ans_id,
+                # "_id": ans_id,
                 "grader": grader_id,
                 "query_id": query_id,
                 "query_link": query_link
@@ -204,11 +205,11 @@ class Database:
         if (query):
             query_id = query["_id"]
         else:
-            common.print_at("No such query.", tg, print_allowed)
+            print_at("No such query.", tg, print_allowed)
             return None
         ans_infos = self._find_all_ans_by_query_id(query_id)
         return ans_infos
-    
+
     def find_one_ans(self, project_id, text, tg=None, print_allowed=True):
         # Init collection nametuple
         Answer = collections.namedtuple("Answer", ["grader_name", "ans", "ans_dist", "detail", "link"])
@@ -217,13 +218,13 @@ class Database:
         # Find ans_infos that store all the query related to that project id and text
         ans_infos = self._find_ans_infos(project_id=project_id, text=text, tg=tg, print_allowed=print_allowed)
         if not ans_infos:
-            common.print_at("Have query but not have answer yet. ", tg, print_allowed)
+            print_at("Have query but not have answer yet. ", tg, print_allowed)
             return None
         try:
             ans_info = self._find_most_reliable(ans_infos)
             Answer.ans = ans_info["grader_answer"]
         except (KeyError, TypeError):
-            common.print_at("Have answer query but have no grader answer yet.", tg, print_allowed)
+            print_at("Have answer query but have no grader answer yet.", tg, print_allowed)
             return None
         grader_id = ans_info["grader"]
         grader = self.db["graders"].find_one({"_id": grader_id})
@@ -241,14 +242,15 @@ class Database:
         return Answer
 
     def find_conflict(self, project_id, usr_id, tg, print_allowed=True):
-        conflict = collections.namedtuple("conflict", ['total', 'texts', 'anss', 'usr_anss', 'details', 'ans_dists', 'links'])
-        conflict.total, conflict.texts, conflict.anss, conflict.usr_anss, conflict.details, conflict.ans_dists, conflict.links = 0,[], [],[],[],[],[]
+        conflict = collections.namedtuple("conflict",
+                                          ['total', 'texts', 'anss', 'usr_anss', 'details', 'ans_dists', 'links'])
+        conflict.total, conflict.texts, conflict.anss, conflict.usr_anss, conflict.details, conflict.ans_dists, conflict.links = 0, [], [], [], [], [], []
 
         query_filter = {"project": project_id}
         query_datas = self.db["querys"].find(query_filter)
         grader_by_id = self.create_grader_table_by_id()
         if query_datas.count() == 0:
-            common.print_at("No Such project", tg, print_allowed)
+            print_at("No Such project", tg, print_allowed)
             return None
         else:
             for query_data in query_datas:
@@ -266,7 +268,7 @@ class Database:
                     conflict.links.append(Answer.link)
                     conflict.total += 1
             if conflict.total == 0:
-                common.print_at("No Conflict Detected", tg, print_allowed)
+                print_at("No Conflict Detected", tg, print_allowed)
                 return None
             return conflict
 

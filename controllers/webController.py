@@ -4,8 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-import config
-import common
+from .. import config
 import time
 import numpy as np
 import re
@@ -368,7 +367,12 @@ class Web:
         self.back_tag_one()
         return True
 
+    def textarea_words(self, path, text):
+        js_code = """
+            document.querySelector('%s').value = '%s';
+        """
+        self.browser.execute_script(js_code % (path, text))
+        return True
 
     def quite_driver(self):
         self.browser.quit()
-
