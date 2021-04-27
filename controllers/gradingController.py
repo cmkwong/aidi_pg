@@ -5,6 +5,7 @@ import config
 from models import gradingModel, dbModel, infoModel
 from views.prints import *
 from utils import inputs, sounds
+import collections
 
 def base_code_check(controller, ans, max_web_search_links, tg=None):
     if (ans == '`'):
@@ -282,15 +283,14 @@ class base_grader:
                 time_interval = gradingModel.find_time_delay_level(self.find_time_delay)
                 if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                     if self.training:
-                        Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg,
-                                                                      print_allowed=False)
+                        Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg, print_allowed=False)
                     else:
-                        Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg,
-                                                                 print_allowed=False)
+                        Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg, print_allowed=False)
                     if Answer != None:
-                        find_time_used = self.find_time_delay - i
+                        Answer.find_ok, Answer.find_time_used = True, self.find_time_delay - i
                         self.timer_running = False
-                        break
+                        return Answer
+
             self.timer_running = False
         except KeyboardInterrupt:
             self.reopen_current_browser()
@@ -345,12 +345,11 @@ class base_grader:
         if self.view:
             print_at("text: " + self.query_text, self.tg)
 
-        Answer = None
         # find delay
-        find_time_used = 0
+        Answer = None
         if self.find_delay:
-            find_ok = self.delay_find_for_answer()
-            if not find_ok:
+            Answer = self.delay_find_for_answer()
+            if not Answer:
                 return False
 
         # not find delay
@@ -375,7 +374,7 @@ class base_grader:
                 print_at("Got from: " + str(Answer.grader_name) + "\nAns: " + str(Answer.ans), self.tg)
 
         # timer delay
-        timer_ok = self.delay_timer(time_used=find_time_used, alarm=False)
+        timer_ok = self.delay_timer(time_used=Answer.find_time_used, alarm=False)
         if not timer_ok:
             return False
 

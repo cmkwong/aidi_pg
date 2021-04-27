@@ -3,6 +3,7 @@ import datetime
 import time
 import collections
 from views.prints import *
+from models import dbModel
 import config
 
 db_name = "cmk_testing"
@@ -167,10 +168,7 @@ class Database:
         :param grader_by_id: {1 : {'name': 'Chris', 'login': 'chris', ... }}
         :return: Answer
         """
-        # Init collection nametuple
-        Answer = collections.namedtuple("Answer", ["grader_name", "ans", "ans_dist", "detail", "link"])
-        Answer.grader_name, Answer.link = None, None
-
+        Answer = dbModel.init_Answer_object()
         # loop for each graders and update the ans_dist
         Answer.detail = self._renew_grader_list(grader_by_id)
         Answer.ans_dist = {}
@@ -211,10 +209,8 @@ class Database:
         return ans_infos
 
     def find_one_ans(self, project_id, text, tg=None, print_allowed=True):
-        # Init collection nametuple
-        Answer = collections.namedtuple("Answer", ["grader_name", "ans", "ans_dist", "detail", "link"])
-        Answer.grader_name = "Unknown"
 
+        Answer = dbModel.init_Answer_object()
         # Find ans_infos that store all the query related to that project id and text
         ans_infos = self._find_ans_infos(project_id=project_id, text=text, tg=tg, print_allowed=print_allowed)
         if not ans_infos:

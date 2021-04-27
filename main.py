@@ -57,7 +57,7 @@ while (not (command_string == "quit")):
                 if graders.grader.project_type == "classify":
                     print_list(graders.grader, config.classify_extra_info_list)
 
-            user_input, command_string = answerModel.enter('Answer Input-a', graders, terminal)
+            user_input, command_string = answerModel.enter('Answer Input-a: ', graders, terminal)
             if command_string == "command_not_checked":
                 graders.auto_mode = False
                 graders.auto_available = graders.decode(user_input)
