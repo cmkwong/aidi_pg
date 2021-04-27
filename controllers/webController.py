@@ -86,6 +86,11 @@ class Web:
         js_code = "window.document.getElementById('grading-nav-next-shortcut').click();"
         self.browser.execute_script(js_code)
 
+    def click_previous_btn(self):
+        self.back_tag_one()
+        js_code = "window.document.getElementById('grading-nav-previous-shortcut').click();"
+        self.browser.execute_script(js_code)
+
     def click_selector(self, selector_string):
         self.back_tag_one()
         js_code = "window.document.querySelector('" + selector_string + "').click();"
@@ -117,6 +122,11 @@ class Web:
             js_code = raw_string % 0
         self.browser.execute_script(js_code)
 
+    def flash_web_search(self):
+        # open web search
+        self.click_web_search()
+        self.close_other_tags()
+
     def flash_all_tags(self, max_web_search_links):
         # get links
         try:
@@ -133,8 +143,7 @@ class Web:
             except:
                 print("A result link cannot open: \n", link)
         # open web search
-        self.click_web_search()
-        self.close_other_tags()
+        self.flash_web_search()
         return True
 
     def get_web_search_link(self):
@@ -368,10 +377,10 @@ class Web:
         return True
 
     def textarea_words(self, path, text):
-        js_code = """
-            document.querySelector('%s').value = '%s';
-        """
-        self.browser.execute_script(js_code % (path, text))
+        textarea = self.browser.find_element_by_css_selector(path)
+        #textarea.click()
+        textarea.clear()
+        textarea.send_keys(text)
         return True
 
     def quite_driver(self):

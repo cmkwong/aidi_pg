@@ -1,6 +1,6 @@
 import config
-from controllers import gradingController, commandController, dbController, webController
-from models import gradingModel, menuModel
+from controllers import gradingController, dbController, webController
+from models import gradingModel, menuModel, answerModel
 from views.prints import *
 from appscript import *
 
@@ -42,12 +42,9 @@ while (not (command_string == "quit")):
             if graders.grader.project_type == "classify":
                 print_list(graders.grader, config.classify_extra_info_list)
 
-        print("Answer Input: ")
-        terminal.activate()  # back to terminal shell for input
-        user_command = input()
-        command_string = commandController.control_command_check(graders, user_command)
+        user_input, command_string = answerModel.enter('Answer Input: ', graders, terminal)
         if command_string == "command_not_checked":
-            gradingFinish = graders.decode(user_command)
+            gradingFinish = graders.decode(user_input)
 
     elif graders.auto_mode == True:
 
@@ -60,13 +57,10 @@ while (not (command_string == "quit")):
                 if graders.grader.project_type == "classify":
                     print_list(graders.grader, config.classify_extra_info_list)
 
-            print("Answer Input-a: ")
-            terminal.activate()  # back to terminal shell for input
-            user_command = input()
-            command_string = commandController.control_command_check(graders, user_command)
+            user_input, command_string = answerModel.enter('Answer Input-a', graders, terminal)
             if command_string == "command_not_checked":
                 graders.auto_mode = False
-                graders.auto_available = graders.decode(user_command)
+                graders.auto_available = graders.decode(user_input)
                 graders.auto_mode = True
 
     if (graders.grader.new_query):

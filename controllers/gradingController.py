@@ -29,6 +29,9 @@ def base_code_check(controller, ans, max_web_search_links, tg=None):
             print_at("Not available '~'", tg)
             return None
         return click_all_links_ok
+    elif ans == '[':
+        controller.click_previous_btn()
+        return True
     else:
         return False # False = continue
 

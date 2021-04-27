@@ -1,5 +1,5 @@
 import config
-from models import menuModel, reportModel
+from models import menuModel, reportModel, answerModel
 from controllers import authController, gradingController, tgController
 from utils.inputs import *
 from views.prints import *
@@ -201,8 +201,7 @@ def control_command_check(graders, ans):
         elif (ans == "-conflict"):
             level = authController.get_grader_access_level(graders)
             if level == 's':
-                print("Input project ID: ")
-                project_id = input()
+                project_id = input("Input project ID: ")
                 usr_id = graders.web_controller.get_grader_id()
                 conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg, print_allowed=True)
                 if conflict:

@@ -332,6 +332,9 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
 
     elif (project_type == "valid"):
 
+        # flash web search
+        web_controller.flash_web_search()
+
         if ans == 'v':
             web_controller.click_by_id("query_validationquery_vague")
         elif ans == 'i':
@@ -340,10 +343,13 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
             web_controller.click_by_id("query_validationquery_wrong_language")
         elif ans == 'n':
             web_controller.click_by_id("query_validationvalid")
-        else:
+        elif ans[0] == '@':
+            ans = ans[1:]
             web_controller.click_by_id("query_validationother")
             web_controller.textarea_words("#text-widget-wrapper textarea", ans)
-
+        else:
+            print_at("--------Not correct ans detected.--------", tg)
+            return False
         return True
 
     else:
