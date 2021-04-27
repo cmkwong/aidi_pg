@@ -292,6 +292,7 @@ class base_grader:
                         return Answer
 
             self.timer_running = False
+            return None
         except KeyboardInterrupt:
             self.reopen_current_browser()
             if not self.tg: print("Timer interrupted. Reopening...")
@@ -348,8 +349,8 @@ class base_grader:
         # find delay
         Answer = None
         if self.find_delay:
-            Answer = self.delay_find_for_answer()
-            if not Answer:
+            Answer = self.delay_find_for_answer() # Answer = False: interrupted; Answer = None: Not Found
+            if Answer == False:
                 return False
 
         # not find delay
