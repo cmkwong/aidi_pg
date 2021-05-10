@@ -41,7 +41,7 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
             web_controller.click_by_id("result3_validationno_result3")
         return True
 
-    elif (project_type == "amp") or (project_type == "maps"):
+    elif (project_type == "amp") or (project_type == "maps") or project_type == 'saf2':
         if len(ans) > max_web_search_links:
             print_at("Wrong length of answer.", tg)
             return False
@@ -369,10 +369,10 @@ def find_time_delay_level(find_time_delay):
     if find_time_delay > 200:
         return 20
     elif find_time_delay <= 200 and find_time_delay > 100:
-        return 10
+        return 15
     elif find_time_delay <= 100 and find_time_delay > 60:
-        return 5
+        return 10
     elif find_time_delay <= 60 and find_time_delay > 20:
-        return 4
+        return 5
     elif find_time_delay <= 20 and find_time_delay > 1:
         return 2

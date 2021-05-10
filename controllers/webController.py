@@ -376,6 +376,14 @@ class Web:
         self.back_tag_one()
         return True
 
+    # def textarea_words(self, text, tab_times):
+    #     keyboard = Controller()
+    #     for _ in range(tab_times):
+    #         keyboard.press(Key.tab)
+    #         keyboard.release(Key.tab)
+    #     keyboard.type(text)
+    #     return True
+
     def textarea_words(self, path, text):
         textarea = self.browser.find_element_by_css_selector(path)
         #textarea.click()

@@ -5,7 +5,6 @@ import config
 from models import gradingModel, dbModel, infoModel
 from views.prints import *
 from utils import inputs, sounds
-import collections
 
 def base_code_check(controller, ans, max_web_search_links, tg=None):
     if (ans == '`'):
@@ -43,7 +42,7 @@ def resume_standard_mode(graders):
     # reset the full-auto
     graders.grader.full_auto = False
     graders.grader.find_delay = False
-    graders.grader.find_time_delay = 60
+    graders.grader.find_time_delay = 320
     # reset tg mode
     graders.grader.tg = None
     # print_allowed
@@ -56,7 +55,6 @@ def set_auto_mode(graders):
     # reset the full-auto
     graders.grader.full_auto = False
     graders.grader.find_delay = False
-    graders.grader.find_time_delay = 60
     print("Auto-mode activated.")
 
 def set_full_auto_mode(graders):
@@ -64,7 +62,6 @@ def set_full_auto_mode(graders):
     graders.auto_available = True
     graders.grader.full_auto = True
     graders.grader.find_delay = True
-    graders.grader.find_time_delay = 320
     print("Full auto activated, time delay after found:", graders.grader.time_delay)
 
 def set_lazy_mode(graders):
@@ -87,7 +84,6 @@ def resume_tg_manual_mode(graders):
     # reset the full-auto
     graders.grader.full_auto = False
     graders.grader.find_delay = False
-    graders.grader.find_time_delay = 60
     return True
 
 def time_delay_set(graders, ans, overtime_bypass=False):
@@ -167,6 +163,8 @@ class Graders:
             self.grader.max_web_search_links = 10
         elif type in config.MAX_FIVE_RESULTS_PROJS:
             self.grader.max_web_search_links = 5
+        elif type in config.MAX_TWO_RESULTS_PROJS:
+            self.grader.max_web_search_links = 2
         elif type in config.MAX_ONE_RESULTS_PROJS:
             self.grader.max_web_search_links = 1
         else:
@@ -197,7 +195,7 @@ class base_grader:
         self.project_type = None
         self.time_delay = 1
         self.find_delay = False
-        self.find_time_delay = 60
+        self.find_time_delay = 320
         self.manual_timer = False
         self.view = False               # print grader answer
         self.full_auto = False
