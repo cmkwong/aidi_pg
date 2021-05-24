@@ -26,7 +26,7 @@ class Telegram_Bot:
                     graders.grader.new_query = False
 
             if graders.auto_available is False:
-                self.current_query_text = graders.grader.send_tg_info(old_query_text=self.old_query_text,
+                self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text,
                                                                       time_out=10)
                 self.next_query_check()
                 # inside grader.py, need to set False for user input manually

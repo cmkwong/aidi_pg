@@ -204,7 +204,7 @@ class Web:
                     filter_list = [];
                     for (let i=0; i<list.length; i++) {
                         if (getComputedStyle(list[i],'::after').content === "counter(section)") {
-                            filter_list.push(list[i].querySelector('a').text);
+                            filter_list.push(list[i].querySelector('.title').textContent.trim() + '\\n' + list[i].querySelector('.description').textContent.trim());
                         }
                     }
                     return filter_list;
