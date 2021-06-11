@@ -203,17 +203,22 @@ class Web:
                     list = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
                     filter_list = [];
                     for (let i=0; i<list.length; i++) {
-                        let title = "Empty Title"
+                        let title = '';
                         if (list[i].querySelector('.title')) { 
-                            title = list[i].querySelector('.title').textContent.trim(); 
+                            title = list[i].querySelector('.title').textContent.trim();
+                        } else {
+                            title = "Empty Title";
                         };
-                        let description = "Empty Description"
-                        if (list[i].querySelector('.description')) { 
-                            description = list[i].querySelector('.description').textContent.trim(); 
+                        let description = '';
+                        let description_list = list[i].querySelectorAll('.description');
+                        if (description_list.length !== 0) {
+                            for (let k=0; k < description_list.length; k++) {
+                                description += description_list[k].textContent.trim() + '\\n';
+                            }
+                        } else {
+                            description = "Empty Description";
                         };
-                        if (getComputedStyle(list[i],'::after').content === "counter(section)") {
-                            filter_list.push(title + '\\n' + description);
-                        }
+                        filter_list.push(title + '\\n' + description);
                     }
                     return filter_list;
                 """

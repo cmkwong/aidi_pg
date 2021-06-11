@@ -55,14 +55,12 @@ def set_auto_mode(graders):
     # reset the full-auto
     graders.grader.full_auto = False
     graders.grader.find_delay = False
-    print("Auto-mode activated.")
 
 def set_full_auto_mode(graders):
     graders.auto_mode = True
     graders.auto_available = True
     graders.grader.full_auto = True
     graders.grader.find_delay = True
-    print("Full auto activated, time delay after found:", graders.grader.time_delay)
 
 def set_lazy_mode(graders):
     # view
@@ -75,7 +73,6 @@ def set_lazy_mode(graders):
     # auto mode activate
     graders.auto_mode = True
     graders.auto_available = True
-    print("Lazy config set done.")
 
 def resume_tg_manual_mode(graders):
     # reset auto mode

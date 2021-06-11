@@ -83,13 +83,7 @@ class Telegram_Bot:
             else:
                 level = authController.get_grader_access_level(graders)
                 if level == 's' or level == 'a':
-                    self.auto_user = True
-                    graders.auto_mode = True
-                    graders.auto_available = True
-                    # reset the full-auto
-                    graders.grader.full_auto = False
-                    graders.grader.find_delay = False
-                    graders.grader.find_time_delay = 60
+                    gradingController.set_auto_mode(graders)
 
                     # auto: loop finding, print, if not found, showing next query
                     self.auto_run(graders)
@@ -110,11 +104,7 @@ class Telegram_Bot:
                 level = authController.get_grader_access_level(graders)
                 if level == 's':
                     self.auto_user = True
-                    graders.auto_mode = True
-                    graders.auto_available = True
-                    graders.grader.full_auto = True
-                    graders.grader.find_delay = True
-                    graders.grader.find_time_delay = 300
+                    gradingController.set_full_auto_mode(graders)
                     self.bot.send_message(self.chat_id, "Full auto activated, time delay after found:" + str(graders.grader.time_delay))
 
                     # auto: loop finding, print, if not found, showing next query
@@ -140,6 +130,19 @@ class Telegram_Bot:
                 return False
             graders.grader.time_delay = int(time)
             self.bot.send_message(message.chat.id, "Time delay set")
+
+        @self.bot.message_handler(commands=['dft'])
+        def set_time_delay(message):
+            msg = self.bot.reply_to(message, "Enter delay time(s): ")
+            self.bot.register_next_step_handler(msg, enter_delay_find_time)
+
+        def enter_delay_find_time(message):
+            time = message.text
+            if not time.isdigit():
+                self.bot.send_message(message.chat.id, "This is not a number")
+                return False
+            graders.grader.find_time_delay = int(time)
+            self.bot.send_message(message.chat.id, "Delay Find Time delay set")
 
         @self.bot.message_handler(commands=['done'])
         def set_done_count(message):
