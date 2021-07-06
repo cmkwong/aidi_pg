@@ -68,6 +68,7 @@ def set_lazy_mode(graders):
     # find ans delay
     graders.grader.find_delay = True
     graders.grader.find_time_delay = 60
+
     # next delay
     graders.grader.time_delay = 200
     # auto mode activate

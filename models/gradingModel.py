@@ -3,6 +3,32 @@ from utils import sounds
 import time
 import numpy as np
 
+def pattern_one(a, num, web_controller, tg):
+    if (a == 'i'):
+        web_controller.click_by_id(
+            ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
+    elif (a == 'l'):
+        web_controller.click_by_id(
+            ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
+    elif (a == 'x'):
+        web_controller.click_by_id(
+            ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
+    else:
+        web_controller.click_by_id(
+            ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+        if (a == 'e'):
+            web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+        elif (a == 'g'):
+            web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
+        elif (a == 'f'):
+            web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
+        elif (a == 'b'):
+            web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
+        else:
+            print_at("--------Not correct ans detected.--------", tg)
+            return False
+    return True
+
 def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=False):
     if (project_type == "spot12"):
         if len(ans) > max_web_search_links:
@@ -10,29 +36,9 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
             return False
         num = 1
         for a in ans:
-            if (a == 'i'):
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
-            elif (a == 'l'):
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
-            elif (a == 'x'):
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-            else:
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                if (a == 'e'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-                elif (a == 'g'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-                elif (a == 'f'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-                elif (a == 'b'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
-                else:
-                    print_at("--------Not correct ans detected.--------", tg)
-                    return False
+            pattern_ok = pattern_one(a, num, web_controller, tg)
+            if not pattern_ok:
+                return False
             num = num + 1
         if (len(ans) == 1):
             web_controller.click_by_id("result2_validationno_result2")
@@ -41,35 +47,31 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
             web_controller.click_by_id("result3_validationno_result3")
         return True
 
+    elif (project_type == 'spot12t'):
+        if len(ans) > max_web_search_links:
+            print_at("Wrong length of answer.", tg)
+            return False
+        num = 1
+        for a in ans:
+            pattern_ok = pattern_one(a, num, web_controller, tg)
+            if not pattern_ok:
+                return False
+            if len(ans) > num:
+                web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
+            elif num != max_web_search_links:
+                web_controller.click_by_id(("result" + str(num + 1) + "_shownno"))
+            num = num + 1
+        return True
+
     elif (project_type == "amp") or (project_type == "maps") or project_type == 'saf2':
         if len(ans) > max_web_search_links:
             print_at("Wrong length of answer.", tg)
             return False
         num = 1
         for a in ans:
-            if (a == 'i'):
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
-            elif (a == 'l'):
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
-            elif (a == 'x'):
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-            else:
-                web_controller.click_by_id(
-                    ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                if (a == 'e'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-                elif (a == 'g'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-                elif (a == 'f'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-                elif (a == 'b'):
-                    web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
-                else:
-                    print_at("--------Not correct ans detected.--------", tg)
-                    return False
+            pattern_ok = pattern_one(a, num, web_controller, tg)
+            if not pattern_ok:
+                return False
             num = num + 1
         # the rest ans by 10 is no results
         no_results_length = max_web_search_links - len(ans)
@@ -102,29 +104,9 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
                 web_controller.click_by_id("query_appropriatetrue")
             num = 1
             for a in ans:
-                if (a == 'i'):
-                    web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
-                elif (a == 'l'):
-                    web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
-                elif (a == 'x'):
-                    web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-                else:
-                    web_controller.click_by_id(
-                        ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-                    if (a == 'e'):
-                        web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-                    elif (a == 'g'):
-                        web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-                    elif (a == 'f'):
-                        web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-                    elif (a == 'b'):
-                        web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
-                    else:
-                        print_at("--------Not correct ans detected.--------", tg)
-                        return False
+                pattern_ok = pattern_one(a, num, web_controller, tg)
+                if not pattern_ok:
+                    return False
                 web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
                 num = num + 1
             web_controller.click_by_id(("result" + str(num) + "_shownno"))
@@ -135,29 +117,9 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
         if len(ans) > 1:
             print_at("Wrong length of answer.", tg)
             return False
-        if (ans == 'i'):
-            web_controller.click_by_id(
-                ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
-        elif (ans == 'l'):
-            web_controller.click_by_id(
-                ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
-        elif (ans == 'x'):
-            web_controller.click_by_id(
-                ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
-        else:
-            web_controller.click_by_id(
-                ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
-            if (ans == 'e'):
-                web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
-            elif (ans == 'g'):
-                web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
-            elif (ans == 'f'):
-                web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
-            elif (ans == 'b'):
-                web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
-            else:
-                print_at("--------Not correct ans detected.--------", tg)
-                return False
+        pattern_ok = pattern_one(ans, num, web_controller, tg)
+        if not pattern_ok:
+            return False
         return True
 
     elif (project_type == "eval3"):
@@ -187,35 +149,9 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
             else:
                 web_controller.click_by_id("query_appropriatetrue")
             for a in ans:
-                if a == "i":
-                    # press result inappropriate
-                    web_controller.click_by_id(
-                        "result" + str(num) + "_validationresult" + str(num) + "_inappropriate")
-                elif a == "l":
-                    web_controller.click_by_id(
-                        "result" + str(num) + "_validationresult" + str(num) + "_wrong_language")
-                elif a == "x":
-                    web_controller.click_by_id(
-                        "result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged")
-                else:
-                    # press can be judge
-                    web_controller.click_by_id(
-                        "result" + str(num) + "_validationresult" + str(num) + "_can_be_judged")
-                    if a == "e":
-                        # press excellent
-                        web_controller.click_by_id("result" + str(num) + "_relevanceexcellent")
-                    elif a == "g":
-                        # press good
-                        web_controller.click_by_id("result" + str(num) + "_relevancegood")
-                    elif a == "f":
-                        # press fair
-                        web_controller.click_by_id("result" + str(num) + "_relevancefair")
-                    elif a == "b":
-                        # press bad
-                        web_controller.click_by_id("result" + str(num) + "_relevancebad")
-                    else:
-                        print_at("--------Not correct ans detected.--------", tg)
-                        return False
+                pattern_ok = pattern_one(a, num, web_controller, tg)
+                if not pattern_ok:
+                    return False
                 if num == max_num:
                     continue
                 elif num == len_ans:
