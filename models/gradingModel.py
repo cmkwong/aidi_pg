@@ -3,7 +3,7 @@ from utils import sounds
 import time
 import numpy as np
 
-def pattern_one(a, num, web_controller, tg):
+def pattern_one(a, num, web_controller, tg=None):
     if (a == 'i'):
         web_controller.click_by_id(
             ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))

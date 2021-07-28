@@ -1,5 +1,5 @@
 import config
-from models import menuModel, reportModel, answerModel
+from models import menuModel, reportModel, infoModel
 from controllers import authController, gradingController, tgController
 from utils.inputs import *
 from views.prints import *
@@ -208,22 +208,10 @@ def control_command_check(graders, ans):
                     print_conflict(conflict, graders.grader.tg)
             return command_checked
 
-        # elif (ans == "--rg"):
-        #     graders.grader.db_controller.graders_id_update()
-        #     return command_checked
-        #
-        # elif (ans == "--rp"):
-        #     graders.grader.db_controller.project_info_update()
-        #     return command_checked
-        #
-        # elif (ans == "--rgp"):
-        #     graders.grader.db_controller.ghost_project_info_update()
-        #     return command_checked
-        #
-        # elif (ans == "--rv"):
-        #     graders.grader.db_controller.version_update()
-        #     return command_checked
-
+        elif (ans == "-check"):
+            project_code = infoModel.get_project_type(graders.web_controller)
+            for key, value in project_code.items():
+                print("{}: {}".format(key, value))
         else:
             print("Invalid Control Command")
             return command_checked  # avoid to go further in the ans parser if user type command wrongly
