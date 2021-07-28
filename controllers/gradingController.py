@@ -42,7 +42,7 @@ def resume_standard_mode(graders):
     # reset the full-auto
     graders.grader.full_auto = False
     graders.grader.find_delay = False
-    graders.grader.find_time_delay = 320
+    graders.grader.find_time_delay = 240
     # reset tg mode
     graders.grader.tg = None
     # print_allowed
@@ -193,7 +193,7 @@ class base_grader:
         self.project_type = None
         self.time_delay = 1
         self.find_delay = False
-        self.find_time_delay = 320
+        self.find_time_delay = 240
         self.manual_timer = False
         self.view = False               # print grader answer
         self.full_auto = False

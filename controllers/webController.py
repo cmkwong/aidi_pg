@@ -116,10 +116,12 @@ class Web:
                     document.querySelector('.selection').querySelector('.menu').getElementsByTagName('div')[%s].click();
                     document.querySelector("#start").click();
                 """
-        if config.projects_info[project_index]["location"] == "zh_HK":
-            js_code = raw_string % 1
-        elif config.projects_info[project_index]["location"] == "en_US":
+        if config.projects_info[project_index]["location"] == "en_US":
             js_code = raw_string % 0
+        elif config.projects_info[project_index]["location"] == "zh_HK":
+            js_code = raw_string % 1
+        elif config.projects_info[project_index]["location"] == "zh_TW":
+            js_code = raw_string % 2
         self.browser.execute_script(js_code)
 
     def flash_web_search(self):
