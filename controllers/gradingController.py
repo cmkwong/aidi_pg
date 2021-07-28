@@ -6,7 +6,7 @@ from models import gradingModel, dbModel, infoModel
 from views.prints import *
 from utils import inputs, sounds
 
-def base_code_check(controller, ans, max_web_search_links, tg=None):
+def base_code_check(controller, ans, max_answer_slots, tg=None):
     if (ans == '`'):
         # web_search
         try:
@@ -24,7 +24,7 @@ def base_code_check(controller, ans, max_web_search_links, tg=None):
             return None
         return True
     elif (ans == '~'):
-        click_all_links_ok = controller.click_all_links(max_web_search_links)
+        click_all_links_ok = controller.click_all_links(max_answer_slots)
         if not click_all_links_ok:
             print_at("Not available '~'", tg)
             return None
@@ -158,15 +158,15 @@ class Graders:
             self.print_extra_info = False
 
         if type in config.MAX_TEN_RESULTS_PROJS:
-            self.grader.max_web_search_links = 10
+            self.grader.max_answer_slots = 10
         elif type in config.MAX_FIVE_RESULTS_PROJS:
-            self.grader.max_web_search_links = 5
+            self.grader.max_answer_slots = 5
         elif type in config.MAX_TWO_RESULTS_PROJS:
-            self.grader.max_web_search_links = 2
+            self.grader.max_answer_slots = 2
         elif type in config.MAX_ONE_RESULTS_PROJS:
-            self.grader.max_web_search_links = 1
+            self.grader.max_answer_slots = 1
         else:
-            self.grader.max_web_search_links = 3
+            self.grader.max_answer_slots = 3
 
         return True
 
@@ -197,7 +197,7 @@ class base_grader:
         self.manual_timer = False
         self.view = False               # print grader answer
         self.full_auto = False
-        self.max_web_search_links = 3
+        self.max_answer_slots = 3
         # sound alarm
         self.alarm = True
         # telegram tg
@@ -299,9 +299,11 @@ class base_grader:
         renew_ok = self.renew_status()
         if not renew_ok:
             return False
-        base_command = base_code_check(self.web_controller, ans, max_web_search_links=self.max_web_search_links, tg=self.tg)
+        # check if there is base command: ~, `, !
+        base_command = base_code_check(self.web_controller, ans, max_answer_slots=self.max_answer_slots, tg=self.tg)
         if ((base_command == True) or (base_command == None)):
             return False
+        # otherwise
         elif (not base_command):
 
             # insert query and grader info into database
@@ -310,10 +312,10 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_tags(self.max_web_search_links)
+                self.web_controller.flash_all_tags(self.max_answer_slots)
 
             # execute the command
-            grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.max_web_search_links, self.tg, auto=False)
+            grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.max_answer_slots, self.tg, auto=False)
             if not grade_ok:
                 return False
 
@@ -376,10 +378,10 @@ class base_grader:
             return False
 
         # press web search
-        self.web_controller.flash_all_tags(self.max_web_search_links)
+        self.web_controller.flash_all_tags(self.max_answer_slots)
 
         # grading ans that from database
-        grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.max_web_search_links, self.tg, auto=True)
+        grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.max_answer_slots, self.tg, auto=True)
         if not grade_ok:
             return False
 
@@ -399,7 +401,7 @@ class base_grader:
         def grade_handler(self):
             try:
                 # grading
-                grade_ok = gradingModel.grading("-k-", self.web_controller, self.project_type, self.max_web_search_links, self.tg)
+                grade_ok = gradingModel.grading("-k-", self.web_controller, self.project_type, self.max_answer_slots, self.tg)
                 # click next button
                 window.focus_force()
                 if grade_ok:
@@ -412,7 +414,7 @@ class base_grader:
         def vague_handler(self):
             try:
                 # grading
-                grade_ok = gradingModel.grading("-n-", self.web_controller, self.project_type, self.max_web_search_links, self.tg)
+                grade_ok = gradingModel.grading("-n-", self.web_controller, self.project_type, self.max_answer_slots, self.tg)
                 # click next button
                 window.focus_force()
                 if grade_ok:

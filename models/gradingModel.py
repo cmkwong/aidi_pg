@@ -29,9 +29,17 @@ def pattern_one(a, num, web_controller, tg):
             return False
     return True
 
-def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=False):
+def valid_answer_length(ans, web_controller, max_answer_slots):
+    links = web_controller.get_links()
+    required_length = min(len(links), max_answer_slots)
+    if len(ans) == required_length:
+        return True
+    else:
+        return False
+
+def grading(ans, web_controller, project_type, max_answer_slots, tg, auto=False):
     if (project_type == "spot12"):
-        if len(ans) > max_web_search_links:
+        if not valid_answer_length(ans, web_controller, max_answer_slots):
             print_at("Wrong length of answer.", tg)
             return False
         num = 1
@@ -48,7 +56,7 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
         return True
 
     elif (project_type == 'spot12t'):
-        if len(ans) > max_web_search_links:
+        if not valid_answer_length(ans, web_controller, max_answer_slots):
             print_at("Wrong length of answer.", tg)
             return False
         num = 1
@@ -58,13 +66,13 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
                 return False
             if len(ans) > num:
                 web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
-            elif num != max_web_search_links:
+            elif num != max_answer_slots:
                 web_controller.click_by_id(("result" + str(num + 1) + "_shownno"))
             num = num + 1
         return True
 
     elif (project_type == "amp") or (project_type == "maps") or project_type == 'saf2':
-        if len(ans) > max_web_search_links:
+        if not valid_answer_length(ans, web_controller, max_answer_slots):
             print_at("Wrong length of answer.", tg)
             return False
         num = 1
@@ -74,7 +82,7 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
                 return False
             num = num + 1
         # the rest ans by 10 is no results
-        no_results_length = max_web_search_links - len(ans)
+        no_results_length = max_answer_slots - len(ans)
         for i in range(no_results_length):
             command_string = "result" + str(num + i) + "_validationno_result" + str(num + i)
             web_controller.click_by_id(command_string)
@@ -82,12 +90,12 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
 
     elif (project_type == "deepscrape"):
         # checking wrong length
-        if ans[0] != 'n':
-            if len(ans) > max_web_search_links:
+        if ans[0] == 'n':
+            if not valid_answer_length(ans[1:], web_controller, max_answer_slots) or len(ans) == 1:
                 print_at("Wrong length of answer.", tg)
                 return False
         else:
-            if len(ans) > 11 or len(ans) == 1:
+            if not valid_answer_length(ans, web_controller, max_answer_slots):
                 print_at("Wrong length of answer.", tg)
                 return False
 
@@ -113,29 +121,31 @@ def grading(ans, web_controller, project_type, max_web_search_links, tg, auto=Fa
         return True
 
     elif (project_type == "saf"):
-        num = 1
-        if len(ans) > 1:
+        # checking wrong length
+        if not valid_answer_length(ans, web_controller, max_answer_slots):
             print_at("Wrong length of answer.", tg)
             return False
+
+        num = 1
         pattern_ok = pattern_one(ans, num, web_controller, tg)
         if not pattern_ok:
             return False
         return True
 
     elif (project_type == "eval3"):
-        max_num = 3
-        len_ans = len(ans)
-        num = 1
-
         # checking wrong length
-        if ans[0] != 'n':
-            if len(ans) > 3:
+        if ans[0] == 'n':
+            if not valid_answer_length(ans[1:], web_controller, max_answer_slots) or len(ans) == 1:
                 print_at("Wrong length of answer.", tg)
                 return False
         else:
-            if len(ans) > 4:
+            if not valid_answer_length(ans, web_controller, max_answer_slots):
                 print_at("Wrong length of answer.", tg)
                 return False
+
+        max_num = 3
+        len_ans = len(ans)
+        num = 1
 
         if ans[0] == 'v':
             # press vague
