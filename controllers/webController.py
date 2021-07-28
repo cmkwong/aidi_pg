@@ -64,14 +64,14 @@ class Web:
         js_code = "window.document.getElementsByClassName('" + class_name + "').click();"
         self.browser.execute_script(js_code)
 
-    def click_all_links(self, max_web_search_links):
+    def click_all_links(self, max_answer_slots):
         # open three results
         try:
             links = self.get_links()
         except:
             links = []
             return False
-        self.open_links_new_tags(links, max_web_search_links)
+        self.open_links_new_tags(links, max_answer_slots)
         # open web search
         self.click_web_search()
         return True
@@ -129,7 +129,7 @@ class Web:
         self.click_web_search()
         self.close_other_tags()
 
-    def flash_all_tags(self, max_web_search_links):
+    def flash_all_tags(self, max_answer_slots):
         # get links
         try:
             links = self.get_links()
@@ -137,7 +137,7 @@ class Web:
             links = []
             return False
         # open the links one-by-one
-        links = links[:max_web_search_links]
+        links = links[:max_answer_slots]
         for link in links:
             try:
                 self.browser.execute_script("window.open('%s');" % link)
