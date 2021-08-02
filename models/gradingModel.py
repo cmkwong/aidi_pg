@@ -78,9 +78,11 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                 pattern_ok = pattern_one(a, num, web_controller, tg)
                 if not pattern_ok:
                     return False
-                web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
+                if len(ans) > num:
+                    web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
+                elif num != max_answer_slots:
+                    web_controller.click_by_id(("result" + str(num + 1) + "_shownno"))
                 num = num + 1
-            web_controller.click_by_id(("result" + str(num) + "_shownno"))
         # for spot12, amp, eval3 ...
         else:
             for a in ans:

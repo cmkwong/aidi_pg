@@ -6,7 +6,7 @@ def print_ghost_proj_list():
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
     for index, project in enumerate(config.ghost_projects_info):
-        print((index+1), ": (", project["type"],")\t", project["name"])
+        print("{}: {}\t({})\n".format(str(index+1), project["name"], project["type"]))
 
 # for tg project list
 def get_project_list_text():
@@ -14,7 +14,7 @@ def get_project_list_text():
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(config.projects_info):
-        txt += "{}: ({})\t{}\n".format(str(index+1), project["type"], project["name"])
+        txt += "{}: {}\t({})\n".format(str(index+1), project["type"], project["name"])
     return txt
 
 def print_proj_list():
@@ -54,5 +54,5 @@ def ghost_menu_choice():
             continue
         project_index = project_index - 1
         project_type = config.ghost_projects_info[project_index]["type"]
-    print("Type of Project: ", project_type, " activated.")
+    print("Type of Project: ", project_type)
     return project_index
