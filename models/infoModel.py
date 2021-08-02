@@ -67,7 +67,7 @@ def get_project_code(web_controller):
     prj_code = {
         'vague': 0,
         'appropriate_query': 0,
-        'max_answer_slots': 0,
+        'max_answer_slots': 3,
         'pattern_one': 0,
         'pattern_one_yes_no': 0,
         'special_type': '',
@@ -90,7 +90,7 @@ def get_project_code(web_controller):
 
     # check if it is pattern_one + if yes/no after right after the pattern_one
     try:
-        for num in range(1, 15):
+        for num in range(1, 15):    # max 15 answer slow
             # check if need pattern_one format
             gradingModel.pattern_one('g', num, web_controller)
             prj_code['pattern_one'] = 1

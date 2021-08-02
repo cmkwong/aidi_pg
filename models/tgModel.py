@@ -17,7 +17,7 @@ def send_tg_info(grader, old_query_text=None, time_out=10):
     except:
         return False
     # combined into one text
-    max_index = min(len(links), grader.max_answer_slots)
+    max_index = min(len(links), grader.project_code["max_answer_slots"])
     text = search_date + '\n\n' + query_text + '\n' + \
            "web search link: " + web_search_link + '\n' + \
            "No. of Results: " + str(max_index)

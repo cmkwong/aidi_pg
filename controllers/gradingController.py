@@ -157,16 +157,16 @@ class Graders:
         else:
             self.print_extra_info = False
 
-        if type in config.MAX_TEN_RESULTS_PROJS:
-            self.grader.max_answer_slots = 10
-        elif type in config.MAX_FIVE_RESULTS_PROJS:
-            self.grader.max_answer_slots = 5
-        elif type in config.MAX_TWO_RESULTS_PROJS:
-            self.grader.max_answer_slots = 2
-        elif type in config.MAX_ONE_RESULTS_PROJS:
-            self.grader.max_answer_slots = 1
-        else:
-            self.grader.max_answer_slots = 3
+        # if type in config.MAX_TEN_RESULTS_PROJS:
+        #     self.grader.max_answer_slots = 10
+        # elif type in config.MAX_FIVE_RESULTS_PROJS:
+        #     self.grader.max_answer_slots = 5
+        # elif type in config.MAX_TWO_RESULTS_PROJS:
+        #     self.grader.max_answer_slots = 2
+        # elif type in config.MAX_ONE_RESULTS_PROJS:
+        #     self.grader.max_answer_slots = 1
+        # else:
+        #     self.grader.max_answer_slots = 3
 
         return True
 
@@ -197,7 +197,7 @@ class base_grader:
         self.manual_timer = False
         self.view = False               # print grader answer
         self.full_auto = False
-        self.max_answer_slots = 3
+        self.project_code = {}          # only used if project_type=standard. Otherwise, it is special project type, eg token
         # sound alarm
         self.alarm = True
         # telegram tg
@@ -209,15 +209,25 @@ class base_grader:
         self.training = False
 
     def renew_status(self):
+
+        # if either has no grader id or project id
+        if self.grader_id is None or self.project_id is None:
+            self.grader_id, self.project_id, self.project_link = dbModel.update_grader_info(self.web_controller, self.db_controller)
+
+        # get query text
         self.query_text = infoModel.get_query_text(self.project_type, self.tg, self.web_controller, self.print_allowed)
         if self.query_text == None:
             return False
         self.current_url = self.web_controller.get_motherTag_url()
         self.new_query = False
 
-        # if either has no grader id or project id
-        if self.grader_id is None or self.project_id is None:
-            self.grader_id, self.project_id, self.project_link = dbModel.update_grader_info(self.web_controller, self.db_controller)
+        # get project code in when project_type: standard mode
+        if self.project_type == 'standard':
+            if self.project_id in config.projects_code.keys():
+                self.project_code = config.projects_code[self.project_id]
+            else:
+                self.project_code = infoModel.get_project_code(self.web_controller)
+                config.projects_code[self.project_id] = self.project_code       # store the project_code into global dictionary (config)
 
         return True
 
@@ -300,7 +310,7 @@ class base_grader:
         if not renew_ok:
             return False
         # check if there is base command: ~, `, !
-        base_command = base_code_check(self.web_controller, ans, max_answer_slots=self.max_answer_slots, tg=self.tg)
+        base_command = base_code_check(self.web_controller, ans, max_answer_slots=self.project_code["max_answer_slots"], tg=self.tg)
         if ((base_command == True) or (base_command == None)):
             return False
         # otherwise
@@ -312,10 +322,10 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_tags(self.max_answer_slots)
+                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"])
 
             # execute the command
-            grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.max_answer_slots, self.tg, auto=False)
+            grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
             if not grade_ok:
                 return False
 
@@ -325,7 +335,7 @@ class base_grader:
                 if not timer_ok:
                     return False
 
-            self.web_controller.click_next_btn()
+            # self.web_controller.click_next_btn()
 
             # update ans into db
             dbModel.update_db_ans(self.project_type, self.db_controller, self.grader_id, answer_id, ans, self.tg)
@@ -378,10 +388,10 @@ class base_grader:
             return False
 
         # press web search
-        self.web_controller.flash_all_tags(self.max_answer_slots)
+        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"])
 
         # grading ans that from database
-        grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.max_answer_slots, self.tg, auto=True)
+        grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)
         if not grade_ok:
             return False
 
@@ -401,7 +411,7 @@ class base_grader:
         def grade_handler(self):
             try:
                 # grading
-                grade_ok = gradingModel.grading("-k-", self.web_controller, self.project_type, self.max_answer_slots, self.tg)
+                grade_ok = gradingModel.grading("-k-", self.web_controller, self.project_type, self.tg)
                 # click next button
                 window.focus_force()
                 if grade_ok:
@@ -414,7 +424,7 @@ class base_grader:
         def vague_handler(self):
             try:
                 # grading
-                grade_ok = gradingModel.grading("-n-", self.web_controller, self.project_type, self.max_answer_slots, self.tg)
+                grade_ok = gradingModel.grading("-n-", self.web_controller, self.project_type, self.tg)
                 # click next button
                 window.focus_force()
                 if grade_ok:

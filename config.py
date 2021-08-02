@@ -19,16 +19,18 @@
 # }
 
 # projects that get query text in inner box
-GET_QUERY_TEXT_PROJS = ["spot12", "spot12t", "saf", "saf2", "eval3", "amp", "deepscrape", "maps"]
+# GET_QUERY_TEXT_PROJS = ["spot12", "spot12t", "saf", "saf2", "eval3", "amp", "deepscrape", "maps"]
+GET_QUERY_TEXT_PROJS = ["standard"]
 
 # projects need to access the database
-UPDATE_DB_PROJS = ["spot12", "spot12t", "saf", "saf2", "eval3", "classify", "amp", "deepscrape", "maps", "valid"]
+# UPDATE_DB_PROJS = ["spot12", "spot12t", "saf", "saf2", "eval3", "classify", "amp", "deepscrape", "maps", "valid"]
+UPDATE_DB_PROJS = ["standard", "classify", "valid"]
 
 # projects that need to open except for 3 results webpages
-MAX_TEN_RESULTS_PROJS = ["deepscrape"]
-MAX_FIVE_RESULTS_PROJS = ["amp", "maps"]
-MAX_TWO_RESULTS_PROJS = ["saf2"]
-MAX_ONE_RESULTS_PROJS = ["saf"]
+# MAX_TEN_RESULTS_PROJS = ["deepscrape"]
+# MAX_FIVE_RESULTS_PROJS = ["amp", "maps"]
+# MAX_TWO_RESULTS_PROJS = ["saf2"]
+# MAX_ONE_RESULTS_PROJS = ["saf"]
 
 help_command = {
 
@@ -112,5 +114,7 @@ MONTHS = {
 graders_info = []
 
 projects_info = []
+
+projects_code = {}
 
 ghost_projects_info = []
