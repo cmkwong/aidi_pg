@@ -13,7 +13,7 @@ def base_code_check(controller, ans, max_answer_slots, tg=None):
             controller.click_web_search()
         except:
             print_at("Not available '`'", tg)
-            return None # None is Error
+            return True # None is Error
         return True
     elif (ans == '!'):
         # close other tags
@@ -21,14 +21,15 @@ def base_code_check(controller, ans, max_answer_slots, tg=None):
             controller.close_other_tags()
         except:
             print_at("Not available '!'", tg)
-            return None
+            return True
         return True
     elif (ans == '~'):
-        click_all_links_ok = controller.click_all_links(max_answer_slots)
-        if not click_all_links_ok:
+        try:
+            controller.click_all_links(max_answer_slots)
+        except:
             print_at("Not available '~'", tg)
-            return None
-        return click_all_links_ok
+            return True
+        return True
     elif ans == '[':
         controller.click_previous_btn()
         return True
@@ -226,7 +227,7 @@ class base_grader:
             if self.project_id in config.projects_code.keys():
                 self.project_code = config.projects_code[self.project_id]
             else:
-                self.project_code = infoModel.get_project_code(self.web_controller)
+                self.project_code = infoModel.get_project_code(self.web_controller) # get the project code if have not seen before
                 config.projects_code[self.project_id] = self.project_code       # store the project_code into global dictionary (config)
 
         return True
@@ -311,10 +312,10 @@ class base_grader:
             return False
         # check if there is base command: ~, `, !
         base_command = base_code_check(self.web_controller, ans, max_answer_slots=self.project_code["max_answer_slots"], tg=self.tg)
-        if ((base_command == True) or (base_command == None)):
+        if base_command:
             return False
         # otherwise
-        elif (not base_command):
+        else:
 
             # insert query and grader info into database
             answer_id = dbModel.insert_db_query(self.project_type, self.web_controller, self.db_controller, self.tg,

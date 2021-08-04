@@ -66,15 +66,10 @@ class Web:
 
     def click_all_links(self, max_answer_slots):
         # open three results
-        try:
-            links = self.get_links()
-        except:
-            links = []
-            return False
+        links = self.get_links()
         self.open_links_new_tags(links, max_answer_slots)
         # open web search
         self.click_web_search()
-        return True
 
     def click_web_search(self):
         self.back_tag_one()
