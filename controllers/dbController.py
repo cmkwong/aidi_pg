@@ -63,15 +63,6 @@ class Database:
 
     def grader_answer_insert(self, grader_id, query_id, query_link):
 
-        # find the webpage page id
-        # regex = re.compile(r"/s/\S+/r/")
-        # matches = regex.finditer(query_link)
-        # ans_id = None
-        # for match in matches:
-        #     ans_id = query_link[match.span()[0] + 3:match.span()[1] - 3]
-        # if ans_id is None:
-        #     print("invalid query link / Cannot catch the webpage ID")
-
         # find the answer if it is exist
         db_filter = {
             "grader": grader_id,

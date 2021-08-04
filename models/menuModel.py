@@ -6,7 +6,7 @@ def print_ghost_proj_list():
     print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     print("Please choose the required project Number: ")
     for index, project in enumerate(config.ghost_projects_info):
-        print("{}: {} ({})\n".format(str(index+1), project["name"], project["type"]))
+        print("{}: {} ({})".format(str(index+1), project["name"], project["type"]))
 
 # for tg project list
 def get_project_list_text():
