@@ -33,18 +33,19 @@ class Database:
         }
         return self.db["graders"].find_one(db_filter)["login"], self.db["graders"].find_one(db_filter)["pw"]
 
-    def filter_gen(self, project_id, text):
+    def query_insert(self, project_id, text, web_controller):
+
+        # try get the results links
+        try:
+            result_links = web_controller.get_result_links()
+        except:
+            result_links = []
+
+        # insert query and answer
         db_filter = {
             "project": project_id,
             "text": text
         }
-        return db_filter
-
-    def query_insert(self, project_id, text, result_links=None):
-        db_filter = self.filter_gen(project_id, text)
-        if db_filter is None:
-            print("project documents is not updated OR something wrong.")
-            return None
         count = self.db["querys"].count_documents(db_filter)
         # insert one query
         if count is 0:  # meaning no query duplicated
@@ -58,10 +59,8 @@ class Database:
         elif count > 0:
             query_id = self.db["querys"].find_one(db_filter)["_id"]
             return query_id
-        else:
-            return None
 
-    def grader_answer_insert(self, grader_id, query_id, query_link):
+    def answer_insert(self, answer, grader_id, query_id, query_link):
 
         # find the answer if it is exist
         db_filter = {
@@ -75,22 +74,22 @@ class Database:
                 # "_id": ans_id,
                 "grader": grader_id,
                 "query_id": query_id,
-                "query_link": query_link
+                "query_link": query_link,
+                "grader_answer": answer,
+                "time": datetime.datetime.fromtimestamp(time.time())
             }
             answer_id = self.db["answers"].insert_one(my_dict).inserted_id
             return answer_id
         elif count > 0:
             answer_id = self.db["answers"].find_one(db_filter)["_id"]
+            self.grader_answer_update(answer_id, answer)
             return answer_id
-        else:
-            return None
 
-    def grader_answer_update(self, grader_id, answer_id, answer="na"):
+    def grader_answer_update(self, answer_id, answer):
         target = {
             "_id": answer_id
         }
         new_dict = {"$set": {
-            "grader": grader_id,
             "grader_answer": answer,
             "time": datetime.datetime.fromtimestamp(time.time())
         }}

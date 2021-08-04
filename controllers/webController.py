@@ -66,7 +66,7 @@ class Web:
 
     def click_all_links(self, max_answer_slots):
         # open three results
-        links = self.get_links()
+        links = self.get_result_links()
         self.open_links_new_tags(links, max_answer_slots)
         # open web search
         self.click_web_search()
@@ -127,7 +127,7 @@ class Web:
     def flash_all_tags(self, max_answer_slots):
         # get links
         try:
-            links = self.get_links()
+            links = self.get_result_links()
         except:
             links = []
             return False
@@ -179,7 +179,7 @@ class Web:
                 link_details.append(self.browser.execute_script(js_code))
         return link_details
 
-    def get_links(self):
+    def get_result_links(self):
         self.back_tag_one()
         js_code = """
             list = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");

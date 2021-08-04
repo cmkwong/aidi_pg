@@ -183,7 +183,7 @@ class base_grader:
     def __init__(self, web_controller, db_controller):
         self.web_controller = web_controller
         self.db_controller = db_controller
-        self.current_url = None
+        self.query_link = None
         self.query_text = None
         self.p_query_text = None
         self.query_done = 0
@@ -219,7 +219,7 @@ class base_grader:
         self.query_text = infoModel.get_query_text(self.project_type, self.tg, self.web_controller, self.print_allowed)
         if self.query_text == None:
             return False
-        self.current_url = self.web_controller.get_motherTag_url()
+        self.query_link = self.web_controller.get_motherTag_url()
         self.new_query = False
 
         # get project code in when project_type: standard mode
@@ -242,7 +242,7 @@ class base_grader:
     def reopen_current_browser(self):
         self.web_controller.open_chrome()
         self.web_controller.init_working_tag()
-        self.web_controller.open_project_link(self.current_url)
+        self.web_controller.open_project_link(self.query_link)
 
     def delay_timer(self, time_used=0, alarm=True):
         self.timer_running = True
@@ -318,8 +318,11 @@ class base_grader:
         else:
 
             # insert query and grader info into database
-            answer_id = dbModel.insert_db_query(self.project_type, self.web_controller, self.db_controller, self.tg,
-                                             self.project_id, self.query_text, self.grader_id, self.current_url)
+            query_id = None
+            if self.project_type in config.UPDATE_DB_PROJS:
+                query_id = self.db_controller.query_insert(self.project_id, self.query_text, self.web_controller)
+                if not query_id:
+                    return False
 
             # press web search if in tg mode
             if self.tg is not None:
@@ -339,7 +342,8 @@ class base_grader:
             self.web_controller.click_next_btn()
 
             # update ans into db
-            dbModel.update_db_ans(self.project_type, self.db_controller, self.grader_id, answer_id, ans, self.tg)
+            if self.project_type in config.UPDATE_DB_PROJS:
+                self.db_controller.answer_insert(ans, self.grader_id, query_id, self.query_link)
 
             # update status after finish a grading
             self.update_status()

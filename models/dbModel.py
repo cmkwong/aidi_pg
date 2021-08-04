@@ -12,32 +12,22 @@ def update_grader_info(web_controller, db_controller):
     db_controller.update_db_config(login=login, pw=pw)
     return grader_id, project_id, project_link
 
-def insert_db_query(project_type, web_controller, db_controller, tg, project_id, query_text, grader_id, current_url):
-    answer_id = None
+# def insert_db_query(web_controller, db_controller, project_id, query_text):
+#
+#     # insert query and answer
+#     try:
+#         result_links = web_controller.get_result_links()
+#     except:
+#         result_links = []
+#
+#     query_id = db_controller.query_insert(project_id, query_text, result_links)
+#
+#     return query_id
 
-    if project_type in config.UPDATE_DB_PROJS:
-        # insert query and answer
-        try:
-            result_links = web_controller.get_links()
-        except:
-            result_links = []
+# def insert_db_ans(ans, db_controller, grader_id, query_id, query_link):
+#     # insert upper part of answer
+#     answer_id = db_controller.answer_insert(ans, grader_id, query_id, query_link)
 
-        query_id = db_controller.query_insert(project_id, query_text, result_links)
-
-        # insert upper part of answer
-        if query_id is not None:
-            answer_id = db_controller.grader_answer_insert(grader_id, query_id, query_link=current_url)
-        else:
-            print_at("Error: query insert unsuccessfully.", tg)
-    return answer_id
-
-def update_db_ans(project_type, db_controller, grader_id, answer_id, ans, tg):
-    if project_type in config.UPDATE_DB_PROJS:
-        # update grader answer
-        if answer_id is not None:
-            db_controller.grader_answer_update(grader_id, answer_id, answer=ans)
-        else:
-            print_at("Error: answer insert unsuccessfully", tg)
 
 def init_Answer_object():
     Answer = collections.namedtuple("Answer", ['find_ok', 'ans', 'find_time_used',

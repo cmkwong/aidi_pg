@@ -30,7 +30,7 @@ def pattern_one(a, num, web_controller, tg=None):
     return True
 
 def valid_answer_length(ans, web_controller, max_answer_slots):
-    links = web_controller.get_links()
+    links = web_controller.get_result_links()
     required_length = min(len(links), max_answer_slots)
     if len(ans) == required_length:
         return True

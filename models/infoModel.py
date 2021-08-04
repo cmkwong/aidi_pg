@@ -50,7 +50,7 @@ def get_links_and_details(web_controller, time_out=10):
             if (time.time() - refer_time) > time_out:
                 return None
             # get links
-            links = web_controller.get_links()
+            links = web_controller.get_result_links()
             # get links text
             link_details = web_controller.get_link_details()
             time.sleep(0.5)
