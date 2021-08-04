@@ -14,7 +14,7 @@ def get_project_list_text():
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(config.projects_info):
-        txt += "{}: {} ({})\n".format(str(index+1), project["type"], project["name"])
+        txt += "{}: {} ({})\n".format(str(index+1), project["name"], project["type"])
     return txt
 
 def print_proj_list():

@@ -336,7 +336,7 @@ class base_grader:
                 if not timer_ok:
                     return False
 
-            # self.web_controller.click_next_btn()
+            self.web_controller.click_next_btn()
 
             # update ans into db
             dbModel.update_db_ans(self.project_type, self.db_controller, self.grader_id, answer_id, ans, self.tg)
