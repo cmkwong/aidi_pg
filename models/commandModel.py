@@ -139,7 +139,7 @@ def control_command_check(graders, ans):
                 graders.grader.done_upper_limit = limit
             return command_checked
 
-        elif (ans == "-telegram"):
+        elif (ans == "-tg"):
             gradingController.resume_standard_mode(graders)
             token = authController.get_grader_tg_token(graders)
             tg = tgController.Telegram_Bot(token=token)
