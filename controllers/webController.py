@@ -269,9 +269,80 @@ class Web:
         click_pj_groups_icon = """
             document.querySelectorAll('.icon.sf-symbol-chevron-down')[0].click();
         """
+        click_pj_icon = """
+            document.querySelectorAll('.icon.sf-symbol-chevron-down')[1].click();
+        """
+        get_pj_name = """
+            return document.querySelector('.highcharts-xaxis-labels').textContent;
+        """
+        click_locate_icon = """
+            document.querySelectorAll('.icon.sf-symbol-chevron-down')[2].click();
+        """
+        get_locate = """
+            return document.getElementById('locale-selection').value.trim();
+        """
+        get_done = """
+            return parseInt(document.querySelector(".highcharts-data-labels").querySelectorAll('tspan.highcharts-text-outline')[0].textContent.replace(',','').trim());
+        """
+        get_working_hrs = """
+            return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[7].textContent.trim());
+        """
+        get_breaking_hrs = """
+            return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[9].textContent.trim());
+        """
+
+        def _get_list_len(click_icon):
+            len_command = """
+                return document.querySelector('.listbox').querySelectorAll('li').length;
+            """
+            self.browser.execute_script(click_icon)
+            list_length = int(self.browser.execute_script(len_command))
+            self.browser.execute_script(click_icon)
+            return list_length
+
+        def _click_list_item(click_icon, num):
+            click_command = """
+                document.querySelector('.listbox').querySelectorAll('li')[%s].click();
+            """
+            self.browser.execute_script(click_icon)
+            time.sleep(0.3)
+            self.browser.execute_script(click_command % num)
+            time.sleep(0.3)
+
+        report = {}
+        pj_groups_length = _get_list_len(click_pj_groups_icon)
+        if pj_groups_length == 0:
+            return False
+
+        # project groups
+        for i in range(pj_groups_length):
+            _click_list_item(click_pj_groups_icon, i)
+            pjs_len = _get_list_len(click_pj_icon)
+
+            # projects
+            for j in range(1, pjs_len):
+                _click_list_item(click_pj_icon, j)
+                locate_len = _get_list_len(click_locate_icon)
+
+                # locale
+                for k in range(1, locate_len):
+                    _click_list_item(click_locate_icon, k)
+
+                    # get data from a project
+                    locate = self.browser.execute_script(get_locate)
+                    pj_name = self.browser.execute_script(get_pj_name)
+                    done = self.browser.execute_script(get_done)
+                    working_hrs = self.browser.execute_script(get_working_hrs)
+                    breaking_hrs = self.browser.execute_script(get_breaking_hrs)
+                    report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
+        return report
+
+    def get_report_data2(self):
+        click_pj_groups_icon = """
+            document.querySelectorAll('.icon.sf-symbol-chevron-down')[0].click();
+        """
         get_pj_groups_len = """
-            var l = document.querySelector('.listbox').querySelectorAll('li').length;
-            return l;
+            return document.querySelector('.listbox').querySelectorAll('li').length;
         """
         click_pj_group = """
             document.querySelector('.listbox').querySelectorAll('li')[%s].click();
@@ -280,15 +351,14 @@ class Web:
             document.querySelectorAll('.icon.sf-symbol-chevron-down')[1].click();
         """
         get_pjs_len = """
-            var l = document.querySelector('.listbox').querySelectorAll('li').length;
-            return l;
+            return document.querySelector('.listbox').querySelectorAll('li').length;
         """
         click_pj = """
+            document.querySelectorAll('.icon.sf-symbol-chevron-down')[1].click();
             document.querySelector('.listbox').querySelectorAll('li')[%s].click();
         """
         get_pj_name = """
-            var pj_name = document.querySelector('.highcharts-xaxis-labels').textContent;
-            return pj_name;
+            return document.querySelector('.highcharts-xaxis-labels').textContent;
         """
         get_done = """
             return parseInt(document.querySelector(".highcharts-data-labels").querySelectorAll('tspan.highcharts-text-outline')[0].textContent.replace(',','').trim());
@@ -302,15 +372,23 @@ class Web:
         report = {}
         self.browser.execute_script(click_pj_groups_icon)
         pj_groups_length = int(self.browser.execute_script(get_pj_groups_len))
+        print("{} project group len".format(pj_groups_length))
+        self.browser.execute_script(click_pj_groups_icon)
         if pj_groups_length == 0:
             return False
         for i in range(pj_groups_length):
+            self.browser.execute_script(click_pj_groups_icon)
             self.browser.execute_script(click_pj_group % i)
+            print("pj_group i={} clicked.".format(i))
             self.browser.execute_script(click_pj_icon)
             pjs_len = int(self.browser.execute_script(get_pjs_len))
+            print('{} project len'.format(pjs_len))
+            self.browser.execute_script(click_pj_icon)
             for j in range(1, pjs_len):
                 self.browser.execute_script(click_pj % j)
+                print("pj j={} clicked.".format(j))
                 pj_name = self.browser.execute_script(get_pj_name)
+                print(pj_name)
                 done = self.browser.execute_script(get_done)
                 working_hrs = self.browser.execute_script(get_working_hrs)
                 breaking_hrs = self.browser.execute_script(get_breaking_hrs)

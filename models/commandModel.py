@@ -177,7 +177,7 @@ def control_command_check(graders, ans):
             graders.web_controller.zoom_browser(0.7)
             return command_checked
 
-        elif (ans == "-txt"):
+        elif (ans == "-text"):
             try:
                 report = graders.grader.web_controller.get_report_data()
                 if report:
@@ -185,7 +185,7 @@ def control_command_check(graders, ans):
                 else:
                     print("No report")
             except:
-                print("Disabled")
+                print("Error")
             return command_checked
 
         elif (ans == "-train"):
