@@ -33,7 +33,7 @@ class Database:
         }
         return self.db["graders"].find_one(db_filter)["login"], self.db["graders"].find_one(db_filter)["pw"]
 
-    def query_insert(self, project_id, text, web_controller):
+    def query_insert(self, project_id, project_locale, text, web_controller):
 
         # try get the results links
         try:
@@ -44,6 +44,7 @@ class Database:
         # insert query and answer
         db_filter = {
             "project": project_id,
+            "locale": project_locale,
             "text": text
         }
         count = self.db["querys"].count_documents(db_filter)
@@ -51,6 +52,7 @@ class Database:
         if count is 0:  # meaning no query duplicated
             my_dict = {
                 "project": project_id,
+                "locale": project_locale,
                 "text": text,
                 "results": result_links
             }
@@ -158,7 +160,7 @@ class Database:
         :param grader_by_id: {1 : {'name': 'Chris', 'login': 'chris', ... }}
         :return: Answer
         """
-        Answer = dbModel.init_Answer_object()
+        Answer = dbModel.format_Answer()
         # loop for each graders and update the ans_dist
         Answer.detail = self._renew_grader_list(grader_by_id)
         Answer.ans_dist = {}
@@ -181,12 +183,16 @@ class Database:
         db_filter = {
             "query_id": query_id
         }
-        ans_infos = self.db["answers"].find(db_filter)
+        # check if have answer for this query id
+        if not self.db["answers"].count_documents(db_filter):
+            return None
+        ans_infos = self.db["answers"].find(db_filter)  # find all ans cursor
         return ans_infos
 
-    def _find_ans_infos(self, project_id, text, tg, print_allowed=True):
+    def _find_ans_infos(self, project_id, project_locale, text, tg, print_allowed=True):
         db_filter = {
             "project": project_id,
+            "locale": project_locale,
             "text": text
         }
         query = self.db["querys"].find_one(db_filter)
@@ -198,19 +204,18 @@ class Database:
         ans_infos = self._find_all_ans_by_query_id(query_id)
         return ans_infos
 
-    def find_one_ans(self, project_id, text, tg=None, print_allowed=True):
+    def find_one_ans(self, project_id, project_locale, text, tg=None, print_allowed=True):
 
-        Answer = dbModel.init_Answer_object()
+        Answer = dbModel.format_Answer()
         # Find ans_infos that store all the query related to that project id and text
-        ans_infos = self._find_ans_infos(project_id=project_id, text=text, tg=tg, print_allowed=print_allowed)
+        ans_infos = self._find_ans_infos(project_id, project_locale, text, tg, print_allowed=print_allowed)
         if not ans_infos:
-            print_at("Have query but not have answer yet. ", tg, print_allowed)
             return None
         try:
             ans_info = self._find_most_reliable(ans_infos)
             Answer.ans = ans_info["grader_answer"]
         except (KeyError, TypeError):
-            print_at("Have answer query but have no grader answer yet.", tg, print_allowed)
+            print_at("Reliable Answer Error.", tg, print_allowed)
             return None
         grader_id = ans_info["grader"]
         grader = self.db["graders"].find_one({"_id": grader_id})
@@ -218,9 +223,9 @@ class Database:
             Answer.grader_name = grader["name"]
         return Answer
 
-    def find_most_popular(self, project_id, text, tg=None, print_allowed=True):
+    def find_most_popular(self, project_id, project_locale, text, tg=None, print_allowed=True):
         # Find ans_infos that store all the query related to that project id and text
-        ans_infos = self._find_ans_infos(project_id=project_id, text=text, tg=tg, print_allowed=print_allowed)
+        ans_infos = self._find_ans_infos(project_id, project_locale, text, tg, print_allowed=print_allowed)
         if not ans_infos:
             return None
         grader_by_id = self.create_grader_table_by_id()

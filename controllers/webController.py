@@ -244,13 +244,22 @@ class Web:
         time.sleep(1)
         return html
 
-    def get_project_id_from_url(self, project_link=None):
-        project_id = None
+    def get_project_id_locale_from_url(self):
+        project_link = self.get_motherTag_url()
+        project_id, project_locale = '', ''
+
+        # project_id
         regex = re.compile(r"/project/\S+?/")
         matches = regex.finditer(project_link)
         for match in matches:
-            project_id = project_link[match.span()[0]+9:match.span()[1]-1]
-        return project_id
+            project_id = project_link[match.span()[0] + 9:match.span()[1] - 1]
+
+        # project locale
+        regex = re.compile(r"/grading/\S+?/")
+        matches = regex.finditer(project_link)
+        for match in matches:
+            project_locale = project_link[match.span()[0] + 9:match.span()[1] - 1]
+        return project_id, project_locale
 
     def get_grader_id(self):
         js_code = """

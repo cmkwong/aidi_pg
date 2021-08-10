@@ -128,8 +128,6 @@ class Graders:
         if new_grader:
             # create new grader
             self.grader = base_grader(self.web_controller, self.db_controller)
-        # set the project name
-        self.grader.project_id = self.web_controller.get_project_id_from_url(link)
         # set the project type
         self.grader.project_type = type
         # open the required project link
@@ -191,6 +189,7 @@ class base_grader:
         self.new_query = False
         self.grader_id = None
         self.project_id = None
+        self.project_locale = None
         self.project_type = None
         self.time_delay = 1
         self.find_delay = False
@@ -211,9 +210,15 @@ class base_grader:
 
     def renew_status(self):
 
-        # if either has no grader id or project id
-        if self.grader_id is None or self.project_id is None:
-            self.grader_id, self.project_id, self.project_link = dbModel.update_grader_info(self.web_controller, self.db_controller)
+        # update grader_id (for access the DB)
+        if self.grader_id is None:
+            self.grader_id = dbModel.update_grader_info(self.web_controller, self.db_controller)
+
+        # renew project info every grading
+        self.project_id, self.project_locale = self.web_controller.get_project_id_locale_from_url()
+        if not self.project_id or not self.project_locale:
+            print_at("Invalid grading in this page.", self.tg, self.print_allowed)
+            return False
 
         # get query text
         self.query_text = infoModel.get_query_text(self.project_type, self.tg, self.web_controller, self.print_allowed)
@@ -290,9 +295,9 @@ class base_grader:
                 time_interval = gradingModel.find_time_delay_level(self.find_time_delay)
                 if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                     if self.training:
-                        Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg, print_allowed=False)
+                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text, self.tg, print_allowed=False)
                     else:
-                        Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg, print_allowed=False)
+                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text, self.tg, print_allowed=False)
                     if Answer != None:
                         Answer.find_ok, Answer.find_time_used = True, self.find_time_delay - i
                         self.timer_running = False
@@ -320,7 +325,7 @@ class base_grader:
             # insert query and grader info into database
             query_id = None
             if self.project_type in config.UPDATE_DB_PROJS:
-                query_id = self.db_controller.query_insert(self.project_id, self.query_text, self.web_controller)
+                query_id = self.db_controller.query_insert(self.project_id, self.project_locale, self.query_text, self.web_controller)
                 if not query_id:
                     return False
 
@@ -369,9 +374,9 @@ class base_grader:
         # not find delay
         elif not self.find_delay:
             if self.training:
-                Answer = self.db_controller.find_most_popular(self.project_id, self.query_text, self.tg)
+                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text, self.tg)
             else:
-                Answer = self.db_controller.find_one_ans(self.project_id, self.query_text, self.tg)
+                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text, self.tg)
 
         # if no Answer found, return false, auto_available will be false
         if (Answer == None):

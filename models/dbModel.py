@@ -4,13 +4,10 @@ import collections
 
 def update_grader_info(web_controller, db_controller):
     grader_id = web_controller.get_grader_id()
-    # update the project id
-    project_link = web_controller.get_motherTag_url()
-    project_id = web_controller.get_project_id_from_url(project_link)
     # update the db login info
     login, pw = db_controller.grader_id_to_login_info(grader_id)
     db_controller.update_db_config(login=login, pw=pw)
-    return grader_id, project_id, project_link
+    return grader_id
 
 # def insert_db_query(web_controller, db_controller, project_id, query_text):
 #
@@ -29,7 +26,7 @@ def update_grader_info(web_controller, db_controller):
 #     answer_id = db_controller.answer_insert(ans, grader_id, query_id, query_link)
 
 
-def init_Answer_object():
+def format_Answer():
     Answer = collections.namedtuple("Answer", ['find_ok', 'ans', 'find_time_used',
                                                'grader_name', 'ans_dist', 'detail', 'link'])
     Answer.find_ok, Answer.ans, Answer.find_time_used, \
