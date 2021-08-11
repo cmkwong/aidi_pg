@@ -6,7 +6,7 @@ from appscript import *
 
 command_string = "command_not_checked"
 user_command = None
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
 db_controller = dbController.Database()
@@ -23,7 +23,7 @@ MAIN_LOOP_COUNT = 0
 while (not (command_string == "quit")):
 
     # need the user re-open the program
-    if MAIN_LOOP_COUNT % 50 == 0:
+    if MAIN_LOOP_COUNT % 30 == 0:
         if VERSION != graders.db_controller.get_most_updated_version():
             raise Exception("Outdated Version, re-open program.")
 

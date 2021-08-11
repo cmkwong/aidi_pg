@@ -246,7 +246,7 @@ class Web:
 
     def get_project_id_locale_from_url(self):
         project_link = self.get_motherTag_url()
-        project_id, project_locale = '', ''
+        project_id, project_locale = None, None
 
         # project_id
         regex = re.compile(r"/project/\S+?/")
