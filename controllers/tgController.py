@@ -3,6 +3,7 @@ import config
 from models import tgModel, menuModel
 from controllers import gradingController, authController
 from views.prints import *
+import os
 
 class Telegram_Bot:
     def __init__(self, token):
@@ -201,6 +202,14 @@ class Telegram_Bot:
             delays = str(graders.grader.time_delay).strip()
             md = str(graders.grader.manual_timer).strip()
             self.bot.send_message(message.chat.id, "Done: " + done + " t-" + delays + " MD-" + md)
+
+        @self.bot.message_handler(commands=['sc'])
+        def screenCap(message):
+            try:
+                os.system('screencapture -c -R240,150,1193,660')
+                self.bot.send_message(message.chat.id, "screenshot saved in clipboard.")
+            except:
+                self.bot.send_message(message.chat.id,'screenshot error')
 
         @self.bot.message_handler(commands=['train'])
         def set_train_mode(message):
