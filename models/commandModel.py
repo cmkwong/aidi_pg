@@ -4,6 +4,7 @@ from controllers import authController, gradingController, tgController
 from utils.inputs import *
 from views.prints import *
 import datetime
+import os
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
@@ -186,6 +187,14 @@ def control_command_check(graders, ans):
                     print("No report")
             except:
                 print("Error")
+            return command_checked
+
+        elif (ans == "-sc"):
+            try:
+                os.system('screencapture -c -R240,150,1193,660')
+                print("screenshot saved in clipboard.")
+            except:
+                print('screenshot error')
             return command_checked
 
         elif (ans == "-train"):
