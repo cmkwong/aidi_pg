@@ -108,9 +108,11 @@ def control_command_check(graders, ans):
             if level == 's':
                 gg = graders.grader
                 try:
-                    Answer = gg.db_controller.find_most_popular(gg.project_id,
-                                                                gg.project_locale,
-                                                                gg.query_text,
+                    project_id, project_locale = gg.web_controller.get_project_id_locale_from_url()
+                    query_text = infoModel.get_query_text(gg.project_type, gg.tg, gg.web_controller, print_allowed=True)
+                    Answer = gg.db_controller.find_most_popular(project_id,
+                                                                project_locale,
+                                                                query_text,
                                                                 gg.tg, print_allowed=True)
                     gradingController.print_popular_ans_detail(Answer, gg.tg)
                 except:
