@@ -1,9 +1,8 @@
 import telebot
 import config
-from models import tgModel, menuModel, reportModel
+from models import tgModel, menuModel, reportModel, infoModel
 from controllers import gradingController, authController
 from views.prints import *
-import os
 
 class Telegram_Bot:
     def __init__(self, token):
@@ -110,6 +109,27 @@ class Telegram_Bot:
 
                     # auto: loop finding, print, if not found, showing next query
                     self.auto_run(graders)
+                else:
+                    self.bot.send_message(message.chat.id, "Invalid Command")
+
+        @self.bot.message_handler(commands=['dist'])
+        def print_dist(message):
+            if self.tg_available == False:
+                self.bot.send_message(message.chat.id, "Please type /s first")
+            else:
+                level = authController.get_grader_access_level(graders)
+                if level == 's':
+                    gg = graders.grader
+                    try:
+                        project_id, project_locale = gg.web_controller.get_project_id_locale_from_url()
+                        query_text = infoModel.get_query_text(gg.project_type, self, gg.web_controller, print_allowed=True)
+                        Answer = gg.db_controller.find_most_popular(project_id,
+                                                                    project_locale,
+                                                                    query_text,
+                                                                    self, print_allowed=True)
+                        gradingController.print_popular_ans_detail(Answer, self)
+                    except:
+                        self.bot.send_message(message.chat.id, 'Error of printing distribution')
                 else:
                     self.bot.send_message(message.chat.id, "Invalid Command")
 
