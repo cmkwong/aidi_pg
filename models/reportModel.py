@@ -16,7 +16,7 @@ def print_report(report):
 def print_screen(saved=False):
     saved_dir = 'clipboard'
     if saved:
-        saved_dir = "~/Downloads/{}.jpg".format(datetime.now().strftime('%d%m%Y-%H%M%S'))
+        saved_dir = "~/Downloads/{}.png".format(datetime.now().strftime('Screenshot %Y-%m-%d at %I.%M.%S %p'))
         os.system('screencapture -R240,150,1193,660 {}'.format(saved_dir))
     else:
         os.system('screencapture -c -R240,150,1193,660')
