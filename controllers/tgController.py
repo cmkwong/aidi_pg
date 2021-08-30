@@ -1,6 +1,6 @@
 import telebot
 import config
-from models import tgModel, menuModel
+from models import tgModel, menuModel, reportModel
 from controllers import gradingController, authController
 from views.prints import *
 import os
@@ -206,10 +206,18 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['sc'])
         def screenCap(message):
             try:
-                os.system('screencapture -c -R240,150,1193,660')
-                self.bot.send_message(message.chat.id, "screenshot saved in clipboard.")
+                file_dir = reportModel.print_screen()
+                self.bot.send_message(message.chat.id, "screenshot saved in {}.".format(file_dir))
             except:
                 self.bot.send_message(message.chat.id,'screenshot error')
+
+        @self.bot.message_handler(commands=['ssc'])
+        def screenSaved(message):
+            try:
+                file_dir = reportModel.print_screen(saved=True)
+                self.bot.send_message(message.chat.id, "screenshot saved in {}.".format(file_dir))
+            except:
+                self.bot.send_message(message.chat.id, 'screenshot error')
 
         @self.bot.message_handler(commands=['train'])
         def set_train_mode(message):

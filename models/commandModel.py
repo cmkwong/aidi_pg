@@ -4,7 +4,6 @@ from controllers import authController, gradingController, tgController
 from utils.inputs import *
 from views.prints import *
 import datetime
-import os
 
 def control_command_check(graders, ans):
     command_checked = "command_checked"
@@ -104,6 +103,20 @@ def control_command_check(graders, ans):
             print("Full auto de-activated")
             return command_checked
 
+        elif (ans == "-dist"):
+            level = authController.get_grader_access_level(graders)
+            if level == 's':
+                gg = graders.grader
+                try:
+                    Answer = gg.db_controller.find_most_popular(gg.project_id,
+                                                                gg.project_locale,
+                                                                gg.query_text,
+                                                                gg.tg, print_allowed=True)
+                    gradingController.print_popular_ans_detail(Answer, gg.tg)
+                except:
+                    print_at('Error of printing distribution', gg.tg)
+            return command_checked
+
         elif (ans == "-alarm"):
             graders.grader.alarm = True
             print("Alarm sound activated.")
@@ -191,8 +204,16 @@ def control_command_check(graders, ans):
 
         elif (ans == "-sc"):
             try:
-                os.system('screencapture -c -R240,150,1193,660')
-                print("screenshot saved in clipboard.")
+                saved_dir = reportModel.print_screen()
+                print("screenshot saved in {}.".format(saved_dir))
+            except:
+                print('screenshot error')
+            return command_checked
+
+        elif (ans == "-ssc"):
+            try:
+                saved_dir = reportModel.print_screen(saved=True)
+                print("screenshot saved in {}.".format(saved_dir))
             except:
                 print('screenshot error')
             return command_checked
@@ -217,7 +238,7 @@ def control_command_check(graders, ans):
                     print_conflict(conflict, graders.grader.tg)
             return command_checked
 
-        elif (ans == "-check"):
+        elif (ans == "-checkCode"):
             project_code = infoModel.get_project_code(graders.web_controller)
             for key, value in project_code.items():
                 print("{}: {}".format(key, value))
