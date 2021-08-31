@@ -106,17 +106,13 @@ class Web:
                 time.sleep(0.5)
             except:
                 continue # continue looping
-        js_code = ''
-        raw_string = """
-                    document.querySelector('.selection').querySelector('.menu').getElementsByTagName('div')[%s].click();
+        js_code = """
+                    document.querySelector('.selection').querySelector('.menu').querySelectorAll('div').forEach(el => {
+                        if (el.innerText === '%s') el.click();
+                    })
                     document.querySelector("#start").click();
                 """
-        if config.projects_info[project_index]["location"] == "en_US":
-            js_code = raw_string % 0
-        elif config.projects_info[project_index]["location"] == "zh_HK":
-            js_code = raw_string % 1
-        elif config.projects_info[project_index]["location"] == "zh_TW":
-            js_code = raw_string % 2
+        js_code = js_code % config.projects_info[project_index]["location"]
         self.browser.execute_script(js_code)
 
     def flash_web_search(self):

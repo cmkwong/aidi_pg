@@ -156,17 +156,6 @@ class Graders:
         else:
             self.print_extra_info = False
 
-        # if type in config.MAX_TEN_RESULTS_PROJS:
-        #     self.grader.max_answer_slots = 10
-        # elif type in config.MAX_FIVE_RESULTS_PROJS:
-        #     self.grader.max_answer_slots = 5
-        # elif type in config.MAX_TWO_RESULTS_PROJS:
-        #     self.grader.max_answer_slots = 2
-        # elif type in config.MAX_ONE_RESULTS_PROJS:
-        #     self.grader.max_answer_slots = 1
-        # else:
-        #     self.grader.max_answer_slots = 3
-
         return True
 
     def decode(self, ans=''):
