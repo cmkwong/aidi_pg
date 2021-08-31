@@ -108,7 +108,7 @@ class Web:
                 continue # continue looping
         js_code = """
                     document.querySelector('.selection').querySelector('.menu').querySelectorAll('div').forEach(el => {
-                        if (el.innerText === '%s') el.click();
+                        if (el.dataset.value === '%s') el.click();
                     })
                     document.querySelector("#start").click();
                 """
