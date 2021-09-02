@@ -226,7 +226,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['sc'])
         def screenCap(message):
             try:
-                file_dir = reportModel.print_screen()
+                file_dir = reportModel.print_screen(graders.grader.web_controller)
                 self.bot.send_message(message.chat.id, "screenshot saved in {}.".format(file_dir))
             except:
                 self.bot.send_message(message.chat.id,'screenshot error')
@@ -234,7 +234,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['ssc'])
         def screenSaved(message):
             try:
-                file_dir = reportModel.print_screen(saved=True)
+                file_dir = reportModel.print_screen(graders.grader.web_controller, saved=True)
                 self.bot.send_message(message.chat.id, "screenshot saved in {}.".format(file_dir))
             except:
                 self.bot.send_message(message.chat.id, 'screenshot error')

@@ -13,7 +13,8 @@ def print_report(report):
     print("\n{:>96}".format("===================================================="))
     print("{:>60}{:>12}{:>12}{:>12}{:>12}".format("Total:", str(len(report)), str(TD), "{:.1f}".format(TWH), "{:.1f}".format(TBH)))
 
-def print_screen(saved=False):
+def print_screen(web_controller, saved=False):
+    web_controller.back_tag_one()
     saved_dir = 'clipboard'
     if saved:
         saved_dir = "~/Downloads/{}.png".format(datetime.now().strftime('Screenshot %Y-%m-%d at %I.%M.%S %p'))
