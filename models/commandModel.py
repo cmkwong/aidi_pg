@@ -207,7 +207,7 @@ def control_command_check(graders, ans):
         elif (ans == "-sc"):
             try:
                 saved_dir = reportModel.print_screen(graders.grader.web_controller)
-                print("screenshot saved in {}.".format(saved_dir))
+                print("saved in {}.".format(saved_dir))
             except:
                 print('screenshot error')
             return command_checked
@@ -215,7 +215,7 @@ def control_command_check(graders, ans):
         elif (ans == "-ssc"):
             try:
                 saved_dir = reportModel.print_screen(graders.grader.web_controller, saved=True)
-                print("screenshot saved in {}.".format(saved_dir))
+                print("saved in {}.".format(saved_dir))
             except:
                 print('screenshot error')
             return command_checked
