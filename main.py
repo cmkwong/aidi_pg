@@ -28,11 +28,8 @@ while (not (command_string == "quit")):
         if VERSION != graders.db_controller.get_most_updated_version():
             raise Exception("Outdated Version, re-open program.")
         # check payment
-        try:
-            if not authController.paid(graders):
-                raise Exception("Please try again later.")
-        except:
-            continue
+        if not authController.paid(graders):
+            raise Exception("Please try again later.")
 
     if FIRST_TIME:
         # update the local info from remote database

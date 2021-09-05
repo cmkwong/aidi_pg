@@ -157,7 +157,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-tg"):
             gradingController.resume_standard_mode(graders)
-            token = authController.get_grader_tg_token(graders)
+            token = authController.get_grader_tgToken(graders)
             tg = tgController.Telegram_Bot(token=token)
             graders.grader.tg = tg
             print("Telegram Online\n"
@@ -242,10 +242,10 @@ def control_command_check(graders, ans):
 
         elif (ans == '-pay'):
             try:
-                expired_date = authController.get_expired_date(graders)
+                usr_name = graders.grader.web_controller.get_user_name()
+                expired_date = graders.grader.db_controller.get_expired_date(usr_name)
                 print("Expired at: {}".format(expired_date))
-                print("$88/month.")
-                show_img('./src/payme_qr.png')
+                show_img('./src/payme_qr.jpg')
             except:
                 print('Please try again.')
 

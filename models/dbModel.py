@@ -1,5 +1,3 @@
-import config
-from views.prints import *
 import collections
 
 def update_grader_info(web_controller, db_controller):
