@@ -24,11 +24,8 @@ def get_expired_date(graders):
     return expired_date
 
 def paid(graders):
-    try:
-        expired_date = get_expired_date(graders)
-        # compare the expired date and current time
-        if (datetime.strptime(expired_date, "%Y-%m-%d %H:%M").timestamp() - datetime.now().timestamp() < 0):
-            return False
-        return True
-    except:
+    expired_date = get_expired_date(graders)
+    # compare the expired date and current time
+    if (datetime.strptime(expired_date, "%Y-%m-%d %H:%M").timestamp() - datetime.now().timestamp() < 0):
         return False
+    return True
