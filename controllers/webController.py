@@ -250,14 +250,18 @@ class Web:
             project_id, project_locale = result.group(1), result.group(2)
         return project_id, project_locale
 
-    def get_grader_id(self):
+    def get_user_name(self):
         js_code = """
-            var usr_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
-            return usr_name;
-        """
+                    var usr_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
+                    return usr_name;
+                """
         usr_name = self.browser.execute_script(js_code)
         usr_name = usr_name.replace('\n', '')
         usr_name = usr_name.replace(' ', '')
+        return usr_name
+
+    def get_grader_id(self):
+        usr_name = self.get_user_name()
         for info in config.graders_info:
             if usr_name == info["name"]:
                 return info["_id"]

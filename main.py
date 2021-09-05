@@ -1,5 +1,5 @@
 import config
-from controllers import gradingController, dbController, webController
+from controllers import gradingController, dbController, webController, authController
 from models import gradingModel, menuModel, answerModel
 from views.prints import *
 from appscript import *
@@ -22,10 +22,12 @@ MAIN_LOOP_COUNT = 0
 
 while (not (command_string == "quit")):
 
-    # need the user re-open the program
+    # check user version and paid status
     if MAIN_LOOP_COUNT % 30 == 0:
         if VERSION != graders.db_controller.get_most_updated_version():
             raise Exception("Outdated Version, re-open program.")
+        if not authController.paid(graders):
+            raise Exception("Please try again later.")
 
     if FIRST_TIME:
         # update the local info from remote database

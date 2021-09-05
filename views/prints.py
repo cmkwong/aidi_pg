@@ -37,7 +37,8 @@ def print_status(grader):
     md = str(grader.manual_timer).strip()
     print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", grader.tg, grader.print_allowed)
 
-def show_img():
-    img = mpimg.imread('./src/payme_qr.png')
-    imgplot = plt.imshow(img)
+def show_img(path):
+    img = mpimg.imread(path)
+    plt.imshow(img)
+    plt.axis('off')
     plt.show()

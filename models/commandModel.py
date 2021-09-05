@@ -241,7 +241,13 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == '-pay'):
-            show_img()
+            try:
+                expired_date = authController.get_expired_date(graders)
+                print("Expired at: {}".format(expired_date))
+                print("$88/month.")
+                show_img('./src/payme_qr.png')
+            except:
+                print('Please try again.')
 
         elif (ans == "-checkCode"):
             project_code = infoModel.get_project_code(graders.web_controller)

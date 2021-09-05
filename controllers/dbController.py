@@ -263,6 +263,12 @@ class Database:
                 return None
             return conflict
 
+    def get_expired_date(self, usr_name):
+        db_filter = {
+            "name": usr_name
+        }
+        return self.db["payment"].find_one(db_filter)["expired"]
+
     def get_most_updated_version(self):
         return self.db["versions_control"].find_one()['version']
 
