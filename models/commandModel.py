@@ -240,6 +240,9 @@ def control_command_check(graders, ans):
                     print_conflict(conflict, graders.grader.tg)
             return command_checked
 
+        elif (ans == '-pay'):
+            show_img()
+
         elif (ans == "-checkCode"):
             project_code = infoModel.get_project_code(graders.web_controller)
             for key, value in project_code.items():
