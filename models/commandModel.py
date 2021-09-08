@@ -244,7 +244,7 @@ def control_command_check(graders, ans):
             try:
                 usr_name = graders.grader.web_controller.get_user_name()
                 expired_date = graders.grader.db_controller.get_expired_date(usr_name)
-                print("Expired at: {}".format(expired_date))
+                print("Due date at: {}".format(expired_date))
                 show_img('./src/payme_qr.png')
             except:
                 print('Please try again.')
