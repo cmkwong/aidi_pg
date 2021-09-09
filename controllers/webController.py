@@ -303,7 +303,10 @@ class Web:
         self.browser.execute_script(js_code)
 
     def scrollIntoView(self, project_type):
-        self.browser.execute_script(config.SCROLL_TO_VIEW_COMMAND[project_type])
+        try:
+            self.browser.execute_script(config.SCROLL_TO_VIEW_COMMAND[project_type])
+        except:
+            pass
 
     def insert_comment(self, project_type, text):
         js_code = config.INSERT_COMMENT_COMMAND[project_type]
