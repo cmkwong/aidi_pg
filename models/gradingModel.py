@@ -306,6 +306,8 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                     print_at("Need comments", tg)
                     return False
                 web_controller.insert_comment(project_type, comment)
+        # flash web search
+        web_controller.flash_web_search(project_type)
         return True
 
     else:
