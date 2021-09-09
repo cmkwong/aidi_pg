@@ -156,6 +156,8 @@ class Graders:
                 self.auto_available = False
             self.grader.new_query = False
 
+        return user_input
+
 class base_grader:
     def __init__(self, web_controller, db_controller):
         self.web_controller = web_controller
@@ -323,7 +325,7 @@ class base_grader:
                 if not timer_ok:
                     return False
 
-            self.web_controller.click_next_btn()
+            #self.web_controller.click_next_btn()
 
             # update ans into db
             if self.project_type in config.UPDATE_DB_PROJS:

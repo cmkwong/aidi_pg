@@ -1,9 +1,7 @@
 from controllers import gradingController, dbController, webController, authController
-from models import gradingModel, menuModel
-from views.prints import *
+from models import menuModel
 
-command_string = "command_not_checked"
-user_command = None
+user_input = ''
 VERSION = "0.0.8"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
@@ -16,7 +14,7 @@ graders = gradingController.Graders(web_controller, db_controller)
 FIRST_TIME = True
 MAIN_LOOP_COUNT = 0
 
-while (not (command_string == "quit")):
+while (not (user_input == "quit")):
 
     # check user version and paid status
     if MAIN_LOOP_COUNT % 30 == 0:
@@ -35,7 +33,7 @@ while (not (command_string == "quit")):
         graders.setup_project(project_index)
         FIRST_TIME = False
 
-    graders.run()
+    user_input = graders.run()
 
     MAIN_LOOP_COUNT += 1
 
