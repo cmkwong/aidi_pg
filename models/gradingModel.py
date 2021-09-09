@@ -255,13 +255,14 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
 
     elif (project_type == 'sbs'):
 
-        # flash web search
-        web_controller.flash_web_search(project_type)
-
         # # extract the comment
         command, comment = ans[0], ''
         if len(ans) > 1:
-            command, comment = ans.split(' ', 1)
+            split_list = ans.split(' ', 1)
+            if len(split_list) == 1:
+                print_at("Wrong command", tg)
+                return False
+            command, comment = split_list[0], split_list[1]
 
         if command == '1':
             web_controller.click_by_id("query_validationno_context")
@@ -287,15 +288,15 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                 web_controller.click_by_id("identical_responsesno")
                 js_code = "document.querySelectorAll('li.choice-group')[%s].querySelector('input').click()" # clicking which response better
                 # about the same
-                if command == '0':
+                if command == 's':
                     web_controller.browser.execute_script(js_code % 3)
                 # they can compare
                 else:
                     strength = len(command)
                     if strength <= 3: # when strength larger than 3 is not allowed
-                        if command[0] == 'l':
+                        if command[0] == 'a':
                             web_controller.browser.execute_script(js_code % abs(strength - 3))
-                        elif command[0] == 'r':
+                        elif command[0] == 'd':
                             web_controller.browser.execute_script(js_code % (strength + 3))
                     else:
                         print_at("--------Not correct ans detected.--------", tg)
