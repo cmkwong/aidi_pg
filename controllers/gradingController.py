@@ -126,21 +126,21 @@ class Graders:
         return True
 
     def decode(self, command, ans=''):
+        gradingFinish = False
         if (not self.auto_mode and not command) or (self.auto_mode and not self.auto_available and not command):
             gradingFinish = self.grader.execute(ans)
-            return gradingFinish
         elif (self.auto_mode and self.auto_available and not command):
             gradingFinish = self.grader.auto_execute()
-            return gradingFinish
+        return gradingFinish
 
     def run(self):
-        if self.auto_mode == False:
+        user_input = ''
 
+        if self.auto_mode == False:
             user_input, command = answerModel.enter(self)
             _ = self.decode(command, user_input)
 
         elif self.auto_mode == True:
-
             if self.auto_available == True:
                 self.auto_available = self.decode(command=False)
 

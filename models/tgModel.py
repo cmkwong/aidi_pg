@@ -17,7 +17,7 @@ def send_tg_info(grader, old_query_text=None, time_out=10):
     except:
         return False
     # combined into one text
-    grader.project_code = infoModel.get_project_code(grader.web_controller)
+    grader.project_code = infoModel.get_project_code(grader.web_controller, grader.project_type)
     max_index = min(len(links), grader.project_code["max_answer_slots"])
     text = search_date + '\n\n' + query_text + '\n' + \
            "web search link: " + web_search_link + '\n' + \

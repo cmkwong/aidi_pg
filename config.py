@@ -19,6 +19,20 @@ CLICK_WEB_SEARCH_COMMAND = {
     "sbs": """document.querySelector('.punchout-link').click();""", # side-by-side project
 }
 
+CLICK_NEXT_BTN_COMMAND = {
+    "standard": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
+    "valid": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
+    "sbs": """
+        const nextWait = setInterval(function() {
+            if (!document.getElementsByClassName('forward-btn')[0].querySelector('i.ban')) {
+                document.getElementsByClassName('forward-btn')[0].click();
+                clearInterval(nextWait);
+                return;
+            }
+        },50)
+    """,
+}
+
 GET_WEB_SEARCH_LINK_COMMAND = {
     "standard": """return document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');""",
     "valid": """return document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');""",

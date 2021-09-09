@@ -251,7 +251,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-checkCode"):
-            project_code = infoModel.get_project_code(graders.web_controller)
+            project_code = infoModel.get_project_code(graders.web_controller, graders.grader.project_type)
             for key, value in project_code.items():
                 print("{}: {}".format(key, value))
         else:

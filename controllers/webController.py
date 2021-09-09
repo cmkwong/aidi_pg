@@ -140,7 +140,7 @@ class Web:
         return True
 
     def get_web_search_link(self, project_type):
-        js_code = config.GET_WEB_SEARCH_LINK_COMMAND(project_type)
+        js_code = config.GET_WEB_SEARCH_LINK_COMMAND[project_type]
         link = self.browser.execute_script(js_code)
         return link
 
@@ -152,7 +152,7 @@ class Web:
 
     def get_link_details(self, project_type):
         self.back_tag_one()
-        js_code = config.GET_LINK_DETAILS_COMMAND(project_type)
+        js_code = config.GET_LINK_DETAILS_COMMAND[project_type]
         link_details = self.browser.execute_script(js_code)
         return link_details
 
