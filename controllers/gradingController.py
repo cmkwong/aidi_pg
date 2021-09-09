@@ -209,12 +209,11 @@ class base_grader:
         self.new_query = False
 
         # get project code in when project_type: standard mode
-        if self.project_type == 'standard':
-            if self.project_id in config.projects_code.keys():
-                self.project_code = config.projects_code[self.project_id]
-            else:
-                self.project_code = infoModel.get_project_code(self.web_controller) # get the project code if have not seen before
-                config.projects_code[self.project_id] = self.project_code       # store the project_code into global dictionary (config)
+        if self.project_id in config.projects_code.keys():
+            self.project_code = config.projects_code[self.project_id]
+        else:
+            self.project_code = infoModel.get_project_code(self.web_controller, self.project_type) # get the project code if have not seen before
+            config.projects_code[self.project_id] = self.project_code       # store the project_code into global dictionary (config)
 
         return True
 

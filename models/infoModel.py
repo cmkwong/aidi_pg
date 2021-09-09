@@ -40,7 +40,7 @@ def get_links_and_details(web_controller, project_type, time_out=10):
             continue  # continue looping
     return links, link_details
 
-def get_project_code(web_controller):
+def get_project_code(web_controller, project_type):
     prj_code = {
         'vague': 0,
         'appropriate_query': 0,
@@ -49,35 +49,38 @@ def get_project_code(web_controller):
         'pattern_one_yes_no': 0,
         'special_type': '',
     }
-    # check if need vague
-    try:
-        web_controller.click_by_id("query_vagueno")
-        web_controller.click_by_id("query_vagueyes_vague")
-        prj_code['vague'] = 1
-    except:
-        pass
+    if project_type == 'standard':
+        # check if need vague
+        try:
+            web_controller.click_by_id("query_vagueno")
+            web_controller.click_by_id("query_vagueyes_vague")
+            prj_code['vague'] = 1
+        except:
+            pass
 
-    # check if need query appropriate
-    try:
-        web_controller.click_by_id("query_appropriatefalse")
-        web_controller.click_by_id("query_appropriatetrue")
-        prj_code['appropriate_query'] = 1
-    except:
-        pass
+        # check if need query appropriate
+        try:
+            web_controller.click_by_id("query_appropriatefalse")
+            web_controller.click_by_id("query_appropriatetrue")
+            prj_code['appropriate_query'] = 1
+        except:
+            pass
 
-    # check if it is pattern_one + if yes/no after right after the pattern_one
-    try:
-        for num in range(1, 15):    # max 15 answer slow
-            # check if need pattern_one format
-            gradingModel.pattern_one('g', num, web_controller)
-            prj_code['pattern_one'] = 1
-            prj_code['max_answer_slots'] = num
-            try:
-                web_controller.click_by_id(("result" + str(num + 1) + "_shownno"))
-                web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
-                prj_code['pattern_one_yes_no'] = 1
-            except:
-                pass
-    except:
-        pass
+        # check if it is pattern_one + if yes/no after right after the pattern_one
+        try:
+            for num in range(1, 15):    # max 15 answer slow
+                # check if need pattern_one format
+                gradingModel.pattern_one('g', num, web_controller)
+                prj_code['pattern_one'] = 1
+                prj_code['max_answer_slots'] = num
+                try:
+                    web_controller.click_by_id(("result" + str(num + 1) + "_shownno"))
+                    web_controller.click_by_id(("result" + str(num + 1) + "_shownyes"))
+                    prj_code['pattern_one_yes_no'] = 1
+                except:
+                    pass
+        except:
+            pass
+    elif project_type == 'sbs':
+        prj_code['max_answer_slots'] = 10
     return prj_code
