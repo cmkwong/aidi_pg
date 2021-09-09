@@ -127,6 +127,13 @@ INSERT_COMMENT_COMMAND = {
     """
 }
 
+SCROLL_TO_VIEW_COMMAND = {
+    "sbs": """
+        const el = document.querySelector('.utterance');
+        el.scrollIntoView();
+    """
+}
+
 help_command = {
 
     "spot12/saf/eval3": {

@@ -309,7 +309,7 @@ class Telegram_Bot:
                 if graders.auto_mode == False:
 
                     # extra print needed
-                    if graders.print_extra_info == True:
+                    if graders.extra_preAction == True:
                         if graders.grader.project_type == "classify":
                             print_list(graders.grader, config.classify_extra_info_list)
                     ans = message.text

@@ -85,7 +85,7 @@ class Graders:
         self.grader = None
         self.auto_mode = False
         self.auto_available = True
-        self.print_extra_info = False
+        self.extra_preAction = False
 
     def setup_project(self, project_index, new_grader=True, ghost_menu=False):
         if ghost_menu:
@@ -119,13 +119,13 @@ class Graders:
         # run classify need extra info provided
         elif type == "classify":
             if self.grader.tg is None:
-                self.print_extra_info = True
+                self.extra_preAction = True
             else:
                 print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
                 return False
 
         elif type == "sbs":
-            self.print_extra_info = True
+            self.extra_preAction = True
 
         return True
 
@@ -138,7 +138,7 @@ class Graders:
         return gradingFinish
 
     def run(self):
-        user_input = ''
+        command = ''
 
         if self.auto_mode == False:
             user_input, command = answerModel.enter(self)
@@ -160,7 +160,7 @@ class Graders:
                 self.auto_available = False
             self.grader.new_query = False
 
-        return user_input
+        return command
 
 class base_grader:
     def __init__(self, web_controller, db_controller):
