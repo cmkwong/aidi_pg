@@ -4,7 +4,7 @@ import matplotlib.image as mpimg
 
 def print_list(grader, str_list):
     for string in str_list:
-        print_at(string, grader.tg)
+        print_at(string, grader.tg, grader.print_allowed)
 
 def print_at(txt, tg=None, print_allowed=True):
     if print_allowed:

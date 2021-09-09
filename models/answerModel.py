@@ -1,13 +1,27 @@
 from models import commandModel
 from views.prints import *
+import config
+from appscript import *
+terminal = app('Terminal')
 
-def enter(placeholder, graders, terminal):
-    terminal.activate()  # back to terminal shell for input
-    user_input = input(placeholder)
+def enter(graders):
+    # setting placeholder
+    placeholder = 'Answer Input: '
+    if graders.auto_mode: placeholder = 'Answer Input-a: '
 
-    # exception for valid project because mostly the answer is 'n'
-    if graders.grader.project_type == 'valid' and len(user_input) == 0:
+    # extra print if needed
+    if graders.print_extra_info == True:
+        if graders.grader.project_type == "classify":
+            print_list(graders.grader, config.classify_extra_info_list)
+        elif graders.grader.project_type == "sbs":
+            print_list(graders.grader, config.sbs_extra_info_list)
+
+    terminal.activate()             # back to terminal shell for input
+    user_input = input(placeholder) # waiting user input
+
+    # exception for valid/side-by-side project because mostly the answer is 'n'
+    if (graders.grader.project_type == 'valid' or graders.grader.project_type == 'sbs') and len(user_input) == 0:
         user_input = 'n'
 
-    command_string = commandModel.control_command_check(graders, user_input)
-    return user_input, command_string
+    command = commandModel.control_command_check(graders, user_input)
+    return user_input, command

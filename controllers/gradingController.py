@@ -2,39 +2,9 @@ import time
 import tkinter as tk
 from functools import partial
 import config
-from models import gradingModel, dbModel, infoModel
+from models import gradingModel, dbModel, infoModel, answerModel
 from views.prints import *
 from utils import inputs, sounds
-
-def base_code_check(controller, ans, max_answer_slots, tg=None):
-    if (ans == '`'):
-        # web_search
-        try:
-            controller.click_web_search()
-        except:
-            print_at("Not available '`'", tg)
-            return True # None is Error
-        return True
-    elif (ans == '!'):
-        # close other tags
-        try:
-            controller.close_other_tags()
-        except:
-            print_at("Not available '!'", tg)
-            return True
-        return True
-    elif (ans == '~'):
-        try:
-            controller.click_all_links(max_answer_slots)
-        except:
-            print_at("Not available '~'", tg)
-            return True
-        return True
-    elif ans == '[':
-        controller.click_previous_btn()
-        return True
-    else:
-        return False # False = continue
 
 def resume_standard_mode(graders):
     # reset auto mode
@@ -114,7 +84,7 @@ class Graders:
         self.db_controller = db_controller
         self.grader = None
         self.auto_mode = False
-        self.auto_available = False
+        self.auto_available = True
         self.print_extra_info = False
 
     def setup_project(self, project_index, new_grader=True, ghost_menu=False):
@@ -147,24 +117,44 @@ class Graders:
                 return False
 
         # run classify need extra info provided
-        if type == "classify":
+        elif type == "classify":
             if self.grader.tg is None:
                 self.print_extra_info = True
             else:
                 print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
                 return False
-        else:
-            self.print_extra_info = False
-
         return True
 
-    def decode(self, ans=''):
-        if (self.auto_mode == False):
+    def decode(self, command, ans=''):
+        if (not self.auto_mode and not command) or (self.auto_mode and not self.auto_available and not command):
             gradingFinish = self.grader.execute(ans)
             return gradingFinish
-        elif (self.auto_mode == True):
+        elif (self.auto_mode and self.auto_available and not command):
             gradingFinish = self.grader.auto_execute()
             return gradingFinish
+
+    def run(self):
+        if self.auto_mode == False:
+
+            user_input, command = answerModel.enter(self)
+            _ = self.decode(command, user_input)
+
+        elif self.auto_mode == True:
+
+            if self.auto_available == True:
+                self.auto_available = self.decode(command=False)
+
+            # usually because answer cannot found so auto_available=False
+            if self.auto_available == False:
+                user_input, command = answerModel.enter(self)
+                self.auto_available = self.decode(command, user_input)
+
+        if (self.grader.new_query):
+            print_status(self.grader)
+            limit_reached = gradingModel.check_limit_reached(self.grader)
+            if limit_reached:  # check for limit reach, if do, assign auto_available=false
+                self.auto_available = False
+            self.grader.new_query = False
 
 class base_grader:
     def __init__(self, web_controller, db_controller):
@@ -305,7 +295,7 @@ class base_grader:
         if not renew_ok:
             return False
         # check if there is base command: ~, `, !
-        base_command = base_code_check(self.web_controller, ans, max_answer_slots=self.project_code["max_answer_slots"], tg=self.tg)
+        base_command = gradingModel.base_code_check(self.web_controller, self.project_type, ans, max_answer_slots=self.project_code["max_answer_slots"], tg=self.tg)
         if base_command:
             return False
         # otherwise
@@ -314,13 +304,13 @@ class base_grader:
             # insert query and grader info into database
             query_id = None
             if self.project_type in config.UPDATE_DB_PROJS:
-                query_id = self.db_controller.query_insert(self.project_id, self.project_locale, self.query_text, self.web_controller)
+                query_id = self.db_controller.query_insert(self.project_type, self.project_id, self.project_locale, self.query_text, self.web_controller)
                 if not query_id:
                     return False
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"])
+                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
@@ -387,7 +377,7 @@ class base_grader:
             return False
 
         # press web search
-        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"])
+        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
 
         # grading ans that from database
         grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)

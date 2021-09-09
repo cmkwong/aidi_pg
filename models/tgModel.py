@@ -9,11 +9,11 @@ def send_tg_info(grader, old_query_text=None, time_out=10):
         return False
     try:
         # get search date
-        search_date = grader.web_controller.get_search_date()
+        search_date = grader.web_controller.get_search_date(grader.project_type)
         # get web search links
-        web_search_link = grader.web_controller.get_web_search_link()
+        web_search_link = grader.web_controller.get_web_search_link(grader.project_type)
         # get links and its details
-        links, link_details = infoModel.get_links_and_details(grader.web_controller, time_out=10)
+        links, link_details = infoModel.get_links_and_details(grader.web_controller, grader.project_type, time_out=10)
     except:
         return False
     # combined into one text

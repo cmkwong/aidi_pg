@@ -1,8 +1,6 @@
-import config
 from controllers import gradingController, dbController, webController, authController
-from models import gradingModel, menuModel, answerModel
+from models import gradingModel, menuModel
 from views.prints import *
-from appscript import *
 
 command_string = "command_not_checked"
 user_command = None
@@ -15,9 +13,7 @@ web_controller.open_chrome()
 web_controller.init_working_tag()
 graders = gradingController.Graders(web_controller, db_controller)
 
-terminal = app('Terminal')
 FIRST_TIME = True
-graders.auto_available = True
 MAIN_LOOP_COUNT = 0
 
 while (not (command_string == "quit")):
@@ -39,40 +35,7 @@ while (not (command_string == "quit")):
         graders.setup_project(project_index)
         FIRST_TIME = False
 
-    if graders.auto_mode == False:
-
-        # extra print needed
-        if graders.print_extra_info == True:
-            if graders.grader.project_type == "classify":
-                print_list(graders.grader, config.classify_extra_info_list)
-
-        user_input, command_string = answerModel.enter('Answer Input: ', graders, terminal)
-        if command_string == "command_not_checked":
-            gradingFinish = graders.decode(user_input)
-
-    elif graders.auto_mode == True:
-
-        if graders.auto_available == True:
-            graders.auto_available = graders.decode()
-        if graders.auto_available == False:
-
-            # extra print needed
-            if graders.print_extra_info == True:
-                if graders.grader.project_type == "classify":
-                    print_list(graders.grader, config.classify_extra_info_list)
-
-            user_input, command_string = answerModel.enter('Answer Input-a: ', graders, terminal)
-            if command_string == "command_not_checked":
-                graders.auto_mode = False
-                graders.auto_available = graders.decode(user_input)
-                graders.auto_mode = True
-
-    if (graders.grader.new_query):
-        print_status(graders.grader)
-        limit_reached = gradingModel.check_limit_reached(graders.grader)
-        if limit_reached:  # check for limit reach, if do, assign auto_available=false
-            graders.auto_available = False
-        graders.grader.new_query = False
+    graders.run()
 
     MAIN_LOOP_COUNT += 1
 

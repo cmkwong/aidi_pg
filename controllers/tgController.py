@@ -19,7 +19,7 @@ class Telegram_Bot:
         if graders.auto_mode == True:
             self.bot.send_message(self.chat_id, "Auto-mode activated\nAuto-running ... ")
             while graders.auto_available:
-                graders.auto_available = graders.decode()
+                graders.auto_available = graders.decode(command=False)
 
                 if (graders.grader.new_query):
                     print_status(graders.grader)
@@ -312,8 +312,8 @@ class Telegram_Bot:
                     if graders.print_extra_info == True:
                         if graders.grader.project_type == "classify":
                             print_list(graders.grader, config.classify_extra_info_list)
-                    user_command = message.text
-                    self.gradingFinish = graders.decode(user_command)
+                    ans = message.text
+                    self.gradingFinish = graders.decode(command=False, ans=ans)
 
                     # turn back to auto available
                     if self.auto_user:

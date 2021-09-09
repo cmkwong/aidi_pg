@@ -33,11 +33,11 @@ class Database:
         }
         return self.db["graders"].find_one(db_filter)["login"], self.db["graders"].find_one(db_filter)["pw"]
 
-    def query_insert(self, project_id, project_locale, text, web_controller):
+    def query_insert(self, project_type, project_id, project_locale, text, web_controller):
 
         # try get the results links
         try:
-            result_links = web_controller.get_result_links()
+            result_links = web_controller.get_result_links(project_type)
         except:
             result_links = []
 
@@ -45,6 +45,7 @@ class Database:
         db_filter = {
             "project": project_id,
             "locale": project_locale,
+            "type": project_type,
             "text": text
         }
         count = self.db["querys"].count_documents(db_filter)
@@ -53,6 +54,7 @@ class Database:
             my_dict = {
                 "project": project_id,
                 "locale": project_locale,
+                "type": project_type,
                 "text": text,
                 "results": result_links
             }
@@ -68,7 +70,6 @@ class Database:
         db_filter = {
             "grader": grader_id,
             "query_id": query_id
-            # "_id": ans_id
         }
         count = self.db["answers"].count_documents(db_filter)
         if count is 0:

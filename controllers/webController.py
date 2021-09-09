@@ -64,16 +64,16 @@ class Web:
         js_code = "window.document.getElementsByClassName('" + class_name + "').click();"
         self.browser.execute_script(js_code)
 
-    def click_all_links(self, max_answer_slots):
+    def click_all_links(self, max_answer_slots, project_type):
         # open three results
-        links = self.get_result_links()
+        links = self.get_result_links(project_type)
         self.open_links_new_tags(links, max_answer_slots)
         # open web search
-        self.click_web_search()
+        self.click_web_search(project_type)
 
-    def click_web_search(self):
+    def click_web_search(self, project_type):
         self.back_tag_one()
-        js_code = "window.document.getElementsByClassName('clicked validates-clicked')[0].click();"
+        js_code = config.CLICK_WEB_SEARCH_COMMAND[project_type]
         self.browser.execute_script(js_code)
 
     def click_next_btn(self):
@@ -115,15 +115,15 @@ class Web:
         js_code = js_code % config.projects_info[project_index]["location"]
         self.browser.execute_script(js_code)
 
-    def flash_web_search(self):
+    def flash_web_search(self, project_type):
         # open web search
-        self.click_web_search()
+        self.click_web_search(project_type)
         self.close_other_tags()
 
-    def flash_all_tags(self, max_answer_slots):
+    def flash_all_tags(self, max_answer_slots, project_type):
         # get links
         try:
-            links = self.get_result_links()
+            links = self.get_result_links(project_type)
         except:
             links = []
             return False
@@ -136,93 +136,28 @@ class Web:
             except:
                 print("A result link cannot open: \n", link)
         # open web search
-        self.flash_web_search()
+        self.flash_web_search(project_type)
         return True
 
-    def get_web_search_link(self):
-        js_code = """
-                    var link = document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');
-                    return link
-        """
+    def get_web_search_link(self, project_type):
+        js_code = config.GET_WEB_SEARCH_LINK_COMMAND(project_type)
         link = self.browser.execute_script(js_code)
         return link
 
-    def get_link_details__discard(self):
+    def get_result_links(self, project_type):
         self.back_tag_one()
-        # get num of result-set
-        js_code = """
-                    var num = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set').length;
-                    return num;
-                """
-        num_sets = self.browser.execute_script(js_code)
-        # get num of links in each result-set
-        num_links = []
-        for num_set in np.arange(num_sets):
-            raw_string = """
-                var num = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set')[%s].getElementsByTagName('a').length;
-                return num;
-            """
-            js_code = raw_string % (num_set)
-            num_links.append(self.browser.execute_script(js_code))
-        link_details = []
-        for i in np.arange(num_sets):
-            for n in np.arange(num_links[i]):
-                raw_string = """
-                    var html_code = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('result-set')[%s].getElementsByTagName('a')[%s].text;
-                    return html_code;
-                """
-                js_code = raw_string % (i, n)
-                link_details.append(self.browser.execute_script(js_code))
-        return link_details
-
-    def get_result_links(self):
-        self.back_tag_one()
-        js_code = """
-            list = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
-            filter_list = [];
-            for (let i=0; i<list.length; i++) {
-                if (getComputedStyle(list[i],'::after').content === "counter(section)") {
-                    filter_list.push(list[i].querySelector('a').getAttribute('href'));
-                }
-            }
-            return filter_list;
-        """
+        js_code = config.GET_RESULT_LINKS_COMMAND[project_type]
         links = self.browser.execute_script(js_code)
         return links
 
-    def get_link_details(self):
+    def get_link_details(self, project_type):
         self.back_tag_one()
-        js_code = """
-                    list = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
-                    filter_list = [];
-                    for (let i=0; i<list.length; i++) {
-                        let title = '';
-                        if (list[i].querySelector('.title')) { 
-                            title = list[i].querySelector('.title').textContent.trim();
-                        } else {
-                            title = "Empty Title";
-                        };
-                        let description = '';
-                        let description_list = list[i].querySelectorAll('.description');
-                        if (description_list.length !== 0) {
-                            for (let k=0; k < description_list.length; k++) {
-                                description += description_list[k].textContent.trim() + '\\n';
-                            }
-                        } else {
-                            description = "Empty Description";
-                        };
-                        filter_list.push(title + '\\n' + description);
-                    }
-                    return filter_list;
-                """
+        js_code = config.GET_LINK_DETAILS_COMMAND(project_type)
         link_details = self.browser.execute_script(js_code)
         return link_details
 
-    def get_search_date(self):
-        js_code = """
-            var text = document.querySelector(".message.blue").querySelector("p").firstChild.textContent;
-            return text;
-        """
+    def get_search_date(self, project_type):
+        js_code = config.GET_SEARCH_DATE_COMMAND[project_type]
         search_date = self.browser.execute_script(js_code)
         return search_date
 
@@ -339,64 +274,6 @@ class Web:
                     report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
         return report
 
-    def get_report_data2(self):
-        click_pj_groups_icon = """
-            document.querySelectorAll('.icon.sf-symbol-chevron-down')[0].click();
-        """
-        get_pj_groups_len = """
-            return document.querySelector('.listbox').querySelectorAll('li').length;
-        """
-        click_pj_group = """
-            document.querySelector('.listbox').querySelectorAll('li')[%s].click();
-        """
-        click_pj_icon = """
-            document.querySelectorAll('.icon.sf-symbol-chevron-down')[1].click();
-        """
-        get_pjs_len = """
-            return document.querySelector('.listbox').querySelectorAll('li').length;
-        """
-        click_pj = """
-            document.querySelectorAll('.icon.sf-symbol-chevron-down')[1].click();
-            document.querySelector('.listbox').querySelectorAll('li')[%s].click();
-        """
-        get_pj_name = """
-            return document.querySelector('.highcharts-xaxis-labels').textContent;
-        """
-        get_done = """
-            return parseInt(document.querySelector(".highcharts-data-labels").querySelectorAll('tspan.highcharts-text-outline')[0].textContent.replace(',','').trim());
-        """
-        get_working_hrs = """
-            return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[7].textContent.trim());
-        """
-        get_breaking_hrs = """
-            return parseFloat(document.querySelector('.highcharts-subtitle').querySelectorAll('tspan')[9].textContent.trim());
-        """
-        report = {}
-        self.browser.execute_script(click_pj_groups_icon)
-        pj_groups_length = int(self.browser.execute_script(get_pj_groups_len))
-        print("{} project group len".format(pj_groups_length))
-        self.browser.execute_script(click_pj_groups_icon)
-        if pj_groups_length == 0:
-            return False
-        for i in range(pj_groups_length):
-            self.browser.execute_script(click_pj_groups_icon)
-            self.browser.execute_script(click_pj_group % i)
-            print("pj_group i={} clicked.".format(i))
-            self.browser.execute_script(click_pj_icon)
-            pjs_len = int(self.browser.execute_script(get_pjs_len))
-            print('{} project len'.format(pjs_len))
-            self.browser.execute_script(click_pj_icon)
-            for j in range(1, pjs_len):
-                self.browser.execute_script(click_pj % j)
-                print("pj j={} clicked.".format(j))
-                pj_name = self.browser.execute_script(get_pj_name)
-                print(pj_name)
-                done = self.browser.execute_script(get_done)
-                working_hrs = self.browser.execute_script(get_working_hrs)
-                breaking_hrs = self.browser.execute_script(get_breaking_hrs)
-                report[pj_name] = [done, working_hrs, breaking_hrs]
-        return report
-
     def open_links_new_tags(self, links, max_tags):
         self.back_tag_one()
         for i, link in enumerate(links):
@@ -424,6 +301,10 @@ class Web:
         """
         js_code = js_code % percentage
         self.browser.execute_script(js_code)
+
+    def insert_comment(self, project_type, text):
+        js_code = config.INSERT_COMMENT_COMMAND[project_type]
+        self.browser.execute_script(js_code % text)
 
     def check_current_report(self, month, date, time_out=10):
         """
@@ -465,14 +346,6 @@ class Web:
         self.browser.execute_script(click_date_code)
         self.back_tag_one()
         return True
-
-    # def textarea_words(self, text, tab_times):
-    #     keyboard = Controller()
-    #     for _ in range(tab_times):
-    #         keyboard.press(Key.tab)
-    #         keyboard.release(Key.tab)
-    #     keyboard.type(text)
-    #     return True
 
     def textarea_words(self, path, text):
         textarea = self.browser.find_element_by_css_selector(path)

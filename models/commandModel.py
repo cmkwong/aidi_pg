@@ -6,8 +6,8 @@ from views.prints import *
 import datetime
 
 def control_command_check(graders, ans):
-    command_checked = "command_checked"
-    command_not_checked = "command_not_checked"
+    command_checked = True
+    command_not_checked = False
     quit_program = "quit"
 
     if ans == '':
@@ -248,6 +248,7 @@ def control_command_check(graders, ans):
                 show_img('./src/payme_qr.png')
             except:
                 print('Please try again.')
+            return command_checked
 
         elif (ans == "-checkCode"):
             project_code = infoModel.get_project_code(graders.web_controller)

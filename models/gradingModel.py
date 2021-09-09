@@ -3,6 +3,36 @@ from utils import sounds
 import time
 import numpy as np
 
+def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
+    if (ans == '`'):
+        # web_search
+        try:
+            controller.click_web_search(project_type)
+        except:
+            print_at("Not available '`'", tg)
+            return True # None is Error
+        return True
+    elif (ans == '!'):
+        # close other tags
+        try:
+            controller.close_other_tags()
+        except:
+            print_at("Not available '!'", tg)
+            return True
+        return True
+    elif (ans == '~'):
+        try:
+            controller.click_all_links(max_answer_slots, project_type)
+        except:
+            print_at("Not available '~'", tg)
+            return True
+        return True
+    elif ans == '[':
+        controller.click_previous_btn()
+        return True
+    else:
+        return False # False = continue
+
 def pattern_one(a, num, web_controller, tg=None):
     if (a == 'i'):
         web_controller.click_by_id(
@@ -29,8 +59,8 @@ def pattern_one(a, num, web_controller, tg=None):
             return False
     return True
 
-def valid_answer_length(ans, web_controller, max_answer_slots):
-    links = web_controller.get_result_links()
+def valid_answer_length(ans, web_controller, max_answer_slots, project_type):
+    links = web_controller.get_result_links(project_type)
     required_length = min(len(links), max_answer_slots)
     if len(ans) == required_length:
         return True
@@ -66,7 +96,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                 web_controller.click_by_id("query_appropriatetrue")
 
         # checking wrong length
-        if not valid_answer_length(ans, web_controller, max_answer_slots):
+        if not valid_answer_length(ans, web_controller, max_answer_slots, project_type):
             print_at("Wrong length of answer.", tg)
             return False
 
@@ -121,7 +151,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             comment = comment.replace("\'", '')
             comment = comment.replace("\"", '')
             if auto == False:
-                web_controller.browser.execute_script("document.querySelector('textarea').value = '%s';" % comment)
+                web_controller.insert_comment(project_type, comment)
             ans = ans[:ans.find('-m')].replace(' ', '')
         # topic
         if ans[0] is '1':
@@ -204,7 +234,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
     elif (project_type == "valid"):
 
         # flash web search
-        web_controller.flash_web_search()
+        web_controller.flash_web_search(project_type)
 
         if ans == 'v':
             web_controller.click_by_id("query_validationquery_vague")
@@ -221,6 +251,60 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         else:
             print_at("--------Not correct ans detected.--------", tg)
             return False
+        return True
+
+    elif (project_type == 'sbs'):
+
+        # flash web search
+        web_controller.flash_web_search(project_type)
+
+        # # extract the comment
+        command, comment = ans[0], ''
+        if len(ans) > 1:
+            command, comment = ans.split(' ', 1)
+
+        if command == '1':
+            web_controller.click_by_id("query_validationno_context")
+        elif command == '2':
+            web_controller.click_by_id("query_validationno_incomplete")
+        elif command == '3':
+            web_controller.click_by_id("query_validationno_contradictory")
+        elif command == '4':
+            web_controller.click_by_id("query_validationno_other")
+            # other need comment
+            if len(comment) == 0:
+                print_at("It need comments", tg)
+                return False
+            web_controller.insert_comment(project_type, comment)
+        # if have sufficient information to judge Siri's responses
+        else:
+            web_controller.click_by_id("query_validationyes")
+            # exact identical results
+            if command == 'n':
+                web_controller.click_by_id("identical_responsesyes")
+            # it always need comment at the end
+            else:
+                web_controller.click_by_id("identical_responsesno")
+                js_code = "document.querySelectorAll('li.choice-group')[%s].querySelector('input').click()" # clicking which response better
+                # about the same
+                if command == '0':
+                    web_controller.browser.execute_script(js_code % 3)
+                # they can compare
+                else:
+                    strength = len(command)
+                    if strength <= 3: # when strength larger than 3 is not allowed
+                        if command[0] == 'l':
+                            web_controller.browser.execute_script(js_code % abs(strength - 3))
+                        elif command[0] == 'r':
+                            web_controller.browser.execute_script(js_code % (strength + 3))
+                    else:
+                        print_at("--------Not correct ans detected.--------", tg)
+                        return False
+                # insert comment
+                if len(comment) == 0:
+                    print_at("Need comments", tg)
+                    return False
+                web_controller.insert_comment(project_type, comment)
         return True
 
     else:
