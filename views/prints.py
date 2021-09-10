@@ -1,6 +1,5 @@
 from models import conflictModel
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+
 
 def print_list(grader, str_list):
     for string in str_list:
@@ -36,9 +35,3 @@ def print_status(grader):
     delays = str(grader.time_delay).strip()
     md = str(grader.manual_timer).strip()
     print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", grader.tg, grader.print_allowed)
-
-def show_img(path):
-    img = mpimg.imread(path)
-    plt.imshow(img)
-    plt.axis('off')
-    plt.show()

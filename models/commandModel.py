@@ -1,7 +1,7 @@
 import config
 from models import menuModel, reportModel, infoModel
 from controllers import authController, gradingController, tgController
-from utils.inputs import *
+from utils import inputs, osSystem
 from views.prints import *
 import datetime
 
@@ -137,7 +137,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-done"):
             print("Please enter the number: ")
-            done = num_check()
+            done = inputs.num_check()
             if (done == None):
                 print("Invalid input.")
             else:
@@ -147,7 +147,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-limit"):
             print("Please enter the number: ")
-            limit = num_check()
+            limit = inputs.num_check()
             if (limit == None):
                 print("Invalid input.")
             else:
@@ -245,7 +245,7 @@ def control_command_check(graders, ans):
                 usr_name = graders.grader.web_controller.get_user_name()
                 expired_date = graders.grader.db_controller.get_expired_date(usr_name)
                 print("Due date at: {}".format(expired_date))
-                show_img('./src/payme_qr.png')
+                osSystem.show_img('./src/payme_qr.png')
             except:
                 print('Please try again.')
             return command_checked

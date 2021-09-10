@@ -38,3 +38,6 @@ def download_driver(executable_path):
     zf.extractall(extract_path)
     zf.close()
     os.system('rm {}/chromedriver_mac64.zip'.format(extract_path))
+
+def show_img(path):
+    os.system('open {}'.format(path))
