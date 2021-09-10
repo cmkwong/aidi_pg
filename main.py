@@ -2,7 +2,7 @@ from controllers import gradingController, dbController, webController, authCont
 from models import menuModel
 
 command = ''
-VERSION = "0.0.8"
+VERSION = "0.0.9"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
 db_controller = dbController.Database()
