@@ -86,7 +86,7 @@ def control_command_check(graders, ans):
             print("Delay find answer de-activated.")
             return command_checked
 
-        elif (ans == "-dft"):
+        elif (ans == "--ftd"):
             set_ok = gradingController.time_delay_set(graders, ans)
             if not set_ok:
                 print("Set timer failed. Try again.")

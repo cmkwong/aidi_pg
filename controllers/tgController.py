@@ -152,7 +152,7 @@ class Telegram_Bot:
             graders.grader.time_delay = int(time)
             self.bot.send_message(message.chat.id, "Time delay set")
 
-        @self.bot.message_handler(commands=['dft'])
+        @self.bot.message_handler(commands=['ftd'])
         def set_time_delay(message):
             msg = self.bot.reply_to(message, "Enter delay time(s): ")
             self.bot.register_next_step_handler(msg, enter_delay_find_time)

@@ -6,8 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import config
 import time
-import numpy as np
 import re
+import os
 
 class Web:
     def __init__(self, init_url):
@@ -20,12 +20,6 @@ class Web:
         chrome_options.add_extension(r'appleconnect.crx')
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
         self.browser.get(self.init_url)
-
-    def open_safari(self, executable_path='/usr/bin/safaridriver'):
-        self.browser = webdriver.Safari(executable_path=executable_path)
-        self.browser.get(self.init_url)
-        # Alert(self.browser).accept()
-        # Alert(self.browser).dismiss()
 
     def open_project_link(self, link):
         self.back_tag_one()
