@@ -1,13 +1,14 @@
+import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
+from utils import osSystem
 import config
 import time
 import re
-import os
 
 class Web:
     def __init__(self, init_url):
@@ -18,8 +19,13 @@ class Web:
     def open_chrome(self, executable_path="../driver/chromedriver"):
         chrome_options = Options()
         chrome_options.add_extension(r'appleconnect.crx')
+        self.update_driver(executable_path)
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
         self.browser.get(self.init_url)
+
+    def update_driver(self, executable_path):
+        print("Updating Chrome driver ... ")
+        osSystem.download_driver(executable_path)
 
     def open_project_link(self, link):
         self.back_tag_one()
