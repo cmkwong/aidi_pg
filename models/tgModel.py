@@ -19,12 +19,22 @@ def send_tg_info(grader, old_query_text=None, time_out=10):
     # combined into one text
     grader.project_code = infoModel.get_project_code(grader.web_controller, grader.project_type)
     max_index = min(len(links), grader.project_code["max_answer_slots"])
+
+    # query and its introduction
     text = search_date + '\n\n' + query_text + '\n' + \
            "web search link: " + web_search_link + '\n' + \
            "No. of Results: " + str(max_index)
+    # link details text and links
     for i in range(max_index):
-        text = text + "\n\n-*-*-*-*-*- " + str(i + 1) + " -*-*-*--*-*-"
-        text = text + '\n' + link_details[i][:600] + '\n' + links[i]
+        text += "\n\n-*-*-*-*-*- " + str(i + 1) + " -*-*-*--*-*-"
+        text += '\n' + link_details[i][:600] + '\n' + links[i]
+
+    # create javascript code
+    text += "\n\n['{}'".format(web_search_link)
+    for i in range(max_index):
+        text += ",'{}'".format(links[i])
+    text += "].forEach(link => window.open(link));"
+
     # send message to tg
     grader.tg.bot.send_message(grader.tg.chat_id, text)
     return query_text
