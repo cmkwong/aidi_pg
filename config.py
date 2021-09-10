@@ -128,10 +128,7 @@ INSERT_COMMENT_COMMAND = {
 }
 
 SCROLL_TO_VIEW_COMMAND = {
-    "sbs": """
-        const el = document.querySelector('.utterance');
-        el.scrollIntoView();
-    """
+    "sbs": """document.querySelector('.utterance')?.scrollIntoView();"""
 }
 
 help_command = {
