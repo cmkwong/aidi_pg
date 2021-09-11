@@ -1,7 +1,7 @@
 import telebot
 import config
-from models import tgModel, menuModel, reportModel, infoModel
-from controllers import gradingController, authController
+from models import tgModel, menuModel, reportModel, infoModel, authModel
+from controllers import gradingController
 from views.prints import *
 
 class Telegram_Bot:
@@ -81,7 +81,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authController.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level(graders)
                 if level == 's' or level == 'a':
                     gradingController.set_auto_mode(graders)
 
@@ -101,7 +101,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authController.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level(graders)
                 if level == 's':
                     self.auto_user = True
                     gradingController.set_full_auto_mode(graders)
@@ -117,7 +117,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authController.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level(graders)
                 if level == 's':
                     gg = graders.grader
                     try:
@@ -254,7 +254,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authController.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level(graders)
                 if level == 's':
                     msg = self.bot.reply_to(message, "Enter Project ID ")
                     self.bot.register_next_step_handler(msg, check_conflict)

@@ -2,7 +2,7 @@ import time
 import tkinter as tk
 from functools import partial
 import config
-from models import gradingModel, dbModel, infoModel, answerModel
+from models import gradingModel, dbModel, infoModel, answerModel, authModel
 from views.prints import *
 from utils import inputs, sounds
 
@@ -79,13 +79,14 @@ def time_delay_set(graders, ans, overtime_bypass=False):
         return True
 
 class Graders:
-    def __init__(self, web_controller, db_controller):
+    def __init__(self, web_controller, db_controller, version):
         self.web_controller = web_controller
         self.db_controller = db_controller
         self.grader = None
         self.auto_mode = False
         self.auto_available = True
         self.extra_preAction = False
+        self.version = version
 
     def setup_project(self, project_index, new_grader=True, ghost_menu=False):
         if ghost_menu:
@@ -97,7 +98,7 @@ class Graders:
 
         if new_grader:
             # create new grader
-            self.grader = base_grader(self.web_controller, self.db_controller)
+            self.grader = base_grader(self.web_controller, self.db_controller, self.version)
         # set the project type
         self.grader.project_type = type
         # open the required project link
@@ -105,6 +106,9 @@ class Graders:
         # if tg mode, then help to click required location
         if self.grader.tg is not None:
             self.web_controller.click_start_project(project_index)
+
+        # default not pre-action
+        self.extra_preAction = False
 
         # situations depend different project type
         # run the TOKEN program immediately
@@ -137,11 +141,10 @@ class Graders:
             gradingFinish = self.grader.auto_execute()
         return gradingFinish
 
-    def run(self):
-        command = ''
+    def run(self, command): # command: Boolean of last input if is command
 
         if self.auto_mode == False:
-            user_input, command = answerModel.enter(self)
+            user_input, command = answerModel.enter(self, command)
             _ = self.decode(command, user_input)
 
         elif self.auto_mode == True:
@@ -150,9 +153,10 @@ class Graders:
 
             # usually because answer cannot found so auto_available=False
             if self.auto_available == False:
-                user_input, command = answerModel.enter(self)
+                user_input, command = answerModel.enter(self, command)
                 self.auto_available = self.decode(command, user_input)
 
+        # update the done count and check if reach the limit
         if (self.grader.new_query):
             print_status(self.grader)
             limit_reached = gradingModel.check_limit_reached(self.grader)
@@ -163,9 +167,11 @@ class Graders:
         return command
 
 class base_grader:
-    def __init__(self, web_controller, db_controller):
+    def __init__(self, web_controller, db_controller, version):
         self.web_controller = web_controller
         self.db_controller = db_controller
+        self.grader_action_count = 0    # counting the number of grader action took
+        self._version = version         # program version that will checked in every user gradings
         self.query_link = None
         self.query_text = None
         self.p_query_text = None
@@ -199,7 +205,17 @@ class base_grader:
         if self.grader_id is None:
             self.grader_id = dbModel.update_grader_info(self.web_controller, self.db_controller)
 
-        # renew project info every grading
+        # check payment and version status
+        if self.grader_action_count % 30 == 0:
+            # check user version
+            if self._version != self.db_controller.get_most_updated_version():
+                raise Exception("Outdated Version, re-open program.")
+            # check payment
+            if not authModel.paid(self.grader_id, self.db_controller):
+                print_at("Please try again later or re-open the program", self.tg)
+                return False
+
+        # renew project info in every grading: project id and project locale
         self.project_id, self.project_locale = self.web_controller.get_project_id_locale_from_url()
         if not self.project_id or not self.project_locale:
             print_at("Invalid grading in this page.", self.tg, self.print_allowed)
@@ -212,13 +228,15 @@ class base_grader:
         self.query_link = self.web_controller.get_motherTag_url()
         self.new_query = False
 
-        # get project code in when project_type: standard mode
+        # get project code depend on the project type
         if self.project_id in config.projects_code.keys():
             self.project_code = config.projects_code[self.project_id]
         else:
             self.project_code = infoModel.get_project_code(self.web_controller, self.project_type) # get the project code if have not seen before
             config.projects_code[self.project_id] = self.project_code       # store the project_code into global dictionary (config)
 
+
+        self.grader_action_count += 1
         return True
 
     def update_status(self):
@@ -315,7 +333,7 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
+                self.web_controller.flash_web_search(self.project_code["max_answer_slots"], self.project_type)
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
@@ -343,6 +361,11 @@ class base_grader:
         # auto mode
         renew_ok = self.renew_status()
         if not renew_ok:
+            return False
+
+        # check if auto allowed to this project
+        if self.project_type not in config.AUTO_ALLOWED_PROJS:
+            print_at("This project not allowed to auto.", self.tg)
             return False
 
         if self.view:
@@ -382,7 +405,7 @@ class base_grader:
             return False
 
         # press web search
-        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
+        self.web_controller.flash_web_search(self.project_code["max_answer_slots"], self.project_type)
 
         # grading ans that from database
         grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)

@@ -1,9 +1,13 @@
 
 # projects that get query text in inner box
-GET_QUERY_TEXT_PROJS = ["standard", "sbs"]
+# GET_QUERY_TEXT_PROJS = ["standard", "classify", "valid", "sbs"]
 
 # projects need to access the database
-UPDATE_DB_PROJS = ["standard", "classify", "valid"]
+UPDATE_DB_PROJS = ["standard", "classify", "valid", "sbs"]
+
+# projects that auto allowable
+AUTO_ALLOWED_PROJS = ["standard", "classify", "valid"]
+
 
 GET_QUERY_TEXT_COMMAND = {
     "standard": """return document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('search-input form-control')[0].getAttribute('value');""",

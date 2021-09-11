@@ -23,11 +23,10 @@ def get_grader_tgToken(graders):
             return info["token"]
     return None
 
-def paid(graders):
+def paid(grader_id, db_controller):
     try:
-        usr_id = graders.grader.grader_id
-        usr_name = get_usrName_from_graderId(usr_id)
-        expired_date = graders.grader.db_controller.get_expired_date(usr_name)
+        usr_name = get_usrName_from_graderId(grader_id)
+        expired_date = db_controller.get_expired_date(usr_name)
         # compare the expired date and current time
         if (datetime.strptime(expired_date, "%Y-%m-%d %H:%M").timestamp() - datetime.now().timestamp() < 0):
             return False

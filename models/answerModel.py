@@ -4,13 +4,13 @@ import config
 from appscript import *
 terminal = app('Terminal')
 
-def enter(graders):
+def enter(graders, command):
     # setting placeholder
     placeholder = 'Answer Input: '
     if graders.auto_mode: placeholder = 'Answer Input-a: '
 
     # extra print if needed
-    if graders.extra_preAction == True:
+    if graders.extra_preAction == True and not command:
         if graders.grader.project_type == "classify":
             print_list(graders.grader, config.classify_extra_info_list)
         elif graders.grader.project_type == "sbs":

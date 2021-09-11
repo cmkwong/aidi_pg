@@ -1,6 +1,6 @@
 import config
-from models import menuModel, reportModel, infoModel
-from controllers import authController, gradingController, tgController
+from models import menuModel, reportModel, infoModel, authModel
+from controllers import gradingController, tgController
 from utils import inputs, osSystem
 from views.prints import *
 import datetime
@@ -32,7 +32,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-auto" or ans == "--a"):
-            level = authController.get_grader_access_level(graders)
+            level = authModel.get_grader_access_level(graders)
             if level == 's' or level == 'a':
                 gradingController.set_auto_mode(graders)
             return command_checked
@@ -93,7 +93,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-fauto"):
-            level = authController.get_grader_access_level(graders)
+            level = authModel.get_grader_access_level(graders)
             if level == 's':
                 gradingController.set_full_auto_mode(graders)
             return command_checked
@@ -104,7 +104,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-dist"):
-            level = authController.get_grader_access_level(graders)
+            level = authModel.get_grader_access_level(graders)
             if level == 's':
                 gg = graders.grader
                 try:
@@ -130,7 +130,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-lazyconfig"):
-            level = authController.get_grader_access_level(graders)
+            level = authModel.get_grader_access_level(graders)
             if level == 's':
                 gradingController.set_lazy_mode(graders)
             return command_checked
@@ -157,7 +157,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-tg"):
             gradingController.resume_standard_mode(graders)
-            token = authController.get_grader_tgToken(graders)
+            token = authModel.get_grader_tgToken(graders)
             tg = tgController.Telegram_Bot(token=token)
             graders.grader.tg = tg
             print("Telegram Online\n"
@@ -231,7 +231,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-conflict"):
-            level = authController.get_grader_access_level(graders)
+            level = authModel.get_grader_access_level(graders)
             if level == 's':
                 project_id = input("Input project ID: ")
                 usr_id = graders.web_controller.get_grader_id()
