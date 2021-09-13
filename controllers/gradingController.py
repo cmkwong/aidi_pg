@@ -207,12 +207,13 @@ class base_grader:
 
         # check payment and version status
         if self.grader_action_count % 30 == 0:
-            # check user version
+            # check local version
             if self._version != self.db_controller.get_most_updated_version():
                 raise Exception("Outdated Version, re-open program.")
             # check payment
             if not authModel.paid(self.grader_id, self.db_controller):
-                print_at("Please try again later or re-open the program", self.tg)
+                print_at("Due date reached or please try again later", self.tg)
+                self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
 
         # renew project info in every grading: project id and project locale
@@ -333,7 +334,7 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_web_search(self.project_code["max_answer_slots"], self.project_type)
+                self.web_controller.flash_web_search(self.project_type)
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
@@ -405,7 +406,7 @@ class base_grader:
             return False
 
         # press web search
-        self.web_controller.flash_web_search(self.project_code["max_answer_slots"], self.project_type)
+        self.web_controller.flash_web_search(self.project_type)
 
         # grading ans that from database
         grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)

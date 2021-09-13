@@ -8,7 +8,7 @@ UPDATE_DB_PROJS = ["standard", "classify", "valid", "sbs"]
 # projects that auto allowable
 AUTO_ALLOWED_PROJS = ["standard", "classify", "valid"]
 
-
+# sbs = side-by-side project
 GET_QUERY_TEXT_COMMAND = {
     "standard": """return document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('search-input form-control')[0].getAttribute('value');""",
     "valid": """return document.querySelector('#widget-container h1').innerText;""",
@@ -20,7 +20,7 @@ GET_QUERY_TEXT_COMMAND = {
 CLICK_WEB_SEARCH_COMMAND = {
     "standard": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
     "valid": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
-    "sbs": """document.querySelector('.punchout-link').click();""", # side-by-side project
+    "sbs": """document.querySelector('.punchout-link').click();""",
 }
 
 CLICK_NEXT_BTN_COMMAND = {
