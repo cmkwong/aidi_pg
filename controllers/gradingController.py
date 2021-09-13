@@ -68,15 +68,7 @@ def time_delay_set(graders, ans, overtime_bypass=False):
         if (time_delay < 0):
             print("Timer cannot be negative.")
             return False
-    # set time delay
-    if ans == "-t" and len(ans) == 2:
-        graders.grader.time_delay = time_delay
-        print("Time delay: ", time_delay)
-        return True
-    if ans == "-dft" and len(ans) == 4:
-        graders.grader.find_time_delay = time_delay
-        print("Find Ans Time delay: ", time_delay)
-        return True
+    return time_delay
 
 class Graders:
     def __init__(self, web_controller, db_controller, version):
@@ -137,7 +129,7 @@ class Graders:
         gradingFinish = False
         if (not self.auto_mode and not command) or (self.auto_mode and not self.auto_available and not command):
             gradingFinish = self.grader.execute(ans)
-        elif (self.auto_mode and self.auto_available and not command):
+        elif (self.auto_mode and self.auto_available):
             gradingFinish = self.grader.auto_execute()
         return gradingFinish
 
