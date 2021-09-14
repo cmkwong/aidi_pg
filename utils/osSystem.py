@@ -24,13 +24,13 @@ def get_driver_download_link(executable_path):
     f = open(os.path.join(extract_path, file_name), 'r')
     available_version = f.read()
     f.close()
-    os.remove(os.path.join(extract_path, file_name))
+    os.system('rm {}/{}'.format(extract_path, file_name))
 
     # required download link
     download_link = "https://chromedriver.storage.googleapis.com/{}/chromedriver_mac64.zip".format(available_version)
     return download_link
 
-def download_driver(executable_path):
+def download_driver(executable_path):   # '../driver/chromedriver'
     download_link = get_driver_download_link(executable_path)
     extract_path = os.path.split(executable_path)[0] # '../driver'
     os.system("cd {}; curl -O {}".format(extract_path, download_link))

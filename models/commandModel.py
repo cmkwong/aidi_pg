@@ -43,7 +43,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-t"):
-            time_delay = gradingController.time_delay_set(graders, ans)
+            time_delay = gradingController.time_delay_set()
             if not time_delay:
                 print("Set timer failed. Try again.")
             else:
@@ -90,7 +90,7 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "--ftd"):
-            time_delay = gradingController.time_delay_set(graders, ans)
+            time_delay = gradingController.time_delay_set()
             if not time_delay:
                 print("Set timer failed. Try again.")
             else:

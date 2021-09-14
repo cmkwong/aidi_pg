@@ -55,7 +55,7 @@ def resume_tg_manual_mode(graders):
     graders.grader.find_delay = False
     return True
 
-def time_delay_set(graders, ans, overtime_bypass=False):
+def time_delay_set(overtime_bypass=False):
     print("Enter the delay time(Second): ")
     time_delay = inputs.num_check()
     if time_delay == None:
@@ -95,9 +95,8 @@ class Graders:
         self.grader.project_type = type
         # open the required project link
         self.grader.web_controller.open_project_link(link)
-        # if tg mode, then help to click required location
-        if self.grader.tg is not None:
-            self.web_controller.click_start_project(project_index)
+        # click required location
+        self.web_controller.click_start_project(project_index)
 
         # default not pre-action
         self.extra_preAction = False
