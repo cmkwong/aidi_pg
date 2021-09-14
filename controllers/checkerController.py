@@ -2,8 +2,13 @@ import config
 import re
 from datetime import datetime
 class Checker:
-    def __init__(self, db_controller):
+    def __init__(self, db_controller, version):
         self.db_controller = db_controller
+        self.version = version
+
+    def check_version(self):
+        if self.db_controller.get_most_updated_version != self.version:
+            return False
 
     def get_project_status_container(self):
         project_status_container = {}

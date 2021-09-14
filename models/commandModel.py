@@ -15,8 +15,14 @@ def control_command_check(checker, ans):
             return quit_program
 
         elif (ans == "-p"):
+            # check version
+            if not checker.check_version():
+                raise Exception("Outdated Version, re-open program.")
+            # update local config: projects and graders
             checker.db_controller.update_local_config_from_db()
+            # print the menu
             project_index = menuModel.menu_choice()
+            # print the project status
             checker.print_project_status(project_index)
             return command_checked
 

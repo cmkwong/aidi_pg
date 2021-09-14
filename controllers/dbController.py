@@ -28,10 +28,7 @@ class Database:
         return self.db["project_status"].find_one(filter)['status']
 
     def get_most_updated_version(self):
-        filter = {
-            "type": "checker"
-        }
-        return self.db["versions_control"].find_one(filter)['version']
+        return self.db["versions_control"].find_one()['checker']
 
     def update_local_config_from_db(self):
         # clean the data
