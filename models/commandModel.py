@@ -259,15 +259,15 @@ def control_command_check(graders, ans):
         elif (ans == "-pq"):
             try:
                 # check if pop-up
-                popUp = graders.grader.web_controller.check_project_finished_popUp()
-                if popUp:
+                popUp_locale = graders.grader.web_controller.check_project_finished_popUp()
+                if popUp_locale:
                     # get the project info and grader name
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name()
-                    graders.grader.db_controller.project_finish_update(project_id, grader_name)
+                    graders.grader.db_controller.project_finish_update(project_id, locale, grader_name)
                     print("Status updated.")
                 else:
-                    print("No pop-up.")
+                    print("No Finished pop-up.")
             except:
                 print("Please try again.")
             return command_checked

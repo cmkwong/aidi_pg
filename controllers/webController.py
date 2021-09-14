@@ -364,9 +364,9 @@ class Web:
         message = "No more new sessions for locale"
         popUp_js_code = """
             try {
-              const [message, _] = document.querySelector("#swal2-content")?.innerText?.split(":")?.map(el => el.trim());
+              const [message, locale] = document.querySelector("#swal2-content")?.innerText?.split(":")?.map(el => el.trim());
               if (message === '%s') {
-                return true;
+                return locale;
               }
             } catch (err) {
                 return false;
