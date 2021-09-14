@@ -7,7 +7,7 @@ class Checker:
 
     def get_project_status_format(self):
         project_status_format = {}
-        for i in range(len(config.graders_info)):
+        for i in range(len(config.graders_info) - 1):
             project_status_format[config.graders_info[i]['name']] = -1
         return project_status_format
 
@@ -34,7 +34,7 @@ class Checker:
         # sorted the dictionary
         sorted_project_status_format = {k: v for k, v in sorted(project_status_format.items(), key=lambda item: item[1])}
         for k, v in sorted_project_status_format.items():
-            print("{}: {} mins".format(k,v))
+            print("{}: {:>25} mins".format(k, round(v, 2)))
 
     def update_project_from_txt(self):
         pass
