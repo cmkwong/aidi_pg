@@ -295,7 +295,7 @@ class Database:
         return self.db["payment"].find_one(db_filter)["expired"]
 
     def get_most_updated_version(self):
-        return self.db["versions_control"].find_one()['version']
+        return self.db["versions_control"].find_one()['clients']
 
     def update_local_config_from_db(self):
         # clean the data
