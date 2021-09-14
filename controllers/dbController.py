@@ -23,6 +23,8 @@ class Database:
             "project_id": project_id,
             "locale": locale
         }
+        if not self.db["project_status"].count_documents(filter):
+            return False
         return self.db["project_status"].find_one(filter)['status']
 
     def get_most_updated_version(self):
@@ -35,7 +37,6 @@ class Database:
         # clean the data
         config.graders_info = []
         config.projects_info = []
-        config.ghost_projects_info = []
 
         # get from database both graders and projects
         for grader in self.db["graders"].find({}):
@@ -43,6 +44,3 @@ class Database:
 
         for project in self.db["projects"].find({}):
             config.projects_info.append(project)
-
-        for project in self.db["ghost_projects"].find({}):
-            config.ghost_projects_info.append(project)
