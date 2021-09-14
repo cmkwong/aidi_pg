@@ -265,8 +265,12 @@ def control_command_check(graders, ans):
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name()
                     graders.grader.db_controller.project_finish_update(project_id, grader_name)
+                    print("Status updated.")
+                else:
+                    print("No pop-up.")
             except:
                 print("Please try again.")
+            return command_checked
 
         elif (ans == "-checkCode"):
             project_code = infoModel.get_project_code(graders.web_controller, graders.grader.project_type)

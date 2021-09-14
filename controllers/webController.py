@@ -366,10 +366,10 @@ class Web:
             try {
               const [message, _] = document.querySelector("#swal2-content")?.innerText?.split(":")?.map(el => el.trim());
               if (message === '%s') {
-                return True;
+                return true;
               }
             } catch (err) {
-                return False;
+                return false;
             }
         """
         # pop_up message
