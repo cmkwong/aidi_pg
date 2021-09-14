@@ -1,5 +1,6 @@
 import pymongo
-import datetime
+from datetime import datetime
+import pytz
 import time
 import collections
 from views.prints import *
@@ -27,9 +28,9 @@ class Database:
         self.client = pymongo.MongoClient(self.URI)
         self.db = self.client[db_name]
 
-    def grader_id_to_login_info(self, id):
+    def grader_id_to_login_info(self, grader_id):
         db_filter = {
-            "_id": id
+            "_id": grader_id
         }
         return self.db["graders"].find_one(db_filter)["login"], self.db["graders"].find_one(db_filter)["pw"]
 
@@ -79,7 +80,7 @@ class Database:
                 "query_id": query_id,
                 "query_link": query_link,
                 "grader_answer": answer,
-                "time": datetime.datetime.fromtimestamp(time.time())
+                "time": datetime.fromtimestamp(time.time())
             }
             answer_id = self.db["answers"].insert_one(my_dict).inserted_id
             return answer_id
@@ -94,9 +95,30 @@ class Database:
         }
         new_dict = {"$set": {
             "grader_answer": answer,
-            "time": datetime.datetime.fromtimestamp(time.time())
+            "time": datetime.fromtimestamp(time.time())
         }}
         self.db["answers"].update_one(target, new_dict)
+
+    def project_finish_update(self, project_id, grader_name):
+        target = {
+            "_id": project_id
+        }
+        count = self.db["project_status"].count_documents(target)
+        # if no such project_id, create new one
+        if count is 0:
+            my_dict = {
+                '_id': project_id,
+                'status': {
+                    grader_name: datetime.utcnow().timestamp()
+                }
+            }
+            self.db["project_status"].insert_one(my_dict)
+        # if existed, update the timestamp
+        elif count > 0:
+            new_dict = {"$set": {
+                'status.{}'.format(grader_name): datetime.utcnow().timestamp()
+            }}
+            self.db["project_status"].update_one(target, new_dict)
 
     def create_grader_table_by_id(self):
         grader_by_id = {}

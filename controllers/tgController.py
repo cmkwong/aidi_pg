@@ -19,7 +19,7 @@ class Telegram_Bot:
         if graders.auto_mode == True:
             self.bot.send_message(self.chat_id, "Auto-mode activated\nAuto-running ... ")
             while graders.auto_available:
-                graders.auto_available = graders.decode(command=False)
+                graders.auto_available = graders.decode_input(command=False)
 
                 if (graders.grader.new_query):
                     print_status(graders.grader)
@@ -121,7 +121,7 @@ class Telegram_Bot:
                 if level == 's':
                     gg = graders.grader
                     try:
-                        project_id, project_locale = gg.web_controller.get_project_id_locale_from_url()
+                        project_id, project_locale = gg.web_controller.get_projectId_locale_from_url()
                         query_text = infoModel.get_query_text(gg.project_type, self, gg.web_controller, print_allowed=True)
                         Answer = gg.db_controller.find_most_popular(project_id,
                                                                     project_locale,
@@ -313,7 +313,7 @@ class Telegram_Bot:
                         if graders.grader.project_type == "classify":
                             print_list(graders.grader, config.classify_extra_info_list)
                     ans = message.text
-                    self.gradingFinish = graders.decode(command=False, ans=ans)
+                    self.gradingFinish = graders.decode_input(command=False, ans=ans)
 
                     # turn back to auto available
                     if self.auto_user:

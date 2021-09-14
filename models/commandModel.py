@@ -114,7 +114,7 @@ def control_command_check(graders, ans):
             if level == 's':
                 gg = graders.grader
                 try:
-                    project_id, project_locale = gg.web_controller.get_project_id_locale_from_url()
+                    project_id, project_locale = gg.web_controller.get_projectId_locale_from_url()
                     query_text = infoModel.get_query_text(gg.project_type, gg.tg, gg.web_controller, print_allowed=True)
                     Answer = gg.db_controller.find_most_popular(project_id,
                                                                 project_locale,
@@ -246,15 +246,27 @@ def control_command_check(graders, ans):
                     print_conflict(conflict, graders.grader.tg)
             return command_checked
 
-        elif (ans == '-pay'):
+        elif (ans == "-pay"):
             try:
-                usr_name = graders.grader.web_controller.get_user_name()
+                usr_name = graders.grader.web_controller.get_grader_name()
                 expired_date = graders.grader.db_controller.get_expired_date(usr_name)
                 print("Due date before: {}".format(expired_date))
                 osSystem.show_img('./src/payme_qr.png')
             except:
                 print('Please try again.')
             return command_checked
+
+        elif (ans == "-pq"):
+            try:
+                # check if pop-up
+                popUp = graders.grader.web_controller.check_project_finished_popUp()
+                if popUp:
+                    # get the project info and grader name
+                    project_id = graders.grader.web_controller.get_projectId_from_url()
+                    grader_name = graders.grader.web_controller.get_grader_name()
+                    graders.grader.db_controller.project_finish_update(project_id, grader_name)
+            except:
+                print("Please try again.")
 
         elif (ans == "-checkCode"):
             project_code = infoModel.get_project_code(graders.web_controller, graders.grader.project_type)

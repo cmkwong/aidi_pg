@@ -77,7 +77,6 @@ class Graders:
         self.grader = None
         self.auto_mode = False
         self.auto_available = True
-        self.extra_preAction = False
         self.version = version
 
     def setup_project(self, project_index, new_grader=True, ghost_menu=False):
@@ -98,10 +97,8 @@ class Graders:
         # click required location
         self.web_controller.click_start_project(project_index)
 
-        # default not pre-action
-        self.extra_preAction = False
-
         # situations depend different project type
+        self.extra_preAction = False    # default not pre-action
         # run the TOKEN program immediately
         if type == "token":
             if self.grader.tg is None:
@@ -124,7 +121,7 @@ class Graders:
 
         return True
 
-    def decode(self, command, ans=''):
+    def decode_input(self, command, ans=''):
         gradingFinish = False
         if (not self.auto_mode and not command) or (self.auto_mode and not self.auto_available and not command):
             gradingFinish = self.grader.execute(ans)
@@ -136,16 +133,16 @@ class Graders:
 
         if self.auto_mode == False:
             user_input, command = answerModel.enter(self, command)
-            _ = self.decode(command, user_input)
+            _ = self.decode_input(command, user_input)
 
         elif self.auto_mode == True:
             if self.auto_available == True:
-                self.auto_available = self.decode(command=False)
+                self.auto_available = self.decode_input(command=False)
 
             # usually because answer cannot found so auto_available=False
             if self.auto_available == False:
                 user_input, command = answerModel.enter(self, command)
-                self.auto_available = self.decode(command, user_input)
+                self.auto_available = self.decode_input(command, user_input)
 
         # update the done count and check if reach the limit
         if (self.grader.new_query):
@@ -208,7 +205,7 @@ class base_grader:
                 return False
 
         # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale = self.web_controller.get_project_id_locale_from_url()
+        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
         if not self.project_id or not self.project_locale:
             print_at("Invalid grading in this page.", self.tg, self.print_allowed)
             return False

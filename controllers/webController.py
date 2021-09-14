@@ -175,7 +175,17 @@ class Web:
         time.sleep(1)
         return html
 
-    def get_project_id_locale_from_url(self):
+    def get_projectId_from_url(self):
+        project_link = self.get_motherTag_url()
+        project_id = None
+
+        # project_id and project locale
+        result = re.search(r"/project/(\S+?)/", project_link)
+        if result:
+            project_id = result.group(1)
+        return project_id
+
+    def get_projectId_locale_from_url(self):
         project_link = self.get_motherTag_url()
         project_id, project_locale = None, None
 
@@ -185,20 +195,20 @@ class Web:
             project_id, project_locale = result.group(1), result.group(2)
         return project_id, project_locale
 
-    def get_user_name(self):
+    def get_grader_name(self):
         js_code = """
-                    var usr_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
-                    return usr_name;
+                    var grader_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
+                    return grader_name;
                 """
-        usr_name = self.browser.execute_script(js_code)
-        usr_name = usr_name.replace('\n', '')
-        usr_name = usr_name.replace(' ', '')
-        return usr_name
+        grader_name = self.browser.execute_script(js_code)
+        grader_name = grader_name.replace('\n', '')
+        grader_name = grader_name.replace(' ', '')
+        return grader_name
 
     def get_grader_id(self):
-        usr_name = self.get_user_name()
+        grader_name = self.get_grader_name()
         for info in config.graders_info:
-            if usr_name == info["name"]:
+            if grader_name == info["name"]:
                 return info["_id"]
         return None
 
@@ -349,6 +359,21 @@ class Web:
         self.browser.execute_script(click_date_code)
         self.back_tag_one()
         return True
+
+    def check_project_finished_popUp(self):
+        message = "No more new sessions for locale"
+        popUp_js_code = """
+            try {
+              const [message, _] = document.querySelector("#swal2-content")?.innerText?.split(":")?.map(el => el.trim());
+              if (message === '%s') {
+                return True;
+              }
+            } catch (err) {
+                return False;
+            }
+        """
+        # pop_up message
+        return self.browser.execute_script(popUp_js_code % (message))
 
     def textarea_words(self, path, text):
         textarea = self.browser.find_element_by_css_selector(path)
