@@ -39,7 +39,7 @@ class Checker:
         # sorted the dictionary
         sorted_project_status_container = {k: v for k, v in sorted(project_status_container.items(), key=lambda item: item[1])}
         for k, v in sorted_project_status_container.items():
-            print("{:<20}{} mins".format(k, round(v, 1)))
+            print("{:<20}{:<6}mins".format(k, round(v, 1)))
 
     def update_project_from_txt(self):
         pass
