@@ -265,9 +265,9 @@ def control_command_check(graders, ans):
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name()
                     graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                    print("Status updated.")
+                    print("Status Updated.")
                 else:
-                    print("No Finished pop-up.")
+                    print("No Finished Pop-up.")
             except:
                 print("Please try again.")
             return command_checked

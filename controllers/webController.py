@@ -365,7 +365,7 @@ class Web:
             try {
               const message = document.querySelector("#swal2-content").innerText;
               const pos = document.querySelector("#swal2-content").innerText.search('_');
-              const locale = message.substring(pos-2,pos+3)
+              const locale = message.substring(pos-2,pos+3);
               if (locale) {
                 return locale;
               }
