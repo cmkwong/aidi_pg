@@ -9,6 +9,7 @@ class Checker:
     def check_version(self):
         if self.db_controller.get_most_updated_version != self.version:
             return False
+        return True
 
     def get_project_status_container(self):
         project_status_container = {}
