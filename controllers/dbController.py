@@ -100,15 +100,16 @@ class Database:
         self.db["answers"].update_one(target, new_dict)
 
     def project_finish_update(self, project_id, locale, grader_name):
-        target_id = "{}({})".format(project_id, locale)
         target = {
-            "_id": target_id
+            "project_id": project_id,
+            "locale": locale
         }
         count = self.db["project_status"].count_documents(target)
         # if no such project_id, create new one
         if count is 0:
             my_dict = {
-                '_id': target_id,
+                'project_id': project_id,
+                "locale": locale,
                 'status': {
                     grader_name: datetime.utcnow().timestamp()
                 }
