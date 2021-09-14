@@ -16,8 +16,7 @@ def control_command_check(checker, ans):
 
         elif (ans == "-p"):
             # check version
-            if not checker.check_version():
-                raise Exception("Outdated Version, re-open program.")
+            checker.check_version()
             # update local config: projects and graders
             checker.db_controller.update_local_config_from_db()
             # print the menu
