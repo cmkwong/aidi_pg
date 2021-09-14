@@ -1,0 +1,15 @@
+① CEval-random-open-2021-relevance-saf-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-random-open-2021-relevance-saf-2021-09-11/overview
+② CEval-random-open-2021-relevance-spot1-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-random-open-2021-relevance-spot1-2021-09-11/overview
+③ CEval-random-open-2021-relevance-spot2-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-random-open-2021-relevance-spot2-2021-09-11/overview
+④ CEval-random-close-2021-relevance-saf-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-random-close-2021-relevance-saf-2021-09-11/overview
+⑤ CEval-random-close-2021-relevance-spot1-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-random-close-2021-relevance-spot1-2021-09-11/overview
+⑥ CEval-random-close-2021-relevance-spot2-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-random-close-2021-relevance-spot2-2021-09-11/overview
+[web] CEval-web-tail-random-2021-relevance-spot2-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-web-tail-random-2021-relevance-spot2-2021-09-11/overview
+[close_hk] CEval-amp-close-202102-relevance-spot2-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-amp-close-202102-relevance-spot2-2021-09-11/overview
+[close_tw] CEval-amp-close-202102-relevance-spot2-2021-09-11 (zh_TW)						https://crowdcollect2.siri.apple.com/main/project/CEval-amp-close-202102-relevance-spot2-2021-09-11/overview
+[open_hk] CEval-amp-open-202102-relevance-spot2-2021-09-11 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-amp-open-202102-relevance-spot2-2021-09-11/overview
+[open_tw] CEval-amp-open-202102-relevance-spot2-2021-09-11 (zh_TW)						https://crowdcollect2.siri.apple.com/main/project/CEval-amp-open-202102-relevance-spot2-2021-09-11/overview
+
+[for re-training] Continuous Eval Certification Sets September 13th 2021 (en_US)						https://crowdcollect2.siri.apple.com/main/project/dr-20210913-custom-2/overview
+Continuous Eval Training-All Locales-2021-06-27 (zh_HK)						https://crowdcollect2.siri.apple.com/main/project/CEval-ce-training-2021-relevance-spot1-2021-06-27/overview
+[en] Continuous Eval Training-en_US-2021-08-16 (en_US)						https://crowdcollect2.siri.apple.com/main/project/ceval-ce-training-2021-relevance-spot1-2021-08-custom-1/overview
