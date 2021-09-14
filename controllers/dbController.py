@@ -100,7 +100,7 @@ class Database:
         self.db["answers"].update_one(target, new_dict)
 
     def project_finish_update(self, project_id, locale, grader_name):
-        target_id = "{}-{}".format(project_id, locale)
+        target_id = "{}({})".format(project_id, locale)
         target = {
             "_id": target_id
         }

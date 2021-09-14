@@ -361,11 +361,12 @@ class Web:
         return True
 
     def check_project_finished_popUp(self):
-        message = "No more new sessions for locale"
         popUp_js_code = """
             try {
-              const [message, locale] = document.querySelector("#swal2-content")?.innerText?.split(":")?.map(el => el.trim());
-              if (message === '%s') {
+              const message = document.querySelector("#swal2-content").innerText;
+              const pos = document.querySelector("#swal2-content").innerText.search('_');
+              const locale = message.substring(pos-2,pos+3)
+              if (locale) {
                 return locale;
               }
             } catch (err) {
@@ -373,7 +374,7 @@ class Web:
             }
         """
         # pop_up message
-        return self.browser.execute_script(popUp_js_code % (message))
+        return self.browser.execute_script(popUp_js_code)
 
     def textarea_words(self, path, text):
         textarea = self.browser.find_element_by_css_selector(path)
