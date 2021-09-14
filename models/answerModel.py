@@ -9,4 +9,4 @@ def enter(checker):
     user_input = input(placeholder) # waiting user input
 
     command = commandModel.control_command_check(checker, user_input)
-    return user_input, command
+    return command
