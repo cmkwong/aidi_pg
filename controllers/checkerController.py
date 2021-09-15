@@ -5,16 +5,17 @@ class Checker:
     def __init__(self, db_controller, version):
         self.db_controller = db_controller
         self.version = version
+        self._empty = 99999
 
     def check_version(self):
         if self.db_controller.get_most_updated_version() != self.version:
             raise Exception("Outdated Version, re-open program.")
 
-    def get_project_status_container(self):
+    def init_project_status_container(self):
         project_status_container = {}
         for i in range(len(config.graders_info)):
             if config.graders_info[i]['name'] != "common_user":
-                project_status_container[config.graders_info[i]['name']] = 99999
+                project_status_container[config.graders_info[i]['name']] = self._empty
         return project_status_container
 
     def get_projectId_from_config(self, project_index):
@@ -38,13 +39,16 @@ class Checker:
             print("No member update this project yet")
             return False
         # get the init container and assign the value into the container
-        project_status_container = self.get_project_status_container()
+        project_status_container = self.init_project_status_container()
         for name, time in project_status.items():
             project_status_container[name] = (current_utc - time) / 60
         # sorted the dictionary
         sorted_project_status_container = {k: v for k, v in sorted(project_status_container.items(), key=lambda item: item[1])}
         for k, v in sorted_project_status_container.items():
-            print("{:<20}{:<6}mins".format(k, round(v, 1)))
+            v = round(v, 1)
+            if v == self._empty:
+                v = '--'
+            print("{:<20}{:<6}mins".format(k, v))
 
     def update_project_from_txt(self):
         pass
