@@ -24,10 +24,9 @@ def print_proj_list():
 def menu_choice():
     max_proj_num = len(config.projects_info)
     project_index = None
-    project_type = None
     while(project_index==None):
         print_proj_list()
-        project_index = num_check()
+        project_index = num_input()
         if project_index == None:
             continue
         if (project_index <= 0 or project_index > max_proj_num):
@@ -35,17 +34,14 @@ def menu_choice():
             project_index = None
             continue
         project_index = project_index - 1
-        project_type = config.projects_info[project_index]["type"]
-    print("Type of Project:", project_type)
     return project_index
 
 def ghost_menu_choice():
     max_proj_num = len(config.ghost_projects_info)
     project_index = None
-    project_type = None
     while(project_index==None):
         print_ghost_proj_list()
-        project_index = num_check()
+        project_index = num_input()
         if project_index == None:
             continue
         if (project_index <= 0 or project_index > max_proj_num):
@@ -53,6 +49,4 @@ def ghost_menu_choice():
             project_index = None
             continue
         project_index = project_index - 1
-        project_type = config.ghost_projects_info[project_index]["type"]
-    print("Type of Project: ", project_type)
     return project_index

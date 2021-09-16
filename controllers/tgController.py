@@ -60,16 +60,14 @@ class Telegram_Bot:
             graders.db_controller.update_local_config_from_db()
             project_list_txt = menuModel.get_project_list_text()
             msg = self.bot.reply_to(message, project_list_txt + "\nEnter project Number: ")
-            self.bot.register_next_step_handler(msg, set_project)
+            self.bot.register_next_step_handler(msg, choose_project)
 
-        def set_project(message):
+        def choose_project(message):
             project_index = message.text
             if not project_index.isdigit():
                 self.bot.send_message(message.chat.id, "This is not a number")
                 return False
             project_index = int(project_index) - 1
-            project_type = config.projects_info[project_index]["type"]
-            self.bot.send_message(message.chat.id, "Type of Project: " + project_type + " activated.")
             graders.open_project(project_index)
             # reset the grader
             self.stop_timer(graders, message.chat.id)

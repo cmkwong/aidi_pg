@@ -143,7 +143,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-done"):
             print("Please enter the number: ")
-            done = inputs.num_check()
+            done = inputs.num_input()
             if (done == None):
                 print("Invalid input.")
             else:
@@ -153,7 +153,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-limit"):
             print("Please enter the number: ")
-            limit = inputs.num_check()
+            limit = inputs.num_input()
             if (limit == None):
                 print("Invalid input.")
             else:
