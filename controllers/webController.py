@@ -76,9 +76,9 @@ class Web:
         js_code = config.CLICK_WEB_SEARCH_COMMAND[project_type]
         self.browser.execute_script(js_code)
 
-    def click_next_btn(self):
+    def click_next_btn(self, project_type):
         self.back_tag_one()
-        js_code = "window.document.getElementById('grading-nav-next-shortcut').click();"
+        js_code = config.CLICK_NEXT_BTN_COMMAND[project_type]
         self.browser.execute_script(js_code)
 
     def click_previous_btn(self):

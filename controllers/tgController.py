@@ -70,7 +70,7 @@ class Telegram_Bot:
             project_index = int(project_index) - 1
             project_type = config.projects_info[project_index]["type"]
             self.bot.send_message(message.chat.id, "Type of Project: " + project_type + " activated.")
-            graders.setup_project(project_index, new_grader=False)
+            graders.open_project(project_index)
             # reset the grader
             self.stop_timer(graders, message.chat.id)
             gradingController.resume_tg_manual_mode(graders) # cancel auto mode
@@ -297,8 +297,13 @@ class Telegram_Bot:
                 self.tg_available = False
             else:
                 self.bot.send_message(self.chat_id, "Got the chat ID")
-                self.current_query_text = tgModel.send_tg_info(graders.grader)
-                self.next_query_check()
+                project_set_ok = graders.grader.project_setup()
+                if project_set_ok:
+                    self.current_query_text = tgModel.send_tg_info(graders.grader)
+                    self.next_query_check()
+                else:
+                    self.bot.send_message(self.chat_id, "Project cannot setup, please try /s again.")
+
 
         @self.bot.message_handler(func=lambda message: True)
         def echo_message(message):
@@ -309,9 +314,8 @@ class Telegram_Bot:
                 if graders.auto_mode == False:
 
                     # extra print needed
-                    if graders.extra_preAction == True:
-                        if graders.grader.project_type == "classify":
-                            print_list(graders.grader, config.classify_extra_info_list)
+                    if graders.grader.project_type == "classify":
+                        print_list(graders.grader, config.classify_extra_info_list)
                     ans = message.text
                     self.gradingFinish = graders.decode_input(command=False, ans=ans)
 

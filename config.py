@@ -24,8 +24,8 @@ CLICK_WEB_SEARCH_COMMAND = {
 }
 
 CLICK_NEXT_BTN_COMMAND = {
-    "standard": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
-    "valid": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
+    "standard": """document.getElementById('grading-nav-next-shortcut').click();""",
+    "valid": """document.getElementById('grading-nav-next-shortcut').click();""",
     "sbs": """
         const nextWait = setInterval(function() {
             if (!document.getElementsByClassName('forward-btn')[0].querySelector('i.ban')) {

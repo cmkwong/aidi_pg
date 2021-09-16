@@ -281,7 +281,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         else:
             web_controller.click_by_id("query_validationyes")
             # exact identical results
-            if command == 'n':
+            if command == 'w':
                 web_controller.click_by_id("identical_responsesyes")
             # it always need comment at the end
             else:

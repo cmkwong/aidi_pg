@@ -74,50 +74,51 @@ class Graders:
     def __init__(self, web_controller, db_controller, version):
         self.web_controller = web_controller
         self.db_controller = db_controller
-        self.grader = None
         self.auto_mode = False
         self.auto_available = True
         self.version = version
+        self.grader = base_grader(self.web_controller, self.db_controller, self.version)
 
-    def setup_project(self, project_index, new_grader=True, ghost_menu=False):
+    def open_project(self, project_index, ghost_menu=False):
         if ghost_menu:
-            type = config.ghost_projects_info[project_index]["type"]
+            # type = config.ghost_projects_info[project_index]["type"]
             link = config.ghost_projects_info[project_index]["link"]
         else:
-            type = config.projects_info[project_index]["type"]
+            # type = config.projects_info[project_index]["type"]
             link = config.projects_info[project_index]["link"]
 
-        if new_grader:
-            # create new grader
-            self.grader = base_grader(self.web_controller, self.db_controller, self.version)
-        # set the project type
-        self.grader.project_type = type
+        # if new_grader:
+        #     # create new grader
+        #     self.grader = base_grader(self.web_controller, self.db_controller, self.version)
+
+        # # set the project type
+        # self.grader.project_type = type
+
         # open the required project link
         self.grader.web_controller.open_project_link(link)
         # click required location
         self.web_controller.click_start_project(project_index)
 
         # situations depend different project type
-        self.extra_preAction = False    # default not pre-action
         # run the TOKEN program immediately
-        if type == "token":
-            if self.grader.tg is None:
-                print("GUI program running....")
-                self.grader.token_GUI_execute()
-            else:
-                print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
-                return False
-
-        # run classify need extra info provided
-        elif type == "classify":
-            if self.grader.tg is None:
-                self.extra_preAction = True
-            else:
-                print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
-                return False
-
-        elif type == "sbs":
-            self.extra_preAction = True
+        # if type == "token":
+        #     if self.grader.tg is None:
+        #         print("GUI program running....")
+        #         self.grader.token_GUI_execute()
+        #     else:
+        #         print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
+        #         return False
+        #
+        # # run classify need extra info provided
+        # elif type == "classify":
+        #     if self.grader.tg is None:
+        #         self.extra_preAction = True
+        #     else:
+        #         print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
+        #         return False
+        #
+        # elif type == "sbs":
+        #     self.extra_preAction = True
 
         return True
 
@@ -204,10 +205,9 @@ class base_grader:
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
 
-        # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
-        if not self.project_id or not self.project_locale:
-            print_at("Invalid grading in this page.", self.tg, self.print_allowed)
+        # get project_id, and locale and set project code and its project type
+        project_set_ok = self.project_setup()
+        if not project_set_ok:
             return False
 
         # get query text
@@ -217,15 +217,24 @@ class base_grader:
         self.query_link = self.web_controller.get_motherTag_url()
         self.new_query = False
 
-        # get project code depend on the project type
+        self.grader_action_count += 1
+        return True
+
+    def project_setup(self):
+        # renew project info in every grading: project id and project locale
+        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
+        if not self.project_id or not self.project_locale:
+            print_at("Invalid grading in this page.", self.tg, self.print_allowed)
+            return False
+
+        # check if project_id exist in local config
         if self.project_id in config.projects_code.keys():
             self.project_code = config.projects_code[self.project_id]
+        # if not exist, get the project_code
         else:
-            self.project_code = infoModel.get_project_code(self.web_controller, self.project_type) # get the project code if have not seen before
-            config.projects_code[self.project_id] = self.project_code       # store the project_code into global dictionary (config)
-
-
-        self.grader_action_count += 1
+            self.project_code = infoModel.get_project_code(self.web_controller)  # get the project code if have not seen before
+            config.projects_code[self.project_id] = self.project_code           # store the project_code into global dictionary (config)
+        self.project_type = config.projects_code[self.project_id]['project_type']
         return True
 
     def update_status(self):
@@ -335,7 +344,7 @@ class base_grader:
                 if not timer_ok:
                     return False
 
-            self.web_controller.click_next_btn()
+            self.web_controller.click_next_btn(self.project_type)
 
             # update ans into db
             if self.project_type in config.UPDATE_DB_PROJS:
@@ -402,7 +411,7 @@ class base_grader:
             return False
 
         # press next
-        self.web_controller.click_next_btn()
+        self.web_controller.click_next_btn(self.project_type)
 
         # update status after finish a grading
         self.update_status()
@@ -421,7 +430,7 @@ class base_grader:
                 # click next button
                 window.focus_force()
                 if grade_ok:
-                    self.web_controller.click_next_btn()
+                    self.web_controller.click_next_btn(self.project_type)
             except:
                 print("grading failed - token")
 
@@ -434,7 +443,7 @@ class base_grader:
                 # click next button
                 window.focus_force()
                 if grade_ok:
-                    self.web_controller.click_next_btn()
+                    self.web_controller.click_next_btn(self.project_type)
             except:
                 print("vague failed - token")
 

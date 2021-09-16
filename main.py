@@ -21,7 +21,7 @@ while (not (command == "quit")):
         db_controller.update_local_config_from_db()
         # ask user choose projects
         project_index = menuModel.menu_choice()
-        graders.setup_project(project_index)
+        graders.open_project(project_index)
         FIRST_TIME = False
 
     command = graders.run(command)

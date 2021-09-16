@@ -2,6 +2,7 @@ from models import infoModel
 
 # for tg_bot.py used
 def send_tg_info(grader, old_query_text=None, time_out=10):
+
     # get query text (plus condition)
     query_text = infoModel.get_query_text(grader.project_type, grader.tg, grader.web_controller, grader.print_allowed,
                                              filter_query=old_query_text, time_out=time_out)
@@ -16,10 +17,8 @@ def send_tg_info(grader, old_query_text=None, time_out=10):
         links, link_details = infoModel.get_links_and_details(grader.web_controller, grader.project_type, time_out=10)
     except:
         return False
-    # combined into one text
-    grader.project_code = infoModel.get_project_code(grader.web_controller, grader.project_type)
-    max_index = min(len(links), grader.project_code["max_answer_slots"])
 
+    max_index = min(len(links), grader.project_code["max_answer_slots"])
     # query and its introduction
     text = search_date + '\n\n' + query_text + '\n' + \
            "web search link: " + web_search_link + '\n' + \

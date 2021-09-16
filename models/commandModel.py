@@ -22,13 +22,13 @@ def control_command_check(graders, ans):
         elif (ans == "-p"):
             graders.grader.db_controller.update_local_config_from_db()
             project_index = menuModel.menu_choice()
-            graders.setup_project(project_index, new_grader=False)
+            graders.open_project(project_index)
             return command_checked
 
         elif (ans == "-gp"):
             graders.grader.db_controller.update_local_config_from_db()
             project_index = menuModel.ghost_menu_choice()
-            graders.setup_project(project_index, new_grader=False, ghost_menu=True)
+            graders.open_project(project_index, ghost_menu=True)
             return command_checked
 
         elif (ans == "-auto" or ans == "--a"):
@@ -273,8 +273,8 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-checkCode"):
-            project_code = infoModel.get_project_code(graders.web_controller, graders.grader.project_type)
-            for key, value in project_code.items():
+            graders.grader.project_setup()
+            for key, value in graders.grader.project_code.items():
                 print("{}: {}".format(key, value))
         else:
             print("Invalid Control Command")
