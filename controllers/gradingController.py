@@ -96,6 +96,7 @@ class Graders:
 
         # open the required project link
         self.grader.web_controller.open_project_link(link)
+        print_at("Opening the project ... ", self.grader.tg)
         # click required location
         self.web_controller.click_start_project(project_index)
 

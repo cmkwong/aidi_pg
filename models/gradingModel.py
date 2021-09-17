@@ -257,6 +257,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
 
         # # extract the comment
         command, comment = ans[0], ''
+        # is NOT 1-4 or w answer, then do NOT split the ans
         if len(ans) > 1:
             split_list = ans.split(' ', 1)
             if len(split_list) == 1:
@@ -298,8 +299,11 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                             web_controller.browser.execute_script(js_code % abs(strength - 3))
                         elif command[0] == 'd':
                             web_controller.browser.execute_script(js_code % (strength + 3))
+                        else:
+                            print_at("Not correct command", tg)
+                            return False
                     else:
-                        print_at("--------Not correct ans detected.--------", tg)
+                        print_at("Wrong length of command", tg)
                         return False
                 # insert comment
                 if len(comment) == 0:

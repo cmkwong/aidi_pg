@@ -256,7 +256,7 @@ def control_command_check(graders, ans):
                 print('Please try again.')
             return command_checked
 
-        elif (ans == "-pq"):
+        elif (ans == "-pe"): # project error
             try:
                 # check if pop-up
                 popUp_locale = graders.grader.web_controller.check_project_finished_popUp()
@@ -273,9 +273,10 @@ def control_command_check(graders, ans):
             return command_checked
 
         elif (ans == "-checkCode"):
-            graders.grader.project_setup()
-            for key, value in graders.grader.project_code.items():
+            project_code = infoModel.get_project_code(graders.grader.web_controller)
+            for key, value in project_code.items():
                 print("{}: {}".format(key, value))
+            return command_checked
         else:
             print("Invalid Control Command")
             return command_checked  # avoid to go further in the ans parser if user type command wrongly
