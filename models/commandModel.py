@@ -266,7 +266,7 @@ def control_command_check(graders, ans):
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name()
                     graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                    print("{}({}) Error Page Screenshot Sent.".format(project_id, popUp_locale))
+                    print("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, popUp_locale))
                 else:
                     print("No Finished Pop-up.")
             except:
