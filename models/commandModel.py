@@ -112,17 +112,16 @@ def control_command_check(graders, ans):
         elif (ans == "-dist"):
             level = authModel.get_grader_access_level(graders)
             if level == 's':
-                gg = graders.grader
                 try:
-                    project_id, project_locale = gg.web_controller.get_projectId_locale_from_url()
-                    query_text = infoModel.get_query_text(gg.project_type, gg.tg, gg.web_controller, print_allowed=True)
-                    Answer = gg.db_controller.find_most_popular(project_id,
-                                                                project_locale,
+                    graders.grader.project_setup()
+                    query_text = infoModel.get_query_text(graders.grader.project_type, graders.grader.tg, graders.grader.web_controller, print_allowed=True)
+                    Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
+                                                                graders.grader.project_locale,
                                                                 query_text,
-                                                                gg.tg, print_allowed=True)
-                    gradingController.print_popular_ans_detail(Answer, gg.tg)
+                                                                graders.grader.tg, print_allowed=True)
+                    gradingController.print_popular_ans_detail(Answer, graders.grader.tg)
                 except:
-                    print_at('Error of printing distribution', gg.tg)
+                    print_at('Error of printing distribution', graders.grader.tg)
             return command_checked
 
         elif (ans == "-alarm"):

@@ -15,9 +15,9 @@ def get_project_list_text(prev_project_index, projects_info):
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(projects_info):
         if index == prev_project_index:
-            txt += "\u001b[32;1m{}: {} ({})\u001b[0m\n".format(str(index+1), project["name"], project["type"])
+            txt += "\u001b[32;1m{}: {})\u001b[0m\n".format(str(index+1), project["name"])
         else:
-            txt += "{}: {} ({})\n".format(str(index + 1), project["name"], project["type"])
+            txt += "{}: {})\n".format(str(index + 1), project["name"])
     return txt
 
 # def print_proj_list(pre_project_index, projects_info):

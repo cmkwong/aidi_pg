@@ -117,14 +117,13 @@ class Telegram_Bot:
             else:
                 level = authModel.get_grader_access_level(graders)
                 if level == 's':
-                    gg = graders.grader
                     try:
-                        project_id, project_locale = gg.web_controller.get_projectId_locale_from_url()
-                        query_text = infoModel.get_query_text(gg.project_type, self, gg.web_controller, print_allowed=True)
-                        Answer = gg.db_controller.find_most_popular(project_id,
-                                                                    project_locale,
-                                                                    query_text,
-                                                                    self, print_allowed=True)
+                        graders.grader.project_setup()
+                        query_text = infoModel.get_query_text(graders.grader.project_type, self, graders.grader.web_controller, print_allowed=True)
+                        Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
+                                                                                graders.grader.project_locale,
+                                                                                query_text,
+                                                                                self, print_allowed=True)
                         gradingController.print_popular_ans_detail(Answer, self)
                     except:
                         self.bot.send_message(message.chat.id, 'Error of printing distribution')
