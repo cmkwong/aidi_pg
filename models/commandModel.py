@@ -251,7 +251,7 @@ def control_command_check(graders, ans):
                 usr_name = graders.grader.web_controller.get_grader_name()
                 expired_date = graders.grader.db_controller.get_expired_date(usr_name)
                 print("Due date before: \u001b[31m{}\u001b[0m".format(expired_date))
-                print("Please attach your \u001b[32mname\u001b[0m on the payment.")
+                print("Please attach your \u001b[32mname\u001b[0m on the payment description.")
                 osSystem.show_img('./src/payme_qr.png')
             except:
                 print('Please try again.')
