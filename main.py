@@ -20,7 +20,7 @@ while (not (command == "quit")):
         # update the local info from remote database
         db_controller.update_local_config_from_db()
         # ask user choose projects
-        project_index = menuModel.menu_choice()
+        project_index = menuModel.menu_choice(graders.prev_project_index)
         graders.open_project(project_index)
         FIRST_TIME = False
 

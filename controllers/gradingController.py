@@ -74,6 +74,7 @@ class Graders:
     def __init__(self, web_controller, db_controller, version):
         self.web_controller = web_controller
         self.db_controller = db_controller
+        self.prev_project_index = -1
         self.auto_mode = False
         self.auto_available = True
         self.version = version
@@ -99,6 +100,9 @@ class Graders:
         print_at("Opening the project ... ", self.grader.tg)
         # click required location
         self.web_controller.click_start_project(project_index)
+
+        # setting previous project index for highlight previous project
+        self.prev_project_index = project_index
 
         # situations depend different project type
         # run the TOKEN program immediately
