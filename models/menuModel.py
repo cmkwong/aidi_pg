@@ -15,7 +15,7 @@ def get_project_list_text(prev_project_index, projects_info, tg=False):
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(projects_info):
         if index == prev_project_index:
-            txt += "{}{}: {}{})\u001b[0m\n".format(hl_start, str(index+1), project["name"], hl_end)
+            txt += "{}{}: {}{}\n".format(hl_start, str(index+1), project["name"], hl_end)
         else:
             txt += "{}: {})\n".format(str(index + 1), project["name"])
     return txt
