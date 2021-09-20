@@ -7,15 +7,14 @@ def get_project_list_text(prev_project_index, projects_info):
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(projects_info):
         if index == prev_project_index:
-            txt += "\u001b[32;1m{}: {} ({})\u001b[0m\n".format(str(index + 1), project["name"], project["type"])
+            txt += "\u001b[32;1m{}: {})\u001b[0m\n".format(str(index + 1), project["name"])
         else:
-            txt += "{}: {} ({})\n".format(str(index+1), project["name"], project["type"])
+            txt += "{}: {}\n".format(str(index+1), project["name"])
     return txt
 
 def menu_choice(prev_project_index, projects_info):
     max_proj_num = len(projects_info)
     project_index = None
-    project_type = None
     while(project_index==None):
         print(get_project_list_text(prev_project_index, projects_info))
         project_index = num_check()
@@ -26,6 +25,4 @@ def menu_choice(prev_project_index, projects_info):
             project_index = None
             continue
         project_index = project_index - 1
-        project_type = projects_info[project_index]["type"]
-    print("Type of Project:", project_type)
     return project_index
