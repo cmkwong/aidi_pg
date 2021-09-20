@@ -251,6 +251,7 @@ def control_command_check(graders, ans):
                 usr_name = graders.grader.web_controller.get_grader_name()
                 expired_date = graders.grader.db_controller.get_expired_date(usr_name)
                 print("Due date before: {}".format(expired_date))
+                print("\u001b[32mPlease attach your name on the payment.\u001b[0m")
                 osSystem.show_img('./src/payme_qr.png')
             except:
                 print('Please try again.')
@@ -265,7 +266,7 @@ def control_command_check(graders, ans):
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name()
                     graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                    print("Status Updated.")
+                    print("{}({}) Error Page Screenshot Sent.".format(project_id, popUp_locale))
                 else:
                     print("No Finished Pop-up.")
             except:

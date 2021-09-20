@@ -202,7 +202,7 @@ class base_grader:
                 raise Exception("Outdated Version, re-open program.")
             # check payment
             if not authModel.paid(self.grader_id, self.db_controller):
-                print_at("Due date reached or please try again later", self.tg)
+                print_at("Permission denied or try again later", self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
 
