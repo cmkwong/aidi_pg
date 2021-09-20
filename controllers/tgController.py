@@ -58,7 +58,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['p'])
         def select_project(message):
             graders.db_controller.update_local_config_from_db()
-            project_list_txt = menuModel.get_project_list_text(graders.prev_project_index, config.projects_info)
+            project_list_txt = menuModel.get_project_list_text(graders.prev_project_index, config.projects_info, tg=True)
             msg = self.bot.reply_to(message, project_list_txt + "\nEnter project Number: ")
             self.bot.register_next_step_handler(msg, choose_project)
 
