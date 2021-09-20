@@ -6,8 +6,8 @@ terminal = app('Terminal')
 
 def enter(graders, command):
     # setting placeholder
-    placeholder = 'Answer Input: '
-    if graders.auto_mode: placeholder = 'Answer Input-a: '
+    placeholder = 'Input: '
+    if graders.auto_mode: placeholder = 'Input-a: '
 
     # extra print if needed
     if not command:
