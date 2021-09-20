@@ -4,6 +4,7 @@ from datetime import datetime
 class Checker:
     def __init__(self, db_controller, version):
         self.db_controller = db_controller
+        self.prev_project_index = -1
         self.version = version
         self._empty = 99999
 
@@ -44,11 +45,16 @@ class Checker:
             project_status_container[name] = (current_utc - time) / 60
         # sorted the dictionary
         sorted_project_status_container = {k: v for k, v in sorted(project_status_container.items(), key=lambda item: item[1])}
-        for k, v in sorted_project_status_container.items():
-            v = round(v, 1)
-            if v == self._empty:
-                v = '--'
-            print("{:<20}{:<6}mins".format(k, v))
+        # print status
+        print("\u001b[31;1m{}\u001b[0m".format(project_id))
+        for name, mins in sorted_project_status_container.items():
+            mins = round(mins, 2)
+            if mins == self._empty:
+                mins = '--'
+            print("{:<20}{:<7}mins".format(name, mins))
+
+        # set previous project index
+        self.prev_project_index = project_index
 
     def update_project_from_txt(self):
         pass

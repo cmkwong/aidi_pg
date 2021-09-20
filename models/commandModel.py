@@ -1,4 +1,5 @@
 from models import menuModel
+import config
 
 def control_command_check(checker, ans):
     command_checked = True
@@ -20,7 +21,7 @@ def control_command_check(checker, ans):
             # update local config: projects and graders
             checker.db_controller.update_local_config_from_db()
             # print the menu
-            project_index = menuModel.menu_choice()
+            project_index = menuModel.menu_choice(checker.prev_project_index, config.projects_info)
             # print the project status
             checker.print_project_status(project_index)
             return command_checked
