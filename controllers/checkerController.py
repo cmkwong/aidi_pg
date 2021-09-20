@@ -28,6 +28,8 @@ class Checker:
         return project_id
 
     def print_project_status(self, project_index):
+        # set previous project index
+        self.prev_project_index = project_index
         # get current UTC timestamp
         current_utc = datetime.utcnow().timestamp()
         # get the project ID and its locale from current config file
@@ -52,9 +54,6 @@ class Checker:
             if mins == self._empty:
                 mins = '--'
             print("{:<20}{:<7}mins".format(name, mins))
-
-        # set previous project index
-        self.prev_project_index = project_index
 
     def update_project_from_txt(self):
         pass
