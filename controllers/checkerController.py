@@ -49,7 +49,7 @@ class Checker:
         sorted_project_status_container = {k: v for k, v in sorted(project_status_container.items(), key=lambda item: item[1])}
         # print status
         txt = ''
-        txt += "\u001b[1m\n\u001b[34m{}\u001b[0m\u001b[0m\n".format(project_id)
+        txt += "\u001b[1m\n\u001b[34m{}\u001b[0m\u001b[0m\n\n".format(project_id)
         txt += "\u001b[4m{:<20}{:<10}{:<10}{:<10}\u001b[0m\n".format("Grader", "mins", "prj id", "locale")
         for name, mins in sorted_project_status_container.items():
             mins = round(mins, 2)
