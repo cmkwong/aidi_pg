@@ -50,13 +50,13 @@ class Checker:
         # print status
         txt = ''
         txt += "\u001b[1m\n\u001b[34m{}\u001b[0m\u001b[0m\n\n".format(project_id)
-        txt += "\u001b[4m{:<20}{:<10}{:<10}{:<10}\u001b[0m\n".format("Grader", "mins", "prj id", "locale")
+        txt += "{:<8}\u001b[4m{:<20}{:<10}{:<10}{:<10}\u001b[0m\n".format('', "Grader", "mins", "prj id", "locale")
         for name, mins in sorted_project_status_container.items():
             mins = round(mins, 2)
             if mins == self._empty:
-                txt += "{:<20}{:<10}\n".format(name, '--')
+                txt += "{:<8}{:<20}{:<10}\n".format('', name, '--')
             else:
-                txt += "{:<20}{:<10}\u001b[32;1m{:<10}{:<10}\u001b[0m\n".format(name, mins, 'matched', 'matched')
+                txt += "{:<8}{:<20}{:<10}\u001b[32;1m{:<10}{:<10}\u001b[0m\n".format('', name, mins, 'matched', 'matched')
         print(txt)
 
     def update_project_from_txt(self):
