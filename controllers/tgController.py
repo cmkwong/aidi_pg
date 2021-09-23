@@ -264,6 +264,22 @@ class Telegram_Bot:
             if conflict:
                 print_conflict(conflict, self)
 
+        @self.bot.message_handler(commands=['pe'])
+        def send_error_page(message):
+            try:
+                # check if pop-up
+                popUp_locale = graders.grader.web_controller.check_project_finished_popUp()
+                if popUp_locale:
+                    # get the project info and grader name
+                    project_id = graders.grader.web_controller.get_projectId_from_url()
+                    grader_name = graders.grader.web_controller.get_grader_name()
+                    graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
+                    print("{}({})\nError Page Sent.".format(project_id, popUp_locale))
+                else:
+                    print("No Finished Pop-up.")
+            except:
+                print("Please try again.")
+
         @self.bot.message_handler(commands=['limit'])
         def set_limit_number(message):
             msg = self.bot.reply_to(message, "Enter limit number: ")
