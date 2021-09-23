@@ -35,6 +35,10 @@ def control_command_check(checker, ans):
 
         elif (ans == "-update"):
             # update the project list
+            try:
+                checker.update_project_from_txt()
+            except:
+                print("Update project list not successful.")
             return command_checked
 
         else:

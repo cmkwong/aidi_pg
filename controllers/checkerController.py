@@ -1,6 +1,8 @@
 import config
 import re
+import os
 from datetime import datetime
+
 class Checker:
     def __init__(self, db_controller, version):
         self.db_controller = db_controller
@@ -59,5 +61,41 @@ class Checker:
                 txt += "{:<8}{:<20}{:<10}\u001b[32;1m{:<10}{:<10}{:<10}\u001b[0m\n".format('', name, mins, 'OK', 'OK', 'OK')
         print(txt)
 
+    def read_txt_file(self, path, filename):
+        full_path = os.path.join(path, filename)
+        with open(full_path, 'r') as f:
+            txt = f.read()
+        f.close()
+        return txt
+
+    def find_locale_from_prjName(self, name):
+        result = re.search(r"[a-z][a-z]_[A-Z][A-Z]", name)
+        if result:
+            return result.group(0)
+
+    def txt2prjdict(self, txt):
+        prj_list = []
+        delimiter = 'http'
+        # eliminate all splace and replace last element into overview
+        txt = txt.replace(' ', '').replace('\t', '').replace('\xa0', '').replace('stats/ungradedByLocale', 'overview')
+        prjs = txt.split('\n')
+        for prj in prjs:
+            if len(prj) > 0:
+                name, link = prj.split(delimiter)
+                p_dict = {}
+                p_dict['name'] = name
+                p_dict['location'] = self.find_locale_from_prjName(name)
+                p_dict['link'] = delimiter + link
+                prj_list.append(p_dict)
+        print("Length: {}".format(len(prj_list)))
+        return prj_list
+
+    def project_info_update(self, info):
+        self.db_controller["projects"].drop()
+        self.db_controller["projects"].insert_many(info)
+        print("\u001b[32;1mRenew projects info done.\u001b[0m")
+
     def update_project_from_txt(self):
-        pass
+        txt = self.read_txt_file(path="../../docs", filename="projects.txt")
+        project_list = self.txt2prjdict(txt)
+        self.project_info_update(project_list)
