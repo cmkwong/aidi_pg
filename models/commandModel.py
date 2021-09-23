@@ -43,7 +43,8 @@ def control_command_check(checker, ans):
             except:
                 print("Cannot get the project list")
             checker.print_projectList_confirm(project_list)
-            if inputs.user_confirm():   # yes to confirm, else to cancel
+            confirmed = inputs.user_confirm()   # yes to confirm, else to cancel
+            if confirmed:   # yes to confirm, else to cancel
                 checker.db_controller.project_info_update(project_list)
             else:
                 print("Cancelled")

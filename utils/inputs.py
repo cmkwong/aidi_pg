@@ -11,9 +11,9 @@ def num_check():
     return num_input
 
 def user_confirm():
-    placeholder = 'Input [y]es to confirm: '
+    placeholder = 'Input [y]es to confirm OR others to cancel: '
     confirm_input = input(placeholder)
-    if confirm_input == 'y' or "yes":
+    if confirm_input == 'y' or confirm_input == "yes":
         return True
     else:
         return False

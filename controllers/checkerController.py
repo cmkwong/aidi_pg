@@ -92,9 +92,9 @@ class Checker:
 
     def print_projectList_confirm(self, prj_list):
         txt = ''
-        txt += "{:<4}\u001b[4m{:<80}{:<10}{:<50}\u001b[0m\n".format('', "Project", "Locale", "Link")
+        txt += "{:<3}\u001b[4m{:<50}{:<10}{:<50}\u001b[0m\n".format('', "Project (Head 45 char)", "Locale", "Link (Tail 50 char)")
         for idx, p in enumerate(prj_list):
-            txt += "{:<4}{:<80}{:<10}{:<50}\n".format(idx, p['name'][-80:], p['location'], p['link'][-50:])
+            txt += "{:<3}{:<50}{:<10}{:<50}\n".format(idx+1, p['name'][:45], p['location'], p['link'][-50:])
         print(txt)
 
     def get_projectList_from_txt(self):
