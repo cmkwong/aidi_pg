@@ -27,6 +27,11 @@ class Database:
             return False
         return self.db["project_status"].find_one(filter)['status']
 
+    def project_info_update(self, info):
+        self.db["projects"].drop()
+        self.db["projects"].insert_many(info)
+        print("\u001b[32;1mRenew projects info done.\u001b[0m")
+
     def get_most_updated_version(self):
         return self.db["versions_control"].find_one()['checker']
 

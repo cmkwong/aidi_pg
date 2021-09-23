@@ -27,7 +27,7 @@ def control_command_check(checker, ans):
             return command_checked
 
         elif (ans == "-r"):
-            if checker.prev_project_index is range(len(config.projects_info)):
+            if checker.prev_project_index in range(len(config.projects_info)):
                 checker.print_project_status(checker.prev_project_index)
             else:
                 print("No project selected. Type -p.")
@@ -35,10 +35,7 @@ def control_command_check(checker, ans):
 
         elif (ans == "-update"):
             # update the project list
-            try:
-                checker.update_project_from_txt()
-            except:
-                print("Update project list not successful.")
+            checker.update_project_from_txt()
             return command_checked
 
         else:

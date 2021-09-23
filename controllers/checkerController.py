@@ -87,15 +87,10 @@ class Checker:
                 p_dict['location'] = self.find_locale_from_prjName(name)
                 p_dict['link'] = delimiter + link
                 prj_list.append(p_dict)
-        print("Length: {}".format(len(prj_list)))
+        print("Number of projects: {}".format(len(prj_list)))
         return prj_list
 
-    def project_info_update(self, info):
-        self.db_controller["projects"].drop()
-        self.db_controller["projects"].insert_many(info)
-        print("\u001b[32;1mRenew projects info done.\u001b[0m")
-
     def update_project_from_txt(self):
-        txt = self.read_txt_file(path="../../docs", filename="projects.txt")
+        txt = self.read_txt_file(path="../docs", filename="projects.txt")
         project_list = self.txt2prjdict(txt)
-        self.project_info_update(project_list)
+        self.db_controller.project_info_update(project_list)
