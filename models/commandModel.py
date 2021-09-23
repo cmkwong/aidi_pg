@@ -1,4 +1,5 @@
 from models import menuModel
+from utils import inputs
 import config
 
 def control_command_check(checker, ans):
@@ -35,7 +36,17 @@ def control_command_check(checker, ans):
 
         elif (ans == "-update"):
             # update the project list
-            checker.update_project_from_txt()
+            project_list = []
+            try:
+                project_list = checker.get_projectList_from_txt()
+                checker.print_projectList_confirm(project_list)
+            except:
+                print("Cannot get the project list")
+            checker.print_projectList_confirm(project_list)
+            if inputs.user_confirm():   # yes to confirm, else to cancel
+                checker.db_controller.project_info_update(project_list)
+            else:
+                print("Cancelled")
             return command_checked
 
         else:

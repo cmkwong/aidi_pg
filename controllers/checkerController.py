@@ -90,7 +90,14 @@ class Checker:
         print("Number of projects: {}".format(len(prj_list)))
         return prj_list
 
-    def update_project_from_txt(self):
+    def print_projectList_confirm(self, prj_list):
+        txt = ''
+        txt += "{:<8}\u001b[4m{:<80}{:<5}{}\u001b[0m\n".format('', "Project", "Locale", "Link")
+        for idx, p in enumerate(prj_list):
+            txt += "{:<8}\u001b[4m{:<80}{:<5}{}\u001b[0m\n".format(idx, p['name'], p['location'], p['link'])
+        print(txt)
+
+    def get_projectList_from_txt(self):
         txt = self.read_txt_file(path="../docs", filename="projects.txt")
         project_list = self.txt2prjdict(txt)
-        self.db_controller.project_info_update(project_list)
+        return project_list

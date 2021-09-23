@@ -9,3 +9,11 @@ def num_check():
         print("Wrong input")
         return None
     return num_input
+
+def user_confirm():
+    placeholder = 'Input [y]es to confirm: '
+    confirm_input = input(placeholder)
+    if confirm_input == 'y' or "yes":
+        return True
+    else:
+        return False
