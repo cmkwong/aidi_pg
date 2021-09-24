@@ -150,7 +150,7 @@ help_command = {
         "f": "fair",
         "b": "bad"
     },
-    "Mac Control Command": {
+    "Control Command": {
         "-q": "quit program",
         "-p": "update and show project menu",
         "-done": "set done counter manually",
@@ -162,16 +162,14 @@ help_command = {
         "-report/-re": "access the report page",
         "-txt": "print the summary of report(Disabled)"
     },
-    "Telegram Control Command": {
-        "/status": "check done count",
-        "/p": "switch to project menu",
-        "/done": "set done count manually",
-        "/stop": "interrupt the timer (= Ctrl+C)",
-        "/t": "set delay time (seconds)",
-        "/md /nd": "activate timer / de-activate timer",
-        "/mute": "silence on",
-        "/nmute": "silence off",
-        "/q": "turn off telegram"
+    "sbs": {
+        "a": "right is better\n  type ' ' then write comment\n  number of 'a' means the how much of better, maximun is 3 times",
+        "d": "left is better\n  type ' ' then write comment\n  number of 'd' means the how much of better, maximun is 3 times",
+        "s": "about the same\n  type ' ' then write comment",
+        "1": "I need more context on this request (e.g., previous request)",
+        "2": "The request was gibberish or incomplete",
+        "3": "Siri's response was missing or had display error",
+        "4": "Some other reason (fill out comment box)\n  type ' ' then write comment",
     }
 }
 
