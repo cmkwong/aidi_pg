@@ -274,11 +274,11 @@ class Telegram_Bot:
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name()
                     graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                    print("{}({})\nError Page Sent.".format(project_id, popUp_locale))
+                    self.bot.send_message(message.chat.id, "{}({})\nError Page Sent.".format(project_id, popUp_locale))
                 else:
-                    print("No Finished Pop-up.")
+                    self.bot.send_message(message.chat.id, "No Finished Pop-up.")
             except:
-                print("Please try again.")
+                self.bot.send_message(message.chat.id, "Please try again.")
 
         @self.bot.message_handler(commands=['limit'])
         def set_limit_number(message):
