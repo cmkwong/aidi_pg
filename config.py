@@ -165,8 +165,8 @@ help_command = {
     "sbs": {
         "a": "\n  right is better\n  type [SPACE] then write comment\n  number of 'a' means the how much of better, maximun is 3 times",
         "d": "\n  left is better\n  type [SPACE] then write comment\n  number of 'd' means the how much of better, maximun is 3 times",
-        "s": "\n  about the same\n  type [SPACE] then write comment",
-        "w": "\n  They are identical",
+        "w": "\n  about the same\n  type [SPACE] then write comment",
+        "s": "\n  They are identical",
         "1": "I need more context on this request (e.g., previous request)",
         "2": "The request was gibberish or incomplete",
         "3": "Siri's response was missing or had display error",

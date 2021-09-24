@@ -282,14 +282,14 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         else:
             web_controller.click_by_id("query_validationyes")
             # exact identical results
-            if command == 'w':
+            if command == 's':
                 web_controller.click_by_id("identical_responsesyes")
             # it always need comment at the end
             else:
                 web_controller.click_by_id("identical_responsesno")
                 js_code = "document.querySelectorAll('li.choice-group')[%s].querySelector('input').click()" # clicking which response better
                 # about the same
-                if command == 's':
+                if command == 'w':
                     web_controller.browser.execute_script(js_code % 3)
                 # they can compare
                 else:
