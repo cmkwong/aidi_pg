@@ -198,7 +198,7 @@ class base_grader:
 
         # update grader_id (for access the DB)
         if self.grader_id is None:
-            self.grader_id = dbModel.update_grader_info(self.web_controller, self.db_controller)
+            self.grader_id = dbModel.update_grader_info_from_cc(self.web_controller, self.db_controller)
 
         # check payment and version status
         if self.grader_action_count % 30 == 0:

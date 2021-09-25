@@ -1,5 +1,5 @@
 import config
-from models import menuModel, reportModel, infoModel, authModel
+from models import menuModel, reportModel, infoModel, authModel, dbModel
 from controllers import gradingController, tgController
 from utils import inputs, osSystem
 from views.prints import *
@@ -16,14 +16,17 @@ def control_command_check(graders, ans):
 
     if ans[0] == '-':
 
-        # getting user level
+        # getting user level and update grader info
         try:
             if graders.grader.grader_level == 0:
                 graders.grader.grader_level = authModel.get_grader_access_level_from_cc(graders)
+            # update grader info
+            if graders.grader.grader_id is None:
+                graders.grader.grader_id = dbModel.update_grader_info_from_cc(graders.grader.web_controller, graders.grader.db_controller)
         except:
             graders.grader.grader_level = 0
 
-        if graders.grader.grader_level == 0:
+        if graders.grader.grader_level >= 0:
 
             if (ans == "-q"):
                 return quit_program

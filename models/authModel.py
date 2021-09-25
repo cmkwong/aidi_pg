@@ -13,7 +13,7 @@ def get_grader_access_level_from_cc(graders):
         return 0
     for info in config.graders_info:
         if usr_id == info["_id"]:
-            return info["level"]
+            return int(info["level"])
     return 0
 
 def get_grader_tgToken_from_cc(graders):

@@ -1,6 +1,6 @@
 import collections
 
-def update_grader_info(web_controller, db_controller):
+def update_grader_info_from_cc(web_controller, db_controller):
     grader_id = web_controller.get_grader_id_from_cc()
     # update the db login info
     login, pw = db_controller.grader_id_to_login_info(grader_id)

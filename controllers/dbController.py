@@ -22,11 +22,11 @@ class Database:
         self.db = self.client[self.db_name]
 
     def grader_id_to_login_info(self, grader_id):
-        rule_filter = {
+        role_filter = {
             "_id": grader_id
         }
         login_filter = {
-            "role": self.db["graders"].find_one(rule_filter)["role"]
+            "role": self.db["graders"].find_one(role_filter)["role"]
         }
         return self.db["db_login"].find_one(login_filter)["login"], self.db["db_login"].find_one(login_filter)["pw"]
 

@@ -1,6 +1,6 @@
 import telebot
 import config
-from models import tgModel, menuModel, reportModel, infoModel, authModel
+from models import tgModel, menuModel, reportModel, infoModel, authModel, dbModel
 from controllers import gradingController
 from views.prints import *
 
