@@ -1,22 +1,15 @@
 import pymongo
 import config
 
-db_name = "cmk_testing"
-
 class Database:
     def __init__(self):
-        self.URI = None
-        self.login = None
-        self.pw = None
+        self.db_name = "cmk_testing"
         self.update_db_config()
 
-    def update_db_config(self, login="common_user", pw="!23456Qwerty"):
-        self.login = login
-        self.pw = pw
-        self.URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (
-        self.login, self.pw, db_name)
-        self.client = pymongo.MongoClient(self.URI)
-        self.db = self.client[db_name]
+    def update_db_config(self, login="checker", pw="sS123456Ss"):
+        URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (login, pw, self.db_name)
+        self.client = pymongo.MongoClient(URI)
+        self.db = self.client[self.db_name]
 
     def get_project_status(self, project_id, locale):
         filter = {
