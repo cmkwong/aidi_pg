@@ -6,17 +6,17 @@ def get_usrName_from_graderId(usr_id):
         if usr_id == info["_id"]:
             return info["name"]
 
-def get_grader_access_level(graders):
+def get_grader_access_level_from_cc(graders):
     try:
         usr_id = graders.web_controller.get_grader_id_from_cc()
     except:
-        return None
+        return 0
     for info in config.graders_info:
         if usr_id == info["_id"]:
             return info["level"]
-    return None
+    return 0
 
-def get_grader_tgToken(graders):
+def get_grader_tgToken_from_cc(graders):
     usr_id = graders.web_controller.get_grader_id_from_cc()
     for info in config.graders_info:
         if usr_id == info["_id"]:

@@ -80,7 +80,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level_from_cc(graders)
                 if level == 's' or level == 'a':
                     gradingController.set_auto_mode(graders)
 
@@ -100,7 +100,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level_from_cc(graders)
                 if level == 's':
                     self.auto_user = True
                     gradingController.set_full_auto_mode(graders)
@@ -116,7 +116,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level_from_cc(graders)
                 if level == 's':
                     try:
                         graders.grader.project_setup()
@@ -252,7 +252,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level(graders)
+                level = authModel.get_grader_access_level_from_cc(graders)
                 if level == 's':
                     msg = self.bot.reply_to(message, "Enter Project ID ")
                     self.bot.register_next_step_handler(msg, check_conflict)

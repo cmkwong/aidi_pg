@@ -173,6 +173,7 @@ class base_grader:
         self.done_upper_limit = -1  # stop when done reach the custom limit and reset once reached
         self.new_query = False
         self.grader_id = None
+        self.grader_level = 0 # for checking if the command has permission to use
         self.project_id = None
         self.project_locale = None
         self.project_type = None
