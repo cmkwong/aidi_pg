@@ -23,7 +23,7 @@ def get_grader_tgToken(graders):
             return info["token"]
     return None
 
-def paid(grader_id, db_controller):
+def paid_user(grader_id, db_controller):
     try:
         usr_name = get_usrName_from_graderId(grader_id)
         expired_date = db_controller.get_expired_date(usr_name)
@@ -32,4 +32,4 @@ def paid(grader_id, db_controller):
             return False
         return True
     except:
-        return True
+        return False

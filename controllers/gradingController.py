@@ -205,7 +205,7 @@ class base_grader:
             if self._version != self.db_controller.get_most_updated_version():
                 raise Exception("Outdated Version, re-open program.")
             # check payment
-            if not authModel.paid(self.grader_id, self.db_controller):
+            if not authModel.paid_user(self.grader_id, self.db_controller):
                 print_at("Permission denied or try again later", self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
