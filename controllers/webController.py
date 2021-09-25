@@ -195,7 +195,7 @@ class Web:
             project_id, project_locale = result.group(1), result.group(2)
         return project_id, project_locale
 
-    def get_grader_name(self):
+    def get_grader_name_from_cc(self):
         js_code = """
                     var grader_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
                     return grader_name;
@@ -205,8 +205,8 @@ class Web:
         grader_name = grader_name.replace(' ', '')
         return grader_name
 
-    def get_grader_id(self):
-        grader_name = self.get_grader_name()
+    def get_grader_id_from_cc(self):
+        grader_name = self.get_grader_name_from_cc()
         for info in config.graders_info:
             if grader_name == info["name"]:
                 return info["_id"]

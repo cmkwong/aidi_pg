@@ -239,7 +239,7 @@ def control_command_check(graders, ans):
             level = authModel.get_grader_access_level(graders)
             if level == 's':
                 project_id = input("Input project ID: ")
-                usr_id = graders.web_controller.get_grader_id()
+                usr_id = graders.web_controller.get_grader_id_from_cc()
                 conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg, print_allowed=True)
                 if conflict:
                     print_conflict(conflict, graders.grader.tg)
@@ -247,7 +247,7 @@ def control_command_check(graders, ans):
 
         elif (ans == "-pay"):
             try:
-                usr_name = graders.grader.web_controller.get_grader_name()
+                usr_name = graders.grader.web_controller.get_grader_name_from_cc()
                 expired_date = graders.grader.db_controller.get_expired_date(usr_name)
                 print("Due date before: \u001b[31m{}\u001b[0m".format(expired_date))
                 print("Please attach your \u001b[32mname\u001b[0m on the payment description.")
@@ -263,7 +263,7 @@ def control_command_check(graders, ans):
                 if popUp_locale:
                     # get the project info and grader name
                     project_id = graders.grader.web_controller.get_projectId_from_url()
-                    grader_name = graders.grader.web_controller.get_grader_name()
+                    grader_name = graders.grader.web_controller.get_grader_name_from_cc()
                     graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
                     print("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, popUp_locale))
                 else:

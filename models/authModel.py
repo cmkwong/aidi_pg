@@ -8,7 +8,7 @@ def get_usrName_from_graderId(usr_id):
 
 def get_grader_access_level(graders):
     try:
-        usr_id = graders.web_controller.get_grader_id()
+        usr_id = graders.web_controller.get_grader_id_from_cc()
     except:
         return None
     for info in config.graders_info:
@@ -17,7 +17,7 @@ def get_grader_access_level(graders):
     return None
 
 def get_grader_tgToken(graders):
-    usr_id = graders.web_controller.get_grader_id()
+    usr_id = graders.web_controller.get_grader_id_from_cc()
     for info in config.graders_info:
         if usr_id == info["_id"]:
             return info["token"]

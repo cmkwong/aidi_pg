@@ -7,32 +7,28 @@ from views.prints import *
 from models import dbModel
 import config
 
-db_name = "cmk_testing"
-
 def print_S(string, allowed=True):
     if allowed:
         print(string)
 
 class Database:
     def __init__(self):
-        self.URI = None
-        self.login = None
-        self.pw = None
+        self.db_name = "cmk_testing"
         self.update_db_config()
 
-    def update_db_config(self, login="common_user", pw="!23456Qwerty"):
-        self.login = login
-        self.pw = pw
-        self.URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (
-        self.login, self.pw, db_name)
-        self.client = pymongo.MongoClient(self.URI)
-        self.db = self.client[db_name]
+    def update_db_config(self, login="reader", pw="s23456s"):
+        URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (login, pw, self.db_name)
+        self.client = pymongo.MongoClient(URI)
+        self.db = self.client[self.db_name]
 
     def grader_id_to_login_info(self, grader_id):
-        db_filter = {
+        rule_filter = {
             "_id": grader_id
         }
-        return self.db["graders"].find_one(db_filter)["login"], self.db["graders"].find_one(db_filter)["pw"]
+        login_filter = {
+            "role": self.db["graders"].find_one(rule_filter)["role"]
+        }
+        return self.db["db_login"].find_one(login_filter)["login"], self.db["db_login"].find_one(login_filter)["pw"]
 
     def query_insert(self, project_type, project_id, project_locale, text, web_controller):
 

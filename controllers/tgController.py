@@ -259,7 +259,7 @@ class Telegram_Bot:
 
         def check_conflict(message):
             project_id = message.text
-            usr_id = graders.web_controller.get_grader_id()
+            usr_id = graders.web_controller.get_grader_id_from_cc()
             conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg,print_allowed=True)
             if conflict:
                 print_conflict(conflict, self)
@@ -272,7 +272,7 @@ class Telegram_Bot:
                 if popUp_locale:
                     # get the project info and grader name
                     project_id = graders.grader.web_controller.get_projectId_from_url()
-                    grader_name = graders.grader.web_controller.get_grader_name()
+                    grader_name = graders.grader.web_controller.get_grader_name_from_cc()
                     graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
                     self.bot.send_message(message.chat.id, "{}({})\nError Page Sent.".format(project_id, popUp_locale))
                 else:
