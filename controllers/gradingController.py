@@ -88,13 +88,6 @@ class Graders:
             # type = config.projects_info[project_index]["type"]
             link = config.projects_info[project_index]["link"]
 
-        # if new_grader:
-        #     # create new grader
-        #     self.grader = base_grader(self.web_controller, self.db_controller, self.version)
-
-        # # set the project type
-        # self.grader.project_type = type
-
         # open the required project link
         self.grader.web_controller.open_project_link(link)
         print_at("Opening the project ... ", self.grader.tg)
@@ -103,27 +96,6 @@ class Graders:
 
         # setting previous project index for highlight previous project
         self.prev_project_index = project_index
-
-        # situations depend different project type
-        # run the TOKEN program immediately
-        # if type == "token":
-        #     if self.grader.tg is None:
-        #         print("GUI program running....")
-        #         self.grader.token_GUI_execute()
-        #     else:
-        #         print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
-        #         return False
-        #
-        # # run classify need extra info provided
-        # elif type == "classify":
-        #     if self.grader.tg is None:
-        #         self.extra_preAction = True
-        #     else:
-        #         print_at("That is not proper project in telegram\nSet up project failed", self.grader.tg)
-        #         return False
-        #
-        # elif type == "sbs":
-        #     self.extra_preAction = True
 
         return True
 
