@@ -80,8 +80,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level_from_cc(graders)
-                if level == 's' or level == 'a':
+                if graders.grader.grader_level >= 2:
                     gradingController.set_auto_mode(graders)
 
                     # auto: loop finding, print, if not found, showing next query
@@ -100,8 +99,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level_from_cc(graders)
-                if level == 's':
+                if graders.grader.grader_level >= 2:
                     self.auto_user = True
                     gradingController.set_full_auto_mode(graders)
                     self.bot.send_message(self.chat_id, "Full auto activated, time delay after found:" + str(graders.grader.time_delay))
@@ -116,8 +114,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level_from_cc(graders)
-                if level == 's':
+                if graders.grader.grader_level >= 2:
                     try:
                         graders.grader.project_setup()
                         query_text = infoModel.get_query_text(graders.grader.project_type, self, graders.grader.web_controller, print_allowed=True)
@@ -252,8 +249,7 @@ class Telegram_Bot:
             if self.tg_available == False:
                 self.bot.send_message(message.chat.id, "Please type /s first")
             else:
-                level = authModel.get_grader_access_level_from_cc(graders)
-                if level == 's':
+                if graders.grader.grader_level >= 2:
                     msg = self.bot.reply_to(message, "Enter Project ID ")
                     self.bot.register_next_step_handler(msg, check_conflict)
 

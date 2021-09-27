@@ -6,7 +6,7 @@ def get_usrName_from_graderId(usr_id):
         if usr_id == info["_id"]:
             return info["name"]
 
-def get_grader_access_level_from_cc(graders):
+def get_grader_access_level_from_cc(graders): # checking command is permission to use
     try:
         usr_id = graders.web_controller.get_grader_id_from_cc()
     except:
