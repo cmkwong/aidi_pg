@@ -284,6 +284,10 @@ def control_command_check(graders, ans):
                     print("{}: {}".format(key, value))
                 return command_checked
 
+            elif (ans == "-listen"):
+                graders.grader.web_controller.listen_next_button()
+                return command_checked
+
         print("Invalid Command")
         return command_checked  # avoid to go further in the ans parser if user type command wrongly
     else:

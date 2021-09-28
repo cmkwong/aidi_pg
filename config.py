@@ -135,6 +135,75 @@ SCROLL_TO_VIEW_COMMAND = {
     "sbs": """document.querySelector('.utterance')?.scrollIntoView();"""
 }
 
+LISTEN_ANS_COMMAND = {
+    'standard': """
+        let _standard_getting_ans_function = () => {
+          [1, 2, 3, 4, 5].forEach((el) => {
+            if (
+              document.getElementById(`result${el}_validationresult${el}_inappropriate`)
+                ?.checked
+            ) {
+              _ans[el - 1] = "i";
+              return;
+            }
+            if (
+              document.getElementById(
+                `result${el}_validationresult${el}_wrong_language`
+              )?.checked
+            ) {
+              _ans[el - 1] = "l";
+              return;
+            }
+            if (
+              document.getElementById(
+                `result${el}_validationresult${el}_cannot_be_judged`
+              )?.checked
+            ) {
+              _ans[el - 1] = "x";
+              return;
+            }
+            if (document.getElementById(`result${el}_relevanceexcellent`)?.checked) {
+              _ans[el - 1] = "e";
+              return;
+            }
+            if (document.getElementById(`result${el}_relevancegood`)?.checked) {
+              _ans[el - 1] = "g";
+              return;
+            }
+            if (document.getElementById(`result${el}_relevancefair`)?.checked) {
+              _ans[el - 1] = "f";
+              return;
+            }
+            if (document.getElementById(`result${el}_relevancebad`)?.checked) {
+              _ans[el - 1] = "b";
+              return;
+            }
+          });
+          console.log(_ans);
+          const ans_str = _ans.join("");
+          console.log(ans_str);
+          return ans_str;
+        };
+        let _ans = ["", "", "", "", ""];
+        let _next_el;
+        let ans_str;
+        let _next_button_interval = setInterval(() => {
+          if (document.querySelector("button.forward-btn")) {
+            _next_el = document.querySelector("button.forward-btn");
+            ans_str = _next_el.addEventListener(
+              "click",
+              _standard_getting_ans_function
+            );
+            clearInterval(_next_button_interval);
+          }
+        }, 10);
+        return ans_str;
+    """,
+    "test": """
+        alert('hi');
+    """
+}
+
 help_command = {
 
     "spot12/saf/eval3": {

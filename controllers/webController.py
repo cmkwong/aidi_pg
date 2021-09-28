@@ -1,4 +1,4 @@
-import selenium
+import asyncio
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -383,6 +383,10 @@ class Web:
         textarea.clear()
         textarea.send_keys(text)
         return True
+
+    def listen_next_button(self):
+        ans_str = self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': config.LISTEN_ANS_COMMAND['standard']})
+        print(ans_str)
 
     def quite_driver(self):
         self.browser.quit()
