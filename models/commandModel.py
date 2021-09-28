@@ -39,7 +39,6 @@ def control_command_check(checker, ans):
             project_list = []
             try:
                 project_list = checker.get_projectList_from_txt()
-                checker.print_projectList_confirm(project_list)
             except:
                 print("Cannot get the project list")
             checker.print_projectList_confirm(project_list)
