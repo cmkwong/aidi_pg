@@ -232,18 +232,19 @@ help_command = {
         "-txt": "print the summary of report(Disabled)"
     },
     "sbs": {
-        "a": "\n  right is better\n  type [SPACE] then write comment\n  number of 'a' means the how much of better, maximun is 3 times",
-        "d": "\n  left is better\n  type [SPACE] then write comment\n  number of 'd' means the how much of better, maximun is 3 times",
-        "w": "\n  about the same\n  type [SPACE] then write comment",
+        "a": "\n  left is better\n  then [SPACE] to write comment\n  number of 'a' means how much better, maximun is 3 times",
+        "d": "\n  right is better\n  then [SPACE] to write comment\n  number of 'd' means how much better, maximun is 3 times",
+        "w": "\n  about the same\n  then [SPACE] to write comment",
         "s": "\n  They are identical",
         "1": "I need more context on this request (e.g., previous request)",
         "2": "The request was gibberish or incomplete",
         "3": "Siri's response was missing or had display error",
         "4": "Some other reason (fill out comment box)\n  type [SPACE] then write comment",
-        "example A": "aaa Right is good because ... ",
-        "example B": "dd Left is good because ... ",
-        "example C": "s About the same because ... ",
+        "example A": "aaa Left is much better because ... ",
+        "example B": "dd Right is better because ... ",
+        "example C": "w They are about the same because ... ",
         "example D": "4 They are inappropriate ... ",
+        "example E": "s",
     }
 }
 
