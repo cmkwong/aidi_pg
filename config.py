@@ -229,9 +229,11 @@ help_command = {
         "-alarm": "sound on",
         "-nalarm": "sound off",
         "-report/-re": "access the report page",
-        "-txt": "print the summary of report(Disabled)"
+        "-text": "print the summary of report"
     },
     "sbs": {
+        "`": "Web Search",
+        "!": "Close Tabs",
         "a": "\n  left is better\n  then [SPACE] to write comment\n  number of 'a' means how much better, maximun is 3 times",
         "d": "\n  right is better\n  then [SPACE] to write comment\n  number of 'd' means how much better, maximun is 3 times",
         "w": "\n  about the same\n  then [SPACE] to write comment",
@@ -239,7 +241,7 @@ help_command = {
         "1": "I need more context on this request (e.g., previous request)",
         "2": "The request was gibberish or incomplete",
         "3": "Siri's response was missing or had display error",
-        "4": "Some other reason (fill out comment box)\n  type [SPACE] then write comment",
+        "4": "Some other reason (fill out comment box)\n  then [SPACE] to write comment",
         "example A": "aaa Left is much better because ... ",
         "example B": "dd Right is better because ... ",
         "example C": "w They are about the same because ... ",
