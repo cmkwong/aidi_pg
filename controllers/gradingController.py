@@ -137,7 +137,6 @@ class base_grader:
         self.web_controller = web_controller
         self.db_controller = db_controller
         self.grader_action_count = 0    # counting the number of grader action took
-        self._version = version         # program version that will checked in every user gradings
         self.query_link = None
         self.query_text = None
         self.p_query_text = None
@@ -156,6 +155,10 @@ class base_grader:
         self.view = False               # print grader answer
         self.full_auto = False
         self.project_code = {}          # only used if project_type=standard. Otherwise, it is special project type, eg token
+        # check grader available
+        self._version = version  # program version that will checked in every user gradings
+        self.print_due_data_alert = False # for print the alert to remind payment
+        self.due_hour_before = 36 # in hours
         # sound alarm
         self.alarm = True
         # telegram tg
@@ -178,7 +181,14 @@ class base_grader:
             if self._version != self.db_controller.get_most_updated_version():
                 raise Exception("Outdated Version, re-open program.")
             # check payment
-            if not authModel.paid_user(self.grader_id, self.db_controller):
+            timeLeft_hour = authModel.get_due_hour_left(self.grader_id, self.db_controller)
+            # payment alert for on-list payment user
+            if timeLeft_hour != 0 and timeLeft_hour < self.due_hour_before:
+                self.print_due_data_alert = True
+            else:
+                self.print_due_data_alert = False
+            # denied the operation for unauthorized user
+            if timeLeft_hour <= 0:
                 print_at("Permission denied or try again later", self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False

@@ -23,13 +23,13 @@ def get_grader_tgToken_from_cc(graders):
             return info["token"]
     return None
 
-def paid_user(grader_id, db_controller):
+def get_due_hour_left(grader_id, db_controller):
     try:
         usr_name = get_usrName_from_graderId(grader_id)
         expired_date = db_controller.get_expired_date(usr_name)
         # compare the expired date and current time
-        if (datetime.strptime(expired_date, "%Y-%m-%d %H:%M").timestamp() - datetime.now().timestamp() < 0):
-            return False
-        return True
+        timeLeft_hour = (datetime.strptime(expired_date, "%Y-%m-%d %H:%M").timestamp() - datetime.now().timestamp()) / 60 / 60
+        return timeLeft_hour
+    # cannot find the name on payment list, return 0
     except:
-        return False
+        return 0
