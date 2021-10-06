@@ -19,7 +19,6 @@ def enter(graders, command):
             graders.grader.web_controller.scrollIntoView(graders.grader.project_type)
 
     terminal.activate()             # back to terminal shell for input
-    if graders.grader.print_due_data_alert: print_due_date_alert()
     user_input = input(placeholder) # waiting user input
 
     command = commandModel.control_command_check(graders, user_input)

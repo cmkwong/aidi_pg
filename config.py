@@ -132,7 +132,20 @@ INSERT_COMMENT_COMMAND = {
 }
 
 SCROLL_TO_VIEW_COMMAND = {
-    "sbs": """document.querySelector('.utterance')?.scrollIntoView();"""
+    "sbs": """
+        let timeWas = new Date();
+        let timeoutMs = 2000;
+        const interval = setInterval(() => {
+          try {
+            if (document.querySelector(".utterance")) {
+              document.querySelector(".utterance").scrollIntoView();
+              clearInterval(interval);
+            } else if (new Date() - timeWas > timeoutMs) {
+              clearInterval(interval);
+            }
+          } catch {}
+        }, 50);
+    """
 }
 
 LISTEN_ANS_COMMAND = {

@@ -35,6 +35,3 @@ def print_status(grader):
     delays = str(grader.time_delay).strip()
     md = str(grader.manual_timer).strip()
     print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", grader.tg, grader.print_allowed)
-
-def print_due_date_alert():
-    print("\u001b[35;1mDue date alert.\u001b[0m")
