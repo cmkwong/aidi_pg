@@ -92,28 +92,8 @@ class Web:
         js_code = "window.document.querySelector('" + selector_string + "').click();"
         self.browser.execute_script(js_code)
 
-    def click_start_project(self, project_index):
-        check_txt = """
-            var start_txt = document.querySelector("#start").innerText;
-            return start_txt
-        """
-        start_txt = None
-        refer_time = time.time()
-        while not start_txt:
-            try:
-                if (time.time() - refer_time) > 10:
-                    return False
-                start_txt = self.browser.execute_script(check_txt)
-                time.sleep(0.5)
-            except:
-                continue # continue looping
-        js_code = """
-                    document.querySelector('.selection').querySelector('.menu').querySelectorAll('div').forEach(el => {
-                        if (el.dataset.value === '%s') el.click();
-                    })
-                    document.querySelector("#start").click();
-                """
-        js_code = js_code % config.projects_info[project_index]["location"]
+    def click_start_project(self, project_index, timeout=5):
+        js_code = config.CLICK_START_PRJ_COMMAND % (timeout * 1000, config.projects_info[project_index]["location"])
         self.browser.execute_script(js_code)
 
     def flash_web_search(self, project_type):

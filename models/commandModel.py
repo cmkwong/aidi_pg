@@ -210,10 +210,20 @@ def control_command_check(graders, ans):
                 print("Full auto de-activated")
                 return command_checked
 
+            elif (ans == "-timeout"):
+                print("Please enter the number: ")
+                done = inputs.num_input()
+                if (done == None):
+                    print("Invalid input.")
+                else:
+                    print("Successful")
+                    graders.grader.info_timeout = done
+                return command_checked
+
             elif (ans == "-dist"):
                 try:
                     graders.grader.project_setup()
-                    query_text = infoModel.get_query_text(graders.grader.project_type, graders.grader.tg, graders.grader.web_controller, print_allowed=True)
+                    query_text = graders.grader.get_query_text()
                     Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                             graders.grader.project_locale,
                                                                             query_text,

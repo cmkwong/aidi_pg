@@ -1,44 +1,41 @@
-import time
-import config
 from models import gradingModel
-from views.prints import *
 
-def get_query_text(project_type, tg, web_controller, print_allowed, filter_query=None, time_out=10):
-    query_text, filter_query = filter_query, filter_query
-    if project_type in config.GET_QUERY_TEXT_COMMAND.keys():
-        js_code = config.GET_QUERY_TEXT_COMMAND[project_type]
-    else:
-        print_at("project type in renew function not set yet", tg)
-        return None
-    refer_time = time.time()
-    print_at("Loading...", tg, print_allowed=print_allowed)
-    while (query_text==filter_query):
-        try:
-            if (time.time() - refer_time) > time_out:
-                print_at("Time Out", tg)
-                return None
-            query_text = web_controller.browser.execute_script(js_code)
-            time.sleep(0.5)
-        except:
-            continue # continue looping
-    return query_text
+# def get_query_text(project_type, tg, web_controller, print_allowed, filter_query=None, time_out=10):
+#     query_text, filter_query = filter_query, filter_query
+#     if project_type in config.GET_QUERY_TEXT_COMMAND.keys():
+#         js_code = config.GET_QUERY_TEXT_COMMAND[project_type]
+#     else:
+#         print_at("project type in renew function not set yet", tg)
+#         return None
+#     refer_time = time.time()
+#     print_at("Loading...", tg, print_allowed=print_allowed)
+#     while (query_text==filter_query):
+#         try:
+#             if (time.time() - refer_time) > time_out:
+#                 print_at("Time Out", tg)
+#                 return None
+#             query_text = web_controller.browser.execute_script(js_code)
+#             time.sleep(0.5)
+#         except:
+#             continue # continue looping
+#     return query_text
 
-def get_links_and_details(web_controller, project_type, time_out=10):
-    refer_time = time.time()
-    links = []
-    link_details = []
-    while (len(links) == 0):
-        try:
-            if (time.time() - refer_time) > time_out:
-                return None
-            # get links
-            links = web_controller.get_result_links(project_type)
-            # get links text
-            link_details = web_controller.get_link_details(project_type)
-            time.sleep(0.5)
-        except:
-            continue  # continue looping
-    return links, link_details
+# def get_links_and_details(web_controller, project_type, time_out=10):
+#     refer_time = time.time()
+#     links = []
+#     link_details = []
+#     while (len(links) == 0):
+#         try:
+#             if (time.time() - refer_time) > time_out:
+#                 return None
+#             # get links
+#             links = web_controller.get_result_links(project_type)
+#             # get links text
+#             link_details = web_controller.get_link_details(project_type)
+#             time.sleep(0.5)
+#         except:
+#             continue  # continue looping
+#     return links, link_details
 
 def get_project_code(web_controller):
     prj_code = {

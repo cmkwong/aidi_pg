@@ -26,8 +26,7 @@ class Telegram_Bot:
                     graders.grader.new_query = False
 
             if graders.auto_available is False:
-                self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text,
-                                                                      time_out=10)
+                self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text)
                 self.next_query_check()
                 # inside grader.py, need to set False for user input manually
                 graders.auto_mode = False
@@ -117,7 +116,7 @@ class Telegram_Bot:
                 if graders.grader.grader_level >= 2:
                     try:
                         graders.grader.project_setup()
-                        query_text = infoModel.get_query_text(graders.grader.project_type, self, graders.grader.web_controller, print_allowed=True)
+                        query_text = graders.grader.get_query_text()
                         Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                                 graders.grader.project_locale,
                                                                                 query_text,
@@ -162,7 +161,7 @@ class Telegram_Bot:
 
         @self.bot.message_handler(commands=['done'])
         def set_done_count(message):
-            msg = self.bot.reply_to(message, "Enter done count: ")
+            msg = self.bot.reply_to(message, "Enter number: ")
             self.bot.register_next_step_handler(msg, set_done)
 
         def set_done(message):
@@ -172,6 +171,19 @@ class Telegram_Bot:
                 return False
             graders.grader.query_done = int(done)
             self.bot.send_message(message.chat.id, "done count set")
+
+        @self.bot.message_handler(commands=['timeout'])
+        def set_timeout_count(message):
+            msg = self.bot.reply_to(message, "Enter number: ")
+            self.bot.register_next_step_handler(msg, set_timeout)
+
+        def set_timeout(message):
+            timeout = message.text
+            if not timeout.isdigit():
+                self.bot.send_message(message.chat.id, "This is not a number")
+                return False
+            graders.grader.info_timeout = int(timeout)
+            self.bot.send_message(message.chat.id, "timeout set")
 
         @self.bot.message_handler(commands=['view'])
         def view_grading(message):
@@ -350,7 +362,7 @@ class Telegram_Bot:
                         self.gradingFinish = False
                         self.old_query_text = self.current_query_text
                         if graders.auto_mode == False:
-                            self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text, time_out=10)
+                            self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text)
                             self.next_query_check()
                     if graders.auto_mode == False:
                         self.bot.send_message(self.chat_id, "Input:")

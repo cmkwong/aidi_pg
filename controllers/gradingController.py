@@ -80,7 +80,7 @@ class Graders:
         self.version = version
         self.grader = base_grader(self.web_controller, self.db_controller, self.version)
 
-    def open_project(self, project_index, ghost_menu=False):
+    def open_project(self, project_index, ghost_menu=False, timeout=5):
         if ghost_menu:
             # type = config.ghost_projects_info[project_index]["type"]
             link = config.ghost_projects_info[project_index]["link"]
@@ -92,7 +92,7 @@ class Graders:
         self.grader.web_controller.open_project_link(link)
         print_at("Opening the project ... ", self.grader.tg)
         # click required location
-        self.web_controller.click_start_project(project_index)
+        self.web_controller.click_start_project(project_index, timeout=timeout) # in seconds
 
         # setting previous project index for highlight previous project
         self.prev_project_index = project_index
@@ -155,6 +155,8 @@ class base_grader:
         self.view = False               # print grader answer
         self.full_auto = False
         self.project_code = {}          # only used if project_type=standard. Otherwise, it is special project type, eg token
+        # grading info
+        self.info_timeout = 10 # in second, finding query text / link_details after seconds timeout
         # check grader available
         self._version = version  # program version that will checked in every user gradings
         self.due_hour_before = 36 # in hours
@@ -196,7 +198,7 @@ class base_grader:
             return False
 
         # get query text
-        self.query_text = infoModel.get_query_text(self.project_type, self.tg, self.web_controller, self.print_allowed)
+        self.query_text = self.get_query_text()
         if self.query_text == None:
             return False
         self.query_link = self.web_controller.get_motherTag_url()
@@ -295,6 +297,43 @@ class base_grader:
             if not self.tg: print("Timer interrupted. Reopening...")
             self.timer_running = False
             return False
+
+    def get_query_text(self, filter_query=None):
+        query_text, filter_query = filter_query, filter_query
+        if self.project_type in config.GET_QUERY_TEXT_COMMAND.keys():
+            js_code = config.GET_QUERY_TEXT_COMMAND[self.project_type]
+        else:
+            print_at("project type in renew function not set yet", self.tg)
+            return None
+        refer_time = time.time()
+        print_at("Loading...", self.tg, print_allowed=self.print_allowed)
+        while (query_text == filter_query):
+            try:
+                if (time.time() - refer_time) > self.info_timeout:
+                    print_at("Time Out", self.tg)
+                    return None
+                query_text = self.web_controller.browser.execute_script(js_code)
+                time.sleep(0.5)
+            except:
+                continue  # continue looping
+        return query_text
+
+    def get_links_and_details(self):
+        refer_time = time.time()
+        links = []
+        link_details = []
+        while (len(links) == 0):
+            try:
+                if (time.time() - refer_time) > self.info_timeout:
+                    return None
+                # get links
+                links = self.web_controller.get_result_links(self.project_type)
+                # get links text
+                link_details = self.web_controller.get_link_details(self.project_type)
+                time.sleep(0.5)
+            except:
+                continue  # continue looping
+        return links, link_details
 
     def execute(self, ans):
         renew_ok = self.renew_status()

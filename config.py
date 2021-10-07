@@ -217,6 +217,31 @@ LISTEN_ANS_COMMAND = {
     """
 }
 
+CLICK_START_PRJ_COMMAND = """
+    let timeWas = new Date();
+    let timeoutMs = +'%s';
+    const interval = setInterval(() => {
+      try {
+        let locale_els = document
+          .querySelector(".selection")
+          .querySelector(".menu")
+          .querySelectorAll("div");
+        if (locale_els.length > 0) {
+          locale_els.forEach((el) => {
+            if (el.dataset.value === "%s") {
+              el.click();
+              document.querySelector("#start").click();
+              clearInterval(interval);
+            }
+          });
+        }
+        if (new Date() - timeWas > timeoutMs) {
+          clearInterval(interval);
+        }
+      } catch {}
+    }, 100);
+"""
+
 help_command = {
 
     "spot12/saf/eval3": {
