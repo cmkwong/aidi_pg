@@ -80,7 +80,7 @@ class Graders:
         self.version = version
         self.grader = base_grader(self.web_controller, self.db_controller, self.version)
 
-    def open_project(self, project_index, ghost_menu=False, timeout=5):
+    def open_project(self, project_index, ghost_menu=False):
         if ghost_menu:
             # type = config.ghost_projects_info[project_index]["type"]
             link = config.ghost_projects_info[project_index]["link"]
@@ -92,7 +92,7 @@ class Graders:
         self.grader.web_controller.open_project_link(link)
         print_at("Opening the project ... ", self.grader.tg)
         # click required location
-        self.web_controller.click_start_project(project_index, timeout=timeout) # in seconds
+        self.web_controller.click_start_project(project_index, timeout=self.grader.info_timeout) # in seconds
 
         # setting previous project index for highlight previous project
         self.prev_project_index = project_index
