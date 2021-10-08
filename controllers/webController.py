@@ -28,7 +28,7 @@ class Web:
         print("Updating Chrome driver ... ")
         osSystem.download_driver(executable_path)
 
-    def open_project_link(self, link):
+    def open_myLink(self, link):
         self.back_tag_one()
         self.browser.get(link)
         self.init_working_tag()
@@ -286,12 +286,23 @@ class Web:
         """
         self.browser.execute_script(js_code)
 
-    def zoom_browser(self, percentage):
+    def zoom_body_style(self, percentage):
         js_code = """
             document.body.style.zoom=%s;
         """
         js_code = js_code % percentage
         self.browser.execute_script(js_code)
+
+    def zoom_browser(self, percent):
+        try:
+            original_url = self.get_motherTag_url()
+            self.browser.get('chrome://settings/')
+            self.browser.execute_script('chrome.settingsPrivate.setDefaultZoom({});'.format(percent))
+            self.open_myLink(original_url)
+            return True
+        except:
+            print("cannot zoom browser")
+            return False
 
     def scrollIntoView(self, project_type):
         time.sleep(0.5)

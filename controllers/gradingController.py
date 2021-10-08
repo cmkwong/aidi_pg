@@ -89,7 +89,7 @@ class Graders:
             link = config.projects_info[project_index]["link"]
 
         # open the required project link
-        self.grader.web_controller.open_project_link(link)
+        self.grader.web_controller.open_myLink(link)
         print_at("Opening the project ... ", self.grader.tg)
         # click required location
         self.web_controller.click_start_project(project_index, timeout=self.grader.info_timeout) # in seconds
@@ -234,7 +234,7 @@ class base_grader:
     def reopen_current_browser(self):
         self.web_controller.open_chrome()
         self.web_controller.init_working_tag()
-        self.web_controller.open_project_link(self.query_link)
+        self.web_controller.open_myLink(self.query_link)
 
     def delay_timer(self, time_used=0, alarm=True):
         self.timer_running = True

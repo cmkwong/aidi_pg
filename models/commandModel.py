@@ -76,22 +76,22 @@ def control_command_check(graders, ans):
 
             elif (ans == "-done"):
                 print("Please enter the number: ")
-                done = inputs.num_input()
-                if (done == None):
+                num = inputs.num_input()
+                if (num == None):
                     print("Invalid input.")
                 else:
                     print("Successful")
-                    graders.grader.query_done = done
+                    graders.grader.query_done = num
                 return command_checked
 
             elif (ans == "-limit"):
                 print("Please enter the number: ")
-                limit = inputs.num_input()
-                if (limit == None):
+                num = inputs.num_input()
+                if (num == None):
                     print("Invalid input.")
                 else:
                     print("Successful")
-                    graders.grader.done_upper_limit = limit
+                    graders.grader.done_upper_limit = num
                 return command_checked
 
             elif (ans == "-alarm"):
@@ -102,6 +102,16 @@ def control_command_check(graders, ans):
             elif (ans == "-nalarm"):
                 graders.grader.alarm = False
                 print("Alarm sound de-activated.")
+                return command_checked
+
+            elif (ans == "-zoom"):
+                print("Please enter the number(0.5-1.5): ")
+                num = inputs.num_input()
+                if (num == None):
+                    print("Invalid input.")
+                else:
+                    if graders.grader.web_controller.zoom_browser(num):
+                        print("Successful")
                 return command_checked
 
             elif (ans == "-help"):
@@ -130,7 +140,7 @@ def control_command_check(graders, ans):
                 month, day = config.MONTHS[now.month], now.day
                 graders.web_controller.browser.get("https://crowdcollect2.siri.apple.com/reports/productivity")
                 graders.web_controller.check_current_report(month, day)
-                graders.web_controller.zoom_browser(0.7)
+                graders.web_controller.zoom_body_style(0.7)
                 return command_checked
 
             elif (ans == "-text"):
@@ -212,12 +222,12 @@ def control_command_check(graders, ans):
 
             elif (ans == "-timeout"):
                 print("Please enter the number: ")
-                done = inputs.num_input()
-                if (done == None):
+                num = inputs.num_input()
+                if (num == None):
                     print("Invalid input.")
                 else:
                     print("Successful")
-                    graders.grader.info_timeout = done
+                    graders.grader.info_timeout = num
                 return command_checked
 
             elif (ans == "-dist"):
