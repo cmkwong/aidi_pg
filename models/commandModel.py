@@ -76,7 +76,7 @@ def control_command_check(graders, ans):
 
             elif (ans == "-done"):
                 print("Please enter the number: ")
-                num = inputs.num_input()
+                num = inputs.int_input()
                 if (num == None):
                     print("Invalid input.")
                 else:
@@ -86,7 +86,7 @@ def control_command_check(graders, ans):
 
             elif (ans == "-limit"):
                 print("Please enter the number: ")
-                num = inputs.num_input()
+                num = inputs.int_input()
                 if (num == None):
                     print("Invalid input.")
                 else:
@@ -106,7 +106,7 @@ def control_command_check(graders, ans):
 
             elif (ans == "-zoom"):
                 print("Please enter the number(0.5-1.5): ")
-                num = inputs.num_input()
+                num = inputs.float_input()
                 if (num == None):
                     print("Invalid input.")
                 else:
@@ -222,7 +222,7 @@ def control_command_check(graders, ans):
 
             elif (ans == "-timeout"):
                 print("Please enter the number: ")
-                num = inputs.num_input()
+                num = inputs.int_input()
                 if (num == None):
                     print("Invalid input.")
                 else:

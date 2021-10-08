@@ -57,7 +57,7 @@ def resume_tg_manual_mode(graders):
 
 def time_delay_set(overtime_bypass=False):
     print("Enter the delay time(Second): ")
-    time_delay = inputs.num_input()
+    time_delay = inputs.int_input()
     if time_delay == None:
         return False
     elif not overtime_bypass:

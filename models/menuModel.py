@@ -29,7 +29,7 @@ def menu_choice(prev_project_index, ghost=False):
     project_index = None
     while(project_index==None):
         print(get_project_list_text(prev_project_index, projects_info))
-        project_index = num_input()
+        project_index = int_input()
         if project_index == None:
             continue
         if (project_index <= 0 or project_index > max_proj_num):
