@@ -294,6 +294,8 @@ class Web:
         self.browser.execute_script(js_code)
 
     def scrollIntoView(self, project_type):
+        element_present = EC.presence_of_element_located((By.CLASS_NAME, 'utterance'))
+        WebDriverWait(self.browser, 2).until(element_present)
         self.browser.execute_script(config.SCROLL_TO_VIEW_COMMAND[project_type])
 
     def insert_comment(self, project_type, text):

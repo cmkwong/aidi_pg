@@ -134,7 +134,7 @@ INSERT_COMMENT_COMMAND = {
 SCROLL_TO_VIEW_COMMAND = {
     "sbs": """
         let timeWas = new Date();
-        let timeoutMs = 2000;
+        let timeoutMs = 5000;
         const interval = setInterval(() => {
           try {
             if (document.querySelector(".utterance")) {
