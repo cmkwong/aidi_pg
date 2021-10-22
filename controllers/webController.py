@@ -178,12 +178,10 @@ class Web:
 
     def get_grader_name_from_cc(self):
         js_code = """
-                    var grader_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText;
+                    var grader_name = document.querySelector("#dd-menu__shared_component__-1-item0").innerText.trim().replace(' ', '');
                     return grader_name;
                 """
         grader_name = self.browser.execute_script(js_code)
-        grader_name = grader_name.replace('\n', '')
-        grader_name = grader_name.replace(' ', '')
         return grader_name
 
     def get_grader_id_from_cc(self):

@@ -106,7 +106,8 @@ GET_LINK_DETAILS_COMMAND = {
 
 GET_SEARCH_DATE_COMMAND = {
     "standard": """
-        return document.querySelector(".message.blue").querySelector("p").firstChild.textContent;
+        const re_date = /from (.+?)\./;
+        return document.querySelector(".message.blue").querySelector("p").firstChild.textContent.match(re_date)[1]
     """,
     "sbs": """
         return document.querySelector('.html-widget-wrapper').querySelector('p').textContent;
