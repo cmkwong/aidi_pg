@@ -435,7 +435,7 @@ class base_grader:
             return False
 
         # press next
-        self.web_controller.click_next_btn(self.project_type)
+        self.web_controller.click_next_btn(self.project_type, auto=True)
 
         # update status after finish a grading
         self.update_status()

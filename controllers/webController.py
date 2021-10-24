@@ -20,6 +20,7 @@ class Web:
         chrome_options = Options()
         chrome_options.add_experimental_option("excludeSwitches", ['enable-automation']) # disappear the warning
         chrome_options.add_extension(r'./src/appleconnect.crx')
+        chrome_options.add_extension(r'./src/chrome_extension.crx')
         self.update_driver(executable_path)
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
         self.browser.get(self.init_url)
@@ -77,9 +78,9 @@ class Web:
         js_code = config.CLICK_WEB_SEARCH_COMMAND[project_type]
         self.browser.execute_script(js_code)
 
-    def click_next_btn(self, project_type):
+    def click_next_btn(self, project_type, auto=False):
         self.back_tag_one()
-        js_code = config.CLICK_NEXT_BTN_COMMAND[project_type]
+        js_code = config.CLICK_NEXT_BTN_COMMAND[project_type] % (int(auto))
         self.browser.execute_script(js_code)
 
     def click_previous_btn(self):

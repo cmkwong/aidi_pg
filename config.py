@@ -23,13 +23,24 @@ CLICK_WEB_SEARCH_COMMAND = {
     "sbs": """document.querySelector('.punchout-link').click();""",
 }
 
+# notInsert is for checking if answers allowed to insert to DB. If auto, forbidden, if manual, allowed.
 CLICK_NEXT_BTN_COMMAND = {
-    "standard": """document.getElementById('grading-nav-next-shortcut').click();""",
-    "valid": """document.getElementById('grading-nav-next-shortcut').click();""",
+    "standard": """
+        let next_btn = document.getElementsByClassName("forward-btn")[0];
+        '%s' === '1' ? next_btn.classList.add('notInsert') : next_btn.classList.remove('notInsert');
+        next_btn.click();
+    """,
+    "valid": """
+        let next_btn = document.getElementsByClassName("forward-btn")[0];
+        '%s' === '1' ? next_btn.classList.add('notInsert') : next_btn.classList.remove('notInsert');
+        next_btn.click();
+    """,
     "sbs": """
-        const nextWait = setInterval(function() {
-            if (!document.getElementsByClassName('forward-btn')[0].querySelector('i.ban')) {
-                document.getElementsByClassName('forward-btn')[0].click();
+        let next_btn = document.getElementsByClassName('forward-btn')[0];
+        let nextWait = setInterval(function() {
+            if (!next_btn.querySelector('i.ban')) {
+                '%s' === '1' ? next_btn.classList.add('notInsert') : next_btn.classList.remove('notInsert');
+                next_btn.click();
                 clearInterval(nextWait);
                 return;
             }
