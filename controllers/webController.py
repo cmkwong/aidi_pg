@@ -361,7 +361,7 @@ class Web:
         popUp_js_code = """
             try {
               const message = document.querySelector("#swal2-content").innerText;
-              const pos = document.querySelector("#swal2-content").innerText.search('_');
+              const pos = message.search('_');
               const locale = message.substring(pos-2,pos+3);
               if (locale) {
                 return locale;
