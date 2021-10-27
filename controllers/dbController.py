@@ -1,6 +1,6 @@
 import pymongo
 from datetime import datetime
-import pytz
+import requests
 import time
 import collections
 from views.prints import *
@@ -15,6 +15,7 @@ class Database:
     def __init__(self):
         self.db_name = "cmk_testing"
         self.update_db_config()
+        self.mainUrl = "https://aidi-work-helper.herokuapp.com/"
 
     def update_db_config(self, login="reader", pw="s23456s"):
         URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (login, pw, self.db_name)
@@ -95,50 +96,42 @@ class Database:
         }}
         self.db["answers"].update_one(target, new_dict)
 
-    def project_finish_update(self, project_id, locale, grader_name):
-        target = {
+    def project_finish_update(self, project_id, locale, grader_name, tg):
+        url = self.mainUrl + 'api/v1/project/status'
+        data = {
             "project_id": project_id,
-            "locale": locale
+            "locale": locale,
+            "grader": grader_name,
         }
-        count = self.db["project_status"].count_documents(target)
-        # if no such project_id, create new one
-        if count is 0:
-            my_dict = {
-                'project_id': project_id,
-                "locale": locale,
-                'status': {
-                    grader_name: datetime.utcnow().timestamp()
-                }
-            }
-            self.db["project_status"].insert_one(my_dict)
-        # if existed, update the timestamp
-        elif count > 0:
-            new_dict = {"$set": {
-                'status.{}'.format(grader_name): datetime.utcnow().timestamp()
-            }}
-            self.db["project_status"].update_one(target, new_dict)
+        res = requests.post(url, data)
+        if res.status_code == 200:
+            print_at("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, locale), tg)
+        else:
+            print_at("No Finished Pop-up.", tg)
 
     def create_grader_table_by_id(self):
         grader_by_id = {}
-        graders = self.db["graders"].find({})
-        for grader in graders:
-            grader_by_id[grader['_id']] = {}
-            for key, value in grader.items():
-                if key != '_id':
-                    grader_by_id[grader['_id']][key] = value
+        for dic in config.graders_info:
+            # defined the sub-dictionary first with _id
+            grader_id = dic['grader_id']
+            grader_by_id[grader_id] = {}
+            # then assign the key and value into sub-dictionary
+            for key, value in dic.items():
+                if key != 'grader_id':
+                    grader_by_id[grader_id][key] = value
         return grader_by_id
 
     def _find_most_reliable(self, ans_infos):
         reliability = 0
-        required_ans = None
+        required_ans_info = None
         for i, ans_info in enumerate(ans_infos):
-            grader_number = ans_info['grader']
+            grader_name = ans_info['grader']
             for grader_info in config.graders_info:
-                if grader_info["_id"] == grader_number:
+                if grader_info["name"] == grader_name:
                     if grader_info["reliability"] > reliability:
                         reliability = grader_info["reliability"]
-                        required_ans = ans_info
-        return required_ans
+                        required_ans_info = ans_info
+        return required_ans_info
 
     def _ans_dist_update(self, ans_dict, ans):
         for i, a in enumerate(ans):
@@ -186,103 +179,162 @@ class Database:
         Answer.detail = self._renew_grader_list(grader_by_id)
         Answer.ans_dist = {}
         for ans_info in ans_infos:
-            grader_name = grader_by_id[ans_info['grader']]["name"]
+            grader_name = ans_info['grader'] # get the grader name
             try:  # for have query but no answer
-                ans, time = ans_info['grader_answer'], ans_info['time']
+                ans, time = ans_info['grader_ans'], ans_info['time']
             except:
                 ans, time = '', ''
             Answer.detail[grader_name]['ans'] = ans
             Answer.detail[grader_name]['time'] = time
             Answer.ans_dist = self._ans_dist_update(Answer.ans_dist, ans)
-            if not Answer.link: Answer.link = ans_info["query_link"]
 
         # find the most popular ans from distribution
         Answer.ans = self._cat_most_popular_ans(Answer.ans_dist)
         return Answer
 
-    def _find_all_ans_by_query_id(self, query_id):
-        db_filter = {
-            "query_id": query_id
-        }
-        # check if have answer for this query id
-        if not self.db["answers"].count_documents(db_filter):
-            return None
-        ans_infos = self.db["answers"].find(db_filter)  # find all ans cursor
-        return ans_infos
+    # def _find_all_ans_by_query_id(self, query_id):
+    #     db_filter = {
+    #         "query_id": query_id
+    #     }
+    #     # check if have answer for this query id
+    #     if not self.db["answers"].count_documents(db_filter):
+    #         return None
+    #     ans_infos = self.db["answers"].find(db_filter)  # find all ans cursor
+    #     return ans_infos
 
-    def _find_ans_infos(self, project_id, project_locale, text, tg, print_allowed=True):
-        db_filter = {
-            "project": project_id,
-            "locale": project_locale,
-            "text": text
-        }
-        query = self.db["querys"].find_one(db_filter)
-        if (query):
-            query_id = query["_id"]
-        else:
-            print_at("No such query.", tg, print_allowed)
-            return None
-        ans_infos = self._find_all_ans_by_query_id(query_id)
-        return ans_infos
+    # def _find_ans_infos(self, project_id, project_locale, text, tg, print_allowed=True):
+    #     db_filter = {
+    #         "project": project_id,
+    #         "locale": project_locale,
+    #         "text": text
+    #     }
+    #     query = self.db["querys"].find_one(db_filter)
+    #     if (query):
+    #         query_id = query["_id"]
+    #     else:
+    #         print_at("No such query.", tg, print_allowed)
+    #         return None
+    #     ans_infos = self._find_all_ans_by_query_id(query_id)
+    #     return ans_infos
 
     def find_one_ans(self, project_id, project_locale, text, tg=None, print_allowed=True):
 
+        url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_text={}".format(project_id, project_locale, text)
         Answer = dbModel.format_Answer()
         # Find ans_infos that store all the query related to that project id and text
-        ans_infos = self._find_ans_infos(project_id, project_locale, text, tg, print_allowed=print_allowed)
-        if not ans_infos:
+        res = requests.get(url)
+        if res.status_code != 200:
             return None
         try:
+            ans_infos = res.json()['data']
             ans_info = self._find_most_reliable(ans_infos)
-            Answer.ans = ans_info["grader_answer"]
+            Answer.ans = ans_info["grader_ans"]
         except (KeyError, TypeError):
             print_at("Reliable Answer Error.", tg, print_allowed)
             return None
-        grader_id = ans_info["grader"]
-        grader = self.db["graders"].find_one({"_id": grader_id})
-        if (grader):
-            Answer.grader_name = grader["name"]
+        Answer.grader_name = ans_info["grader"]
         return Answer
 
+    # def find_one_ans_discard(self, project_id, project_locale, text, tg=None, print_allowed=True):
+    #
+    #     Answer = dbModel.format_Answer()
+    #     # Find ans_infos that store all the query related to that project id and text
+    #     ans_infos = self._find_ans_infos(project_id, project_locale, text, tg, print_allowed=print_allowed)
+    #     if not ans_infos:
+    #         return None
+    #     try:
+    #         ans_info = self._find_most_reliable(ans_infos)
+    #         Answer.ans = ans_info["grader_answer"]
+    #     except (KeyError, TypeError):
+    #         print_at("Reliable Answer Error.", tg, print_allowed)
+    #         return None
+    #     grader_id = ans_info["grader"]
+    #     grader = self.db["graders"].find_one({"_id": grader_id})
+    #     if (grader):
+    #         Answer.grader_name = grader["name"]
+    #     return Answer
+
     def find_most_popular(self, project_id, project_locale, text, tg=None, print_allowed=True):
+        url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_text={}".format(project_id, project_locale, text)
         # Find ans_infos that store all the query related to that project id and text
-        ans_infos = self._find_ans_infos(project_id, project_locale, text, tg, print_allowed=print_allowed)
-        if not ans_infos:
+        res = requests.get(url)
+        if res.status_code != 200:
             return None
+        ans_infos = res.json()['data']
         grader_by_id = self.create_grader_table_by_id()
         Answer = self._loop_for_most_popular_from_ans_infos(ans_infos, grader_by_id)
         return Answer
 
-    def find_conflict(self, project_id, usr_id, tg, print_allowed=True):
+    # def find_most_popular_discard(self, project_id, project_locale, text, tg=None, print_allowed=True):
+    #     # Find ans_infos that store all the query related to that project id and text
+    #     ans_infos = self._find_ans_infos(project_id, project_locale, text, tg, print_allowed=print_allowed)
+    #     if not ans_infos:
+    #         return None
+    #     grader_by_id = self.create_grader_table_by_id()
+    #     Answer = self._loop_for_most_popular_from_ans_infos(ans_infos, grader_by_id)
+    #     return Answer
+
+    def _get_ans_infos_by_queryId(self, raw_ans_infos, query_ids):
+        """
+        :param raw_ans_infos: [answer documents]
+        :param query_ids: [id]
+        :return: {query_id: ans_infos}
+        """
+        ans_infos_by_queryId = {}
+        for query_id in query_ids:
+            ans_infos_by_queryId[query_id] = []
+            for ans_info in raw_ans_infos:
+                if ans_info["query_id"] == query_id:
+                    ans_infos_by_queryId[query_id].append(ans_info)
+        return ans_infos_by_queryId
+
+    def _get_query_ids_from_query_datas(self, query_datas):
+        """
+        :param query_datas: [query_datas]
+        :return: [query_id]
+        """
+        query_ids = []
+        for query_data in query_datas:
+            query_ids.append(query_data['_id'])
+        return query_ids
+
+    def find_conflict(self, project_id, grader_name, tg, max_queries=50, print_allowed=True):
         conflict = collections.namedtuple("conflict",
                                           ['total', 'texts', 'anss', 'usr_anss', 'details', 'ans_dists', 'links'])
         conflict.total, conflict.texts, conflict.anss, conflict.usr_anss, conflict.details, conflict.ans_dists, conflict.links = 0, [], [], [], [], [], []
 
-        query_filter = {"project": project_id}
-        query_datas = self.db["querys"].find(query_filter)
-        grader_by_id = self.create_grader_table_by_id()
-        if query_datas.count() == 0:
+        # find the query_datas
+        url = self.mainUrl + "api/v1/query?project_id={}&max={}".format(project_id, max_queries)
+        res = requests.get(url)
+        if res.status_code != 200:
             print_at("No Such project", tg, print_allowed)
             return None
-        else:
-            for query_data in query_datas:
-                text = query_data["text"]
-                ans_infos = self._find_all_ans_by_query_id(query_data['_id'])
-                Answer = self._loop_for_most_popular_from_ans_infos(ans_infos, grader_by_id)
-                grader_name = self.db["graders"].find_one({"_id": usr_id})["name"]
-                grader_ans = Answer.detail[grader_name]['ans']
-                if grader_ans != Answer.ans and grader_ans != '':
-                    conflict.texts.append(text)
-                    conflict.anss.append(Answer.ans)
-                    conflict.usr_anss.append(grader_ans)
-                    conflict.details.append(Answer.detail)
-                    conflict.ans_dists.append(Answer.ans_dist)
-                    conflict.links.append(Answer.link)
-                    conflict.total += 1
-            if conflict.total == 0:
-                print_at("No Conflict Detected", tg, print_allowed)
-                return None
-            return conflict
+        query_datas = res.json()['data']
+        query_ids = self._get_query_ids_from_query_datas(query_datas)
+
+        # get many answer from many query ids (raw ans infos)
+        url = self.mainUrl + "api/v1/query/manyAnswerManyQueryId"
+        raw_ans_infos = requests.post(url=url, data={"query_ids": query_ids}).json()['data']
+        ans_infos_by_queryId = self._get_ans_infos_by_queryId(raw_ans_infos, query_ids) # reformat the (query_id: ans_info)
+
+        grader_by_id = self.create_grader_table_by_id()
+        for query_data in query_datas:
+            text = query_data["query_text"]
+            ans_infos = ans_infos_by_queryId[query_data['_id']]
+            Answer = self._loop_for_most_popular_from_ans_infos(ans_infos, grader_by_id)
+            grader_ans = Answer.detail[grader_name]['ans']
+            if grader_ans != Answer.ans and grader_ans != '':
+                conflict.texts.append(text)
+                conflict.anss.append(Answer.ans)
+                conflict.usr_anss.append(grader_ans)
+                conflict.details.append(Answer.detail)
+                conflict.ans_dists.append(Answer.ans_dist)
+                conflict.links.append(query_data["query_link"])
+                conflict.total += 1
+        if conflict.total == 0:
+            print_at("No Conflict Detected", tg, print_allowed)
+            return None
+        return conflict
 
     def get_expired_date(self, usr_name):
         db_filter = {
@@ -293,18 +345,30 @@ class Database:
     def get_most_updated_version(self):
         return self.db["versions_control"].find_one()['clients']
 
+    def get_graders_info(self):
+        url = self.mainUrl + "api/v1/user?locale=hk"
+        graders_info = requests.get(url).json()['data']
+        config.graders_info = graders_info
+
+    def get_project_list(self):
+        url = self.mainUrl + "api/v1/project/list"
+        projects_info = requests.get(url).json()['data']
+        config.projects_info = projects_info
+
+    def get_ghost_project_list(self):
+        url = self.mainUrl + "api/v1/project/ghostList"
+        ghost_projects_info = requests.get(url).json()['data']
+        config.ghost_projects_info = ghost_projects_info
+
     def update_local_config_from_db(self):
         # clean the data
         config.graders_info = []
         config.projects_info = []
         config.ghost_projects_info = []
 
-        # get from database both graders and projects
-        for grader in self.db["graders"].find({}):
-            config.graders_info.append(grader)
-
-        for project in self.db["projects"].find({}):
-            config.projects_info.append(project)
-
-        for project in self.db["ghost_projects"].find({}):
-            config.ghost_projects_info.append(project)
+        # get graders (from hk)
+        self.get_graders_info()
+        # get project list
+        self.get_project_list()
+        # get ghost project list
+        self.get_ghost_project_list()

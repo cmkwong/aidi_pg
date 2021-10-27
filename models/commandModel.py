@@ -32,7 +32,7 @@ def control_command_check(graders, ans):
                 return quit_program
 
             elif (ans == "-p"):
-                graders.grader.db_controller.update_local_config_from_db()
+                graders.grader.db_controller.get_project_list()
                 project_index = menuModel.menu_choice(graders.prev_project_index)
                 graders.open_project(project_index)
                 return command_checked
@@ -45,8 +45,7 @@ def control_command_check(graders, ans):
                         # get the project info and grader name
                         project_id = graders.grader.web_controller.get_projectId_from_url()
                         grader_name = graders.grader.web_controller.get_grader_name_from_cc()
-                        graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                        print("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, popUp_locale))
+                        graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name, graders.grader.tg)
                     else:
                         print("No Finished Pop-up.")
                 except:
@@ -272,15 +271,15 @@ def control_command_check(graders, ans):
 
             elif (ans == "-conflict"):
                 project_id = input("Input project ID: ")
-                usr_id = graders.web_controller.get_grader_id_from_cc()
-                conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg, print_allowed=True)
+                grader_name = graders.web_controller.get_grader_name_from_cc()
+                conflict = graders.grader.db_controller.find_conflict(project_id, grader_name, graders.grader.tg, print_allowed=True)
                 if conflict:
                     print_conflict(conflict, graders.grader.tg)
                 return command_checked
 
         if graders.grader.grader_level >= 3:
             if (ans == "-gp"):
-                graders.grader.db_controller.update_local_config_from_db()
+                graders.grader.db_controller.get_ghost_project_list()
                 project_index = menuModel.menu_choice(graders.prev_project_index, ghost=True)
                 graders.open_project(project_index, ghost_menu=True)
                 return command_checked

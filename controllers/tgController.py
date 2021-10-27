@@ -57,7 +57,7 @@ class Telegram_Bot:
         @self.bot.message_handler(commands=['p'])
         def select_project(message):
             self.chat_id = message.chat.id
-            graders.db_controller.update_local_config_from_db()
+            graders.db_controller.get_project_list()
             project_list_txt = menuModel.get_project_list_text(graders.prev_project_index, config.projects_info, tg=True)
             msg = self.bot.reply_to(message, project_list_txt + "\nEnter project Number: ")
             self.bot.register_next_step_handler(msg, choose_project)
@@ -267,8 +267,8 @@ class Telegram_Bot:
 
         def check_conflict(message):
             project_id = message.text
-            usr_id = graders.web_controller.get_grader_id_from_cc()
-            conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg,print_allowed=True)
+            grader_name = graders.web_controller.get_grader_name_from_cc()
+            conflict = graders.grader.db_controller.find_conflict(project_id, grader_name, graders.grader.tg,print_allowed=True)
             if conflict:
                 print_conflict(conflict, self)
 
@@ -281,8 +281,7 @@ class Telegram_Bot:
                     # get the project info and grader name
                     project_id = graders.grader.web_controller.get_projectId_from_url()
                     grader_name = graders.grader.web_controller.get_grader_name_from_cc()
-                    graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                    self.bot.send_message(message.chat.id, "{}({})\nError Page Sent.".format(project_id, popUp_locale))
+                    graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name, self)
                 else:
                     self.bot.send_message(message.chat.id, "No Finished Pop-up.")
             except:

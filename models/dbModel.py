@@ -9,8 +9,8 @@ def update_grader_info_from_cc(web_controller, db_controller):
 
 def format_Answer():
     Answer = collections.namedtuple("Answer", ['find_ok', 'ans', 'find_time_used',
-                                               'grader_name', 'ans_dist', 'detail', 'link'])
+                                               'grader_name', 'ans_dist', 'detail'])
     Answer.find_ok, Answer.ans, Answer.find_time_used, \
-    Answer.grader_name, Answer.ans_dist, Answer.detail, Answer.link \
-        = False, None, 0, "Unknown", None, None, None
+    Answer.grader_name, Answer.ans_dist, Answer.detail \
+        = False, None, 0, "Unknown", None, None
     return Answer
