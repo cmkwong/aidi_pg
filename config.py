@@ -56,7 +56,6 @@ GET_WEB_SEARCH_LINK_COMMAND = {
 
 GET_RESULT_LINKS_COMMAND = {
     "standard": """
-        function getResultLinks() {
           let all_parsecResult = [
             ...document
               .getElementsByClassName("iframe")[0]
@@ -70,7 +69,6 @@ GET_RESULT_LINKS_COMMAND = {
             resultLinkArray.push(link ? link : "NO LINK");
           });
           return resultLinkArray;
-        }
         """,
     "sbs": """
         const links = [];
