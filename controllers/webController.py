@@ -189,7 +189,7 @@ class Web:
         grader_name = self.get_grader_name_from_cc()
         for info in config.graders_info:
             if grader_name == info["name"]:
-                return info["_id"]
+                return info["grader_id"]
         return None
 
     def get_report_data(self):

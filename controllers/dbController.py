@@ -16,11 +16,21 @@ class Database:
         self.db_name = "cmk_testing"
         self.update_db_config()
         self.mainUrl = "https://aidi-work-helper.herokuapp.com/"
+        self.api_urls()
 
     def update_db_config(self, login="reader", pw="s23456s"):
         URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (login, pw, self.db_name)
         self.client = pymongo.MongoClient(URI)
         self.db = self.client[self.db_name]
+
+    def api_urls(self):
+        self.prj_finish_url = self.mainUrl + "api/v1/project/status"
+        self.find_many_ans_url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_text={}"
+        self.find_many_queries_from_project_id_url = self.mainUrl + "api/v1/query?project_id={}&max={}"
+        self.find_many_ans_from_many_queryId_url = self.mainUrl + "api/v1/query/manyAnswerManyQueryId"
+        self.get_graders_info_url = self.mainUrl + "api/v1/user?locale=hk"
+        self.get_project_list_url = self.mainUrl + "api/v1/project/list"
+        self.get_ghost_project_list_url = self.mainUrl + "api/v1/project/ghostList"
 
     def grader_id_to_login_info(self, grader_id):
         role_filter = {
@@ -97,13 +107,12 @@ class Database:
         self.db["answers"].update_one(target, new_dict)
 
     def project_finish_update(self, project_id, locale, grader_name, tg):
-        url = self.mainUrl + 'api/v1/project/status'
         data = {
             "project_id": project_id,
             "locale": locale,
             "grader": grader_name,
         }
-        res = requests.post(url, data)
+        res = requests.post(self.prj_finish_url, data)
         if res.status_code == 200:
             print_at("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, locale), tg)
         else:
@@ -218,11 +227,9 @@ class Database:
     #     return ans_infos
 
     def find_one_ans(self, project_id, project_locale, text, tg=None, print_allowed=True):
-
-        url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_text={}".format(project_id, project_locale, text)
         Answer = dbModel.format_Answer()
         # Find ans_infos that store all the query related to that project id and text
-        res = requests.get(url)
+        res = requests.get(self.find_many_ans_url.format(project_id, project_locale, text))
         if res.status_code != 200:
             return None
         try:
@@ -254,10 +261,9 @@ class Database:
     #         Answer.grader_name = grader["name"]
     #     return Answer
 
-    def find_most_popular(self, project_id, project_locale, text, tg=None, print_allowed=True):
-        url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_text={}".format(project_id, project_locale, text)
+    def find_most_popular(self, project_id, project_locale, text):
         # Find ans_infos that store all the query related to that project id and text
-        res = requests.get(url)
+        res = requests.get(self.find_many_ans_url.format(project_id, project_locale, text))
         if res.status_code != 200:
             return None
         ans_infos = res.json()['data']
@@ -304,8 +310,7 @@ class Database:
         conflict.total, conflict.texts, conflict.anss, conflict.usr_anss, conflict.details, conflict.ans_dists, conflict.links = 0, [], [], [], [], [], []
 
         # find the query_datas
-        url = self.mainUrl + "api/v1/query?project_id={}&max={}".format(project_id, max_queries)
-        res = requests.get(url)
+        res = requests.get(self.find_many_queries_from_project_id_url.format(project_id, max_queries))
         if res.status_code != 200:
             print_at("No Such project", tg, print_allowed)
             return None
@@ -313,8 +318,7 @@ class Database:
         query_ids = self._get_query_ids_from_query_datas(query_datas)
 
         # get many answer from many query ids (raw ans infos)
-        url = self.mainUrl + "api/v1/query/manyAnswerManyQueryId"
-        raw_ans_infos = requests.post(url=url, data={"query_ids": query_ids}).json()['data']
+        raw_ans_infos = requests.post(url=self.find_many_ans_from_many_queryId_url, data={"query_ids": query_ids}).json()['data']
         ans_infos_by_queryId = self._get_ans_infos_by_queryId(raw_ans_infos, query_ids) # reformat the (query_id: ans_info)
 
         grader_by_id = self.create_grader_table_by_id()
@@ -346,18 +350,15 @@ class Database:
         return self.db["versions_control"].find_one()['clients']
 
     def get_graders_info(self):
-        url = self.mainUrl + "api/v1/user?locale=hk"
-        graders_info = requests.get(url).json()['data']
+        graders_info = requests.get(self.get_graders_info_url).json()['data']
         config.graders_info = graders_info
 
     def get_project_list(self):
-        url = self.mainUrl + "api/v1/project/list"
-        projects_info = requests.get(url).json()['data']
+        projects_info = requests.get(self.get_project_list_url).json()['data']
         config.projects_info = projects_info
 
     def get_ghost_project_list(self):
-        url = self.mainUrl + "api/v1/project/ghostList"
-        ghost_projects_info = requests.get(url).json()['data']
+        ghost_projects_info = requests.get(self.get_ghost_project_list_url).json()['data']
         config.ghost_projects_info = ghost_projects_info
 
     def update_local_config_from_db(self):
