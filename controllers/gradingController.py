@@ -282,9 +282,9 @@ class base_grader:
                 time_interval = gradingModel.find_time_delay_level(self.find_time_delay)
                 if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                     if self.training:
-                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text, self.tg, print_allowed=False)
+                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text)
                     else:
-                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text, self.tg, print_allowed=False)
+                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text)
                     if Answer != None:
                         Answer.find_ok, Answer.find_time_used = True, self.find_time_delay - i
                         self.timer_running = False
@@ -368,7 +368,7 @@ class base_grader:
                 if not timer_ok:
                     return False
 
-            self.web_controller.click_next_btn(self.project_type)
+            # self.web_controller.click_next_btn(self.project_type)
 
             # update ans into db
             if self.project_type in config.UPDATE_DB_PROJS:
@@ -403,9 +403,9 @@ class base_grader:
         # not find delay
         elif not self.find_delay:
             if self.training:
-                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text, self.tg)
+                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text)
             else:
-                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text, self.tg)
+                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text)
 
         # if no Answer found, return false, auto_available will be false
         if (Answer == None):
@@ -435,7 +435,7 @@ class base_grader:
             return False
 
         # press next
-        self.web_controller.click_next_btn(self.project_type, auto=True)
+        # self.web_controller.click_next_btn(self.project_type, auto=True)
 
         # update status after finish a grading
         self.update_status()

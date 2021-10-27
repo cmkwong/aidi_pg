@@ -15,8 +15,7 @@ def control_command_check(graders, ans):
         return command_checked
 
     if ans[0] == '-':
-
-        # getting user level and update grader info
+        # ------------------------------getting user level and update grader info--------------------------------- #
         try:
             if graders.grader.grader_level == 0:
                 graders.grader.grader_level = authModel.get_grader_access_level_from_cc(graders)
@@ -26,6 +25,7 @@ def control_command_check(graders, ans):
         except:
             graders.grader.grader_level = 0
 
+        # ------------------------------Commands--------------------------------- #
         if graders.grader.grader_level >= 0:
 
             if (ans == "-q"):
@@ -235,8 +235,7 @@ def control_command_check(graders, ans):
                     query_text = graders.grader.get_query_text()
                     Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                             graders.grader.project_locale,
-                                                                            query_text,
-                                                                            graders.grader.tg, print_allowed=True)
+                                                                            query_text)
                     gradingController.print_popular_ans_detail(Answer, graders.grader.tg)
                 except:
                     print_at('Error of printing distribution', graders.grader.tg)

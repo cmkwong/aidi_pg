@@ -18,7 +18,7 @@ while (not (command == "quit")):
 
     if FIRST_TIME:
         # update the local info from remote database
-        db_controller.update_local_config_from_db()
+        db_controller.get_project_list()
         # ask user choose projects
         project_index = menuModel.menu_choice(graders.prev_project_index)
         graders.open_project(project_index)

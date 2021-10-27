@@ -31,6 +31,8 @@ class Database:
         self.get_graders_info_url = self.mainUrl + "api/v1/user?locale=hk"
         self.get_project_list_url = self.mainUrl + "api/v1/project/list"
         self.get_ghost_project_list_url = self.mainUrl + "api/v1/project/ghostList"
+        self.get_version_url = self.mainUrl + "api/v1/system/version"
+        self.get_expired_date_url = self.mainUrl + "api/v1/user/expired?grader={}"
 
     def grader_id_to_login_info(self, grader_id):
         role_filter = {
@@ -226,7 +228,7 @@ class Database:
     #     ans_infos = self._find_all_ans_by_query_id(query_id)
     #     return ans_infos
 
-    def find_one_ans(self, project_id, project_locale, text, tg=None, print_allowed=True):
+    def find_one_ans(self, project_id, project_locale, text):
         Answer = dbModel.format_Answer()
         # Find ans_infos that store all the query related to that project id and text
         res = requests.get(self.find_many_ans_url.format(project_id, project_locale, text))
@@ -237,7 +239,6 @@ class Database:
             ans_info = self._find_most_reliable(ans_infos)
             Answer.ans = ans_info["grader_ans"]
         except (KeyError, TypeError):
-            print_at("Reliable Answer Error.", tg, print_allowed)
             return None
         Answer.grader_name = ans_info["grader"]
         return Answer
@@ -341,13 +342,12 @@ class Database:
         return conflict
 
     def get_expired_date(self, usr_name):
-        db_filter = {
-            "name": usr_name
-        }
-        return self.db["payment"].find_one(db_filter)["expired"]
+        expired_date = requests.get(self.get_expired_date_url.format(usr_name)).json()['data']
+        return expired_date
 
     def get_most_updated_version(self):
-        return self.db["versions_control"].find_one()['clients']
+        version = requests.get(self.get_version_url).json()['data']['clients']
+        return version
 
     def get_graders_info(self):
         graders_info = requests.get(self.get_graders_info_url).json()['data']

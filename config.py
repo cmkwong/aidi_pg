@@ -56,14 +56,19 @@ GET_WEB_SEARCH_LINK_COMMAND = {
 
 GET_RESULT_LINKS_COMMAND = {
     "standard": """
-            const results = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
-            links = [];
-            for (let i=0; i<results.length; i++) {
-                if (getComputedStyle(results[i],'::after').content === "counter(section)") {
-                    links.push(results[i].querySelector('a').getAttribute('href'));
-                }
-            }
-            return links;
+          let all_parsecResult = [
+            ...document
+              .getElementsByClassName("iframe")[0]
+              .getElementsByTagName("iframe")
+              .item(0)
+              .contentDocument.querySelectorAll(".parsec-result"),
+          ];
+          let resultLinkArray = [];
+          all_parsecResult.forEach((parsecResult) => {
+            let link = parsecResult.querySelector("a")?.getAttribute("href");
+            resultLinkArray.push(link ? link : "NO LINK");
+          });
+          return resultLinkArray;
         """,
     "sbs": """
         const links = [];

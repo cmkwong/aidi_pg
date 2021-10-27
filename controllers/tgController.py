@@ -119,8 +119,7 @@ class Telegram_Bot:
                         query_text = graders.grader.get_query_text()
                         Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                                 graders.grader.project_locale,
-                                                                                query_text,
-                                                                                self, print_allowed=True)
+                                                                                query_text)
                         gradingController.print_popular_ans_detail(Answer, self)
                     except:
                         self.bot.send_message(message.chat.id, 'Error of printing distribution')
