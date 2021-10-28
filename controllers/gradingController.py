@@ -177,17 +177,12 @@ class base_grader:
             self.grader_id = dbModel.update_grader_info_from_cc(self.web_controller, self.db_controller)
 
         # check payment and version status
-        if self.grader_action_count % 30 == 0:
-            # check local version
-            if self._version != self.db_controller.get_most_updated_version():
-                raise Exception("Outdated Version, re-open program.")
-            # check timeLeft_hour for payment
-            timeLeft_hour = authModel.get_due_hour_left(self.grader_id, self.db_controller)
-            # Alert for payment alert for on-list payment user
-            if timeLeft_hour != 0 and timeLeft_hour < self.due_hour_before:
+        if self.grader_action_count % 100 == 0:
+            hr_left = authModel.check_health_status(self._version, self.grader_id, self.db_controller)
+            if hr_left < self.due_hour_before:
                 print_at("\u001b[35;1mDue date alert.\u001b[0m", self.tg, print_allowed=True)
             # denied the operation for unauthorized user
-            if timeLeft_hour <= 0:
+            if hr_left < 0:
                 print_at("Permission denied or try again later", self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
@@ -368,7 +363,7 @@ class base_grader:
                 if not timer_ok:
                     return False
 
-            # self.web_controller.click_next_btn(self.project_type)
+            self.web_controller.click_next_btn(self.project_type)
 
             # update ans into db
             if self.project_type in config.UPDATE_DB_PROJS:
@@ -435,7 +430,7 @@ class base_grader:
             return False
 
         # press next
-        # self.web_controller.click_next_btn(self.project_type, auto=True)
+        self.web_controller.click_next_btn(self.project_type, auto=True)
 
         # update status after finish a grading
         self.update_status()

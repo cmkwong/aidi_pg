@@ -33,3 +33,10 @@ def get_due_hour_left(grader_id, db_controller):
     # cannot find the name on payment list, return 0
     except:
         return 0
+
+def check_health_status(version, grader_id, db_controller):
+    try:
+        usr_name = get_usrName_from_graderId(grader_id)
+        hr_left = db_controller.check_health_status(version, usr_name)
+    except:
+        return -1

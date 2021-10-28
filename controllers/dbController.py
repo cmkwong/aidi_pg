@@ -33,6 +33,7 @@ class Database:
         self.get_ghost_project_list_url = self.mainUrl + "api/v1/project/ghostList"
         self.get_version_url = self.mainUrl + "api/v1/system/version"
         self.get_expired_date_url = self.mainUrl + "api/v1/user/expired?grader={}"
+        self.check_health_url = self.mainUrl + "api/v1/system/clientsHealthStatus"
 
     def grader_id_to_login_info(self, grader_id):
         role_filter = {
@@ -340,6 +341,17 @@ class Database:
             print_at("No Conflict Detected", tg, print_allowed)
             return None
         return conflict
+
+    def check_health_status(self, version, usr_name):
+        data = {
+            "user_version": version,
+            "grader": usr_name
+        }
+        res = requests.post(self.check_health_url, data)
+        if res.status_code == 409:
+            raise Exception("Outdated Version, re-open program.")
+        hr_left = float(res.json()['data'])
+        return hr_left
 
     def get_expired_date(self, usr_name):
         expired_date = requests.get(self.get_expired_date_url.format(usr_name)).json()['data']
