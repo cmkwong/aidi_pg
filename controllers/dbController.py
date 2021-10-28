@@ -350,7 +350,7 @@ class Database:
         res = requests.post(self.check_health_url, data)
         if res.status_code == 409:
             raise Exception("Outdated Version, re-open program.")
-        hr_left = float(res.json()['data'])
+        hr_left = res.json()['data']
         return hr_left
 
     def get_expired_date(self, usr_name):
