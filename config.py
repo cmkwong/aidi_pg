@@ -10,7 +10,7 @@ AUTO_ALLOWED_PROJS = ["standard", "classify", "valid"]
 
 # sbs = side-by-side project
 GET_QUERY_TEXT_COMMAND = {
-    "standard": """return document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.getElementsByClassName('search-input form-control')[0].getAttribute('value');""",
+    "standard": """return document.querySelector('iframe').contentDocument.querySelector('.search input').getAttribute('value');""",
     "valid": """return document.querySelector('#widget-container h1').innerText;""",
     "sbs": """return document.querySelector('.utterance').innerText;""",
     "token": """return document.querySelector('#input-field').querySelector('input').value;""",
@@ -56,19 +56,26 @@ GET_WEB_SEARCH_LINK_COMMAND = {
 
 GET_RESULT_LINKS_COMMAND = {
     "standard": """
-          let all_parsecResult = [
-            ...document
-              .getElementsByClassName("iframe")[0]
-              .getElementsByTagName("iframe")
-              .item(0)
-              .contentDocument.querySelectorAll(".parsec-result"),
-          ];
-          let resultLinkArray = [];
-          all_parsecResult.forEach((parsecResult) => {
-            let link = parsecResult.querySelector("a")?.getAttribute("href");
-            resultLinkArray.push(link ? link : "NO LINK");
-          });
-          return resultLinkArray;
+            let all_parsecResult = [
+              ...document
+                .querySelector("iframe")
+                .contentDocument.querySelectorAll(".result"),
+            ];
+            all_parsecResult.length !== 0
+              ? all_parsecResult
+              : (all_parsecResult = [
+                  ...document
+                    .getElementsByClassName("iframe")[0]
+                    .getElementsByTagName("iframe")
+                    .item(0)
+                    .contentDocument.querySelectorAll(".parsec-result"),
+                ]);
+            let resultLinkArray = [];
+            all_parsecResult.forEach((parsecResult) => {
+              let link = parsecResult.querySelector("a")?.getAttribute("href");
+              resultLinkArray.push(link ? link : "NO LINK");
+            });
+            return resultLinkArray;
         """,
     "sbs": """
         const links = [];
