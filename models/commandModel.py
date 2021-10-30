@@ -15,8 +15,7 @@ def control_command_check(graders, ans):
         return command_checked
 
     if ans[0] == '-':
-
-        # getting user level and update grader info
+        # ------------------------------getting user level and update grader info--------------------------------- #
         try:
             if graders.grader.grader_level == 0:
                 graders.grader.grader_level = authModel.get_grader_access_level_from_cc(graders)
@@ -26,13 +25,14 @@ def control_command_check(graders, ans):
         except:
             graders.grader.grader_level = 0
 
+        # ------------------------------Commands--------------------------------- #
         if graders.grader.grader_level >= 0:
 
             if (ans == "-q"):
                 return quit_program
 
             elif (ans == "-p"):
-                graders.grader.db_controller.update_local_config_from_db()
+                graders.grader.db_controller.get_project_list()
                 project_index = menuModel.menu_choice(graders.prev_project_index)
                 graders.open_project(project_index)
                 return command_checked
@@ -45,8 +45,7 @@ def control_command_check(graders, ans):
                         # get the project info and grader name
                         project_id = graders.grader.web_controller.get_projectId_from_url()
                         grader_name = graders.grader.web_controller.get_grader_name_from_cc()
-                        graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name)
-                        print("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, popUp_locale))
+                        graders.grader.db_controller.project_finish_update(project_id, popUp_locale, grader_name, graders.grader.tg)
                     else:
                         print("No Finished Pop-up.")
                 except:
@@ -233,11 +232,9 @@ def control_command_check(graders, ans):
             elif (ans == "-dist"):
                 try:
                     graders.grader.project_setup()
-                    query_text = graders.grader.get_query_text()
                     Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                             graders.grader.project_locale,
-                                                                            query_text,
-                                                                            graders.grader.tg, print_allowed=True)
+                                                                            graders.grader.query_code)
                     gradingController.print_popular_ans_detail(Answer, graders.grader.tg)
                 except:
                     print_at('Error of printing distribution', graders.grader.tg)
@@ -272,15 +269,15 @@ def control_command_check(graders, ans):
 
             elif (ans == "-conflict"):
                 project_id = input("Input project ID: ")
-                usr_id = graders.web_controller.get_grader_id_from_cc()
-                conflict = graders.grader.db_controller.find_conflict(project_id, usr_id, graders.grader.tg, print_allowed=True)
+                grader_name = graders.web_controller.get_grader_name_from_cc()
+                conflict = graders.grader.db_controller.find_conflict(project_id, grader_name, graders.grader.tg, print_allowed=True)
                 if conflict:
                     print_conflict(conflict, graders.grader.tg)
                 return command_checked
 
         if graders.grader.grader_level >= 3:
             if (ans == "-gp"):
-                graders.grader.db_controller.update_local_config_from_db()
+                graders.grader.db_controller.get_ghost_project_list()
                 project_index = menuModel.menu_choice(graders.prev_project_index, ghost=True)
                 graders.open_project(project_index, ghost_menu=True)
                 return command_checked

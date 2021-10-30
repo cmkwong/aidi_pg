@@ -167,15 +167,15 @@ class Web:
             project_id = result.group(1)
         return project_id
 
-    def get_projectId_locale_from_url(self):
+    def get_projectId_locale_queryCode_from_url(self):
         project_link = self.get_motherTag_url()
-        project_id, project_locale = None, None
+        project_id, project_locale, query_code = None, None, None
 
         # project_id and project locale
-        result = re.search(r"/project/(\S+?)/grading/(\S+?)/", project_link)
+        result = re.search(r"/project/(\S+?)/grading/(\S+?)/s/(\S+?)/", project_link)
         if result:
-            project_id, project_locale = result.group(1), result.group(2)
-        return project_id, project_locale
+            project_id, project_locale, query_code = result.group(1), result.group(2), result.group(3)
+        return project_id, project_locale, query_code
 
     def get_grader_name_from_cc(self):
         js_code = """
@@ -189,7 +189,7 @@ class Web:
         grader_name = self.get_grader_name_from_cc()
         for info in config.graders_info:
             if grader_name == info["name"]:
-                return info["_id"]
+                return info["grader_id"]
         return None
 
     def get_report_data(self):

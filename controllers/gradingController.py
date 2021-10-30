@@ -145,8 +145,7 @@ class base_grader:
         self.new_query = False
         self.grader_id = None
         self.grader_level = 0 # for checking if the command has permission to use
-        self.project_id = None
-        self.project_locale = None
+        self.project_id, self.project_locale, self.query_code = None, None, None
         self.project_type = None
         self.time_delay = 1
         self.find_delay = False
@@ -177,17 +176,12 @@ class base_grader:
             self.grader_id = dbModel.update_grader_info_from_cc(self.web_controller, self.db_controller)
 
         # check payment and version status
-        if self.grader_action_count % 30 == 0:
-            # check local version
-            if self._version != self.db_controller.get_most_updated_version():
-                raise Exception("Outdated Version, re-open program.")
-            # check timeLeft_hour for payment
-            timeLeft_hour = authModel.get_due_hour_left(self.grader_id, self.db_controller)
-            # Alert for payment alert for on-list payment user
-            if timeLeft_hour != 0 and timeLeft_hour < self.due_hour_before:
+        if self.grader_action_count % 100 == 0:
+            hr_left = authModel.check_health_status(self._version, self.grader_id, self.db_controller)
+            if hr_left < self.due_hour_before:
                 print_at("\u001b[35;1mDue date alert.\u001b[0m", self.tg, print_allowed=True)
             # denied the operation for unauthorized user
-            if timeLeft_hour <= 0:
+            if hr_left < 0:
                 print_at("Permission denied or try again later", self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
@@ -209,8 +203,8 @@ class base_grader:
 
     def project_setup(self):
         # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
-        if not self.project_id or not self.project_locale:
+        self.project_id, self.project_locale, self.query_code = self.web_controller.get_projectId_locale_queryCode_from_url()
+        if not self.project_id or not self.project_locale or not self.query_code:
             print_at("Invalid grading in this page.", self.tg, self.print_allowed)
             return False
 
@@ -282,9 +276,9 @@ class base_grader:
                 time_interval = gradingModel.find_time_delay_level(self.find_time_delay)
                 if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                     if self.training:
-                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text, self.tg, print_allowed=False)
+                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_code)
                     else:
-                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text, self.tg, print_allowed=False)
+                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_code)
                     if Answer != None:
                         Answer.find_ok, Answer.find_time_used = True, self.find_time_delay - i
                         self.timer_running = False
@@ -403,9 +397,9 @@ class base_grader:
         # not find delay
         elif not self.find_delay:
             if self.training:
-                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text, self.tg)
+                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_code)
             else:
-                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text, self.tg)
+                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_code)
 
         # if no Answer found, return false, auto_available will be false
         if (Answer == None):
