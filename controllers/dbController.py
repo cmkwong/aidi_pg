@@ -25,7 +25,7 @@ class Database:
 
     def api_urls(self):
         self.prj_finish_url = self.mainUrl + "api/v1/project/status"
-        self.find_many_ans_url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_text={}"
+        self.find_many_ans_url = self.mainUrl + "api/v1/query/manyAnswer?project_id={}&locale={}&query_code={}"
         self.find_many_queries_from_project_id_url = self.mainUrl + "api/v1/query?project_id={}&max={}"
         self.find_many_ans_from_many_queryId_url = self.mainUrl + "api/v1/query/manyAnswerManyQueryId"
         self.get_graders_info_url = self.mainUrl + "api/v1/user?locale=hk"
@@ -229,10 +229,10 @@ class Database:
     #     ans_infos = self._find_all_ans_by_query_id(query_id)
     #     return ans_infos
 
-    def find_one_ans(self, project_id, project_locale, text):
+    def find_one_ans(self, project_id, project_locale, query_code):
         Answer = dbModel.format_Answer()
         # Find ans_infos that store all the query related to that project id and text
-        res = requests.get(self.find_many_ans_url.format(project_id, project_locale, text))
+        res = requests.get(self.find_many_ans_url.format(project_id, project_locale, query_code))
         if res.status_code != 200:
             return None
         try:
@@ -263,9 +263,9 @@ class Database:
     #         Answer.grader_name = grader["name"]
     #     return Answer
 
-    def find_most_popular(self, project_id, project_locale, text):
+    def find_most_popular(self, project_id, project_locale, query_code):
         # Find ans_infos that store all the query related to that project id and text
-        res = requests.get(self.find_many_ans_url.format(project_id, project_locale, text))
+        res = requests.get(self.find_many_ans_url.format(project_id, project_locale, query_code))
         if res.status_code != 200:
             return None
         ans_infos = res.json()['data']

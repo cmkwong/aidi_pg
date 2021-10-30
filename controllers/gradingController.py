@@ -145,8 +145,7 @@ class base_grader:
         self.new_query = False
         self.grader_id = None
         self.grader_level = 0 # for checking if the command has permission to use
-        self.project_id = None
-        self.project_locale = None
+        self.project_id, self.project_locale, self.query_code = None, None, None
         self.project_type = None
         self.time_delay = 1
         self.find_delay = False
@@ -204,8 +203,8 @@ class base_grader:
 
     def project_setup(self):
         # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
-        if not self.project_id or not self.project_locale:
+        self.project_id, self.project_locale, self.query_code = self.web_controller.get_projectId_locale_queryCode_from_url()
+        if not self.project_id or not self.project_locale or not self.query_code:
             print_at("Invalid grading in this page.", self.tg, self.print_allowed)
             return False
 
@@ -277,9 +276,9 @@ class base_grader:
                 time_interval = gradingModel.find_time_delay_level(self.find_time_delay)
                 if ((i % time_interval) == 0) or ((i % self.find_time_delay) == 0):
                     if self.training:
-                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text)
+                        Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_code)
                     else:
-                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text)
+                        Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_code)
                     if Answer != None:
                         Answer.find_ok, Answer.find_time_used = True, self.find_time_delay - i
                         self.timer_running = False
@@ -398,9 +397,9 @@ class base_grader:
         # not find delay
         elif not self.find_delay:
             if self.training:
-                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_text)
+                Answer = self.db_controller.find_most_popular(self.project_id, self.project_locale, self.query_code)
             else:
-                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_text)
+                Answer = self.db_controller.find_one_ans(self.project_id, self.project_locale, self.query_code)
 
         # if no Answer found, return false, auto_available will be false
         if (Answer == None):
