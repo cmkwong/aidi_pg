@@ -172,7 +172,7 @@ class Web:
         project_id, project_locale, query_code = None, None, None
 
         # project_id and project locale
-        result = re.search(r"/project/(\S+?)/grading/(\S+?)/s/(\S+?)", project_link)
+        result = re.search(r"/project/(\S+?)/grading/(\S+?)/s/(\S+?)/", project_link)
         if result:
             project_id, project_locale, query_code = result.group(1), result.group(2), result.group(3)
         return project_id, project_locale, query_code
