@@ -21,7 +21,7 @@ def control_command_check(graders, ans):
                 graders.grader.grader_level = authModel.get_grader_access_level_from_cc(graders)
             # update grader info
             if graders.grader.grader_id is None:
-                graders.grader.grader_id = dbModel.update_grader_info_from_cc(graders.grader.web_controller, graders.grader.db_controller)
+                graders.grader.grader_id = dbModel.update_grader_info_from_cc(graders.grader.web_controller)
         except:
             graders.grader.grader_level = 0
 
@@ -31,7 +31,9 @@ def control_command_check(graders, ans):
             if (ans == "-q"):
                 return quit_program
 
-            elif (ans == "-p"):
+        if graders.grader.grader_level >= 1:
+
+            if (ans == "-p"):
                 graders.grader.db_controller.get_project_list()
                 project_index = menuModel.menu_choice(graders.prev_project_index)
                 graders.open_project(project_index)
@@ -52,9 +54,7 @@ def control_command_check(graders, ans):
                     print("Please try again.")
                 return command_checked
 
-        if graders.grader.grader_level >= 1:
-
-            if (ans == "-t"):
+            elif (ans == "-t"):
                 time_delay = gradingController.time_delay_set()
                 if not time_delay:
                     print("Set timer failed. Try again.")

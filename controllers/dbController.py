@@ -14,14 +14,14 @@ def print_S(string, allowed=True):
 class Database:
     def __init__(self):
         self.db_name = "cmk_testing"
-        self.update_db_config()
+        # self.update_db_config()
         self.mainUrl = "https://aidi-work-helper.herokuapp.com/"
         self.api_urls()
 
-    def update_db_config(self, login="reader", pw="s23456s"):
-        URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (login, pw, self.db_name)
-        self.client = pymongo.MongoClient(URI)
-        self.db = self.client[self.db_name]
+    # def update_db_config(self, login="reader", pw="s23456s"):
+    #     URI = "mongodb+srv://%s:%s@aiditesting.3bzv1.mongodb.net/%s?retryWrites=true&w=majority" % (login, pw, self.db_name)
+    #     self.client = pymongo.MongoClient(URI)
+    #     self.db = self.client[self.db_name]
 
     def api_urls(self):
         self.prj_finish_url = self.mainUrl + "api/v1/project/status"
@@ -35,79 +35,79 @@ class Database:
         self.get_expired_date_url = self.mainUrl + "api/v1/user/expired?grader={}"
         self.check_health_url = self.mainUrl + "api/v1/system/clientsHealthStatus"
 
-    def grader_id_to_login_info(self, grader_id):
-        role_filter = {
-            "_id": grader_id
-        }
-        login_filter = {
-            "role": self.db["graders"].find_one(role_filter)["role"]
-        }
-        return self.db["db_login"].find_one(login_filter)["login"], self.db["db_login"].find_one(login_filter)["pw"]
+    # def grader_id_to_login_info(self, grader_id):
+    #     role_filter = {
+    #         "_id": grader_id
+    #     }
+    #     login_filter = {
+    #         "role": self.db["graders"].find_one(role_filter)["role"]
+    #     }
+    #     return self.db["db_login"].find_one(login_filter)["login"], self.db["db_login"].find_one(login_filter)["pw"]
 
-    def query_insert(self, project_type, project_id, project_locale, text, web_controller):
+    # def query_insert(self, project_type, project_id, project_locale, text, web_controller):
+    #
+    #     # try get the results links
+    #     try:
+    #         result_links = web_controller.get_result_links(project_type)
+    #     except:
+    #         result_links = []
+    #
+    #     # insert query and answer
+    #     db_filter = {
+    #         "project": project_id,
+    #         "locale": project_locale,
+    #         "type": project_type,
+    #         "text": text
+    #     }
+    #     count = self.db["querys"].count_documents(db_filter)
+    #     # insert one query
+    #     if count is 0:  # meaning no query duplicated
+    #         my_dict = {
+    #             "project": project_id,
+    #             "locale": project_locale,
+    #             "type": project_type,
+    #             "text": text,
+    #             "results": result_links
+    #         }
+    #         query_id = self.db["querys"].insert_one(my_dict).inserted_id
+    #         return query_id
+    #     elif count > 0:
+    #         query_id = self.db["querys"].find_one(db_filter)["_id"]
+    #         return query_id
 
-        # try get the results links
-        try:
-            result_links = web_controller.get_result_links(project_type)
-        except:
-            result_links = []
+    # def answer_insert(self, answer, grader_id, query_id, query_link):
+    #
+    #     # find the answer if it is exist
+    #     db_filter = {
+    #         "grader": grader_id,
+    #         "query_id": query_id
+    #     }
+    #     count = self.db["answers"].count_documents(db_filter)
+    #     if count is 0:
+    #         my_dict = {
+    #             # "_id": ans_id,
+    #             "grader": grader_id,
+    #             "query_id": query_id,
+    #             "query_link": query_link,
+    #             "grader_answer": answer,
+    #             "time": datetime.fromtimestamp(time.time())
+    #         }
+    #         answer_id = self.db["answers"].insert_one(my_dict).inserted_id
+    #         return answer_id
+    #     elif count > 0:
+    #         answer_id = self.db["answers"].find_one(db_filter)["_id"]
+    #         self.grader_answer_update(answer_id, answer)
+    #         return answer_id
 
-        # insert query and answer
-        db_filter = {
-            "project": project_id,
-            "locale": project_locale,
-            "type": project_type,
-            "text": text
-        }
-        count = self.db["querys"].count_documents(db_filter)
-        # insert one query
-        if count is 0:  # meaning no query duplicated
-            my_dict = {
-                "project": project_id,
-                "locale": project_locale,
-                "type": project_type,
-                "text": text,
-                "results": result_links
-            }
-            query_id = self.db["querys"].insert_one(my_dict).inserted_id
-            return query_id
-        elif count > 0:
-            query_id = self.db["querys"].find_one(db_filter)["_id"]
-            return query_id
-
-    def answer_insert(self, answer, grader_id, query_id, query_link):
-
-        # find the answer if it is exist
-        db_filter = {
-            "grader": grader_id,
-            "query_id": query_id
-        }
-        count = self.db["answers"].count_documents(db_filter)
-        if count is 0:
-            my_dict = {
-                # "_id": ans_id,
-                "grader": grader_id,
-                "query_id": query_id,
-                "query_link": query_link,
-                "grader_answer": answer,
-                "time": datetime.fromtimestamp(time.time())
-            }
-            answer_id = self.db["answers"].insert_one(my_dict).inserted_id
-            return answer_id
-        elif count > 0:
-            answer_id = self.db["answers"].find_one(db_filter)["_id"]
-            self.grader_answer_update(answer_id, answer)
-            return answer_id
-
-    def grader_answer_update(self, answer_id, answer):
-        target = {
-            "_id": answer_id
-        }
-        new_dict = {"$set": {
-            "grader_answer": answer,
-            "time": datetime.fromtimestamp(time.time())
-        }}
-        self.db["answers"].update_one(target, new_dict)
+    # def grader_answer_update(self, answer_id, answer):
+    #     target = {
+    #         "_id": answer_id
+    #     }
+    #     new_dict = {"$set": {
+    #         "grader_answer": answer,
+    #         "time": datetime.fromtimestamp(time.time())
+    #     }}
+    #     self.db["answers"].update_one(target, new_dict)
 
     def project_finish_update(self, project_id, locale, grader_name, tg):
         data = {

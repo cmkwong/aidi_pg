@@ -173,7 +173,7 @@ class base_grader:
 
         # update grader_id (for access the DB)
         if self.grader_id is None:
-            self.grader_id = dbModel.update_grader_info_from_cc(self.web_controller, self.db_controller)
+            self.grader_id = dbModel.update_grader_info_from_cc(self.web_controller)
 
         # check payment and version status
         if self.grader_action_count % 100 == 0:
@@ -341,11 +341,11 @@ class base_grader:
         else:
 
             # insert query and grader info into database
-            query_id = None
-            if self.project_type in config.UPDATE_DB_PROJS:
-                query_id = self.db_controller.query_insert(self.project_type, self.project_id, self.project_locale, self.query_text, self.web_controller)
-                if not query_id:
-                    return False
+            # query_id = None
+            # if self.project_type in config.UPDATE_DB_PROJS:
+            #     query_id = self.db_controller.query_insert(self.project_type, self.project_id, self.project_locale, self.query_text, self.web_controller)
+            #     if not query_id:
+            #         return False
 
             # press web search if in tg mode
             if self.tg is not None:
@@ -365,8 +365,8 @@ class base_grader:
             self.web_controller.click_next_btn(self.project_type)
 
             # update ans into db
-            if self.project_type in config.UPDATE_DB_PROJS:
-                self.db_controller.answer_insert(ans, self.grader_id, query_id, self.query_link)
+            # if self.project_type in config.UPDATE_DB_PROJS:
+            #     self.db_controller.answer_insert(ans, self.grader_id, query_id, self.query_link)
 
             # update status after finish a grading
             self.update_status()
