@@ -186,7 +186,7 @@ class base_grader:
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
 
-        # get project_id, and locale and set project code and its project type
+        # get project_id, and locale and query code; and the project type and project code
         project_set_ok = self.project_setup()
         if not project_set_ok:
             return False
@@ -194,6 +194,9 @@ class base_grader:
         # get query text
         self.query_text = self.get_query_text()
         if self.query_text == None:
+            return False
+        self.query_code = self.web_controller.get_queryCode_from_url() # right after the getting query text
+        if self.query_code == None:
             return False
         self.query_link = self.web_controller.get_motherTag_url()
         self.new_query = False
@@ -203,8 +206,8 @@ class base_grader:
 
     def project_setup(self):
         # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale, self.query_code = self.web_controller.get_projectId_locale_queryCode_from_url()
-        if not self.project_id or not self.project_locale or not self.query_code:
+        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
+        if not self.project_id or not self.project_locale:
             print_at("Invalid grading in this page.", self.tg, self.print_allowed)
             return False
 
@@ -374,9 +377,6 @@ class base_grader:
             return True
 
     def auto_execute(self):
-
-        # buffer time to load the new URL
-        time.sleep(3)
 
         # auto mode
         renew_ok = self.renew_status()
