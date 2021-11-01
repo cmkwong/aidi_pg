@@ -374,6 +374,10 @@ class base_grader:
             return True
 
     def auto_execute(self):
+
+        # buffer time to load the new URL
+        time.sleep(3)
+
         # auto mode
         renew_ok = self.renew_status()
         if not renew_ok:
