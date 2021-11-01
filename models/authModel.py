@@ -34,7 +34,7 @@ def get_due_hour_left(grader_id, db_controller):
     except:
         return 0
 
-def check_health_status(version, grader_id, db_controller):
-    usr_name = get_usrName_from_graderId(grader_id)
-    hr_left = db_controller.check_health_status(version, usr_name)
-    return hr_left
+# def check_health_status(version, grader_id, db_controller):
+#     usr_name = get_usrName_from_graderId(grader_id)
+#     hr_left = db_controller.check_health_status(version, usr_name)
+#     return hr_left

@@ -159,6 +159,7 @@ class base_grader:
         # check grader available
         self._version = version  # program version that will checked in every user gradings
         self.due_hour_before = 36 # in hours
+        self.hr_left = 0
         # sound alarm
         self.alarm = True
         # telegram tg
@@ -177,7 +178,7 @@ class base_grader:
 
         # check payment and version status
         if self.grader_action_count % 100 == 0:
-            hr_left = authModel.check_health_status(self._version, self.grader_id, self.db_controller)
+            hr_left = self.db_controller.check_health_status(self._version, self.grader_id)
             if hr_left < self.due_hour_before:
                 print_at("\u001b[35;1mDue date alert.\u001b[0m", self.tg, print_allowed=True)
             # denied the operation for unauthorized user
@@ -195,7 +196,7 @@ class base_grader:
         self.query_text = self.get_query_text()
         if self.query_text == None:
             return False
-        self.query_code = self.web_controller.get_queryCode_from_url() # right after the getting query text
+        self.query_code = self.web_controller.get_queryCode_from_url() # right after the getting query text successful
         if self.query_code == None:
             return False
         self.query_link = self.web_controller.get_motherTag_url()

@@ -1,10 +1,7 @@
-import pymongo
-from datetime import datetime
 import requests
-import time
 import collections
 from views.prints import *
-from models import dbModel
+from models import dbModel, authModel
 import config
 
 def print_S(string, allowed=True):
@@ -342,7 +339,8 @@ class Database:
             return None
         return conflict
 
-    def check_health_status(self, version, usr_name):
+    def check_health_status(self, version, grader_id):
+        usr_name = authModel.get_usrName_from_graderId(grader_id)
         data = {
             "user_version": version,
             "grader": usr_name
