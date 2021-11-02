@@ -163,6 +163,8 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
             });
           return all_resultDict;
         }
+        let results = getResults('standard');
+        return results ? results : []
     """,
     "sbs": """
         const details = [];

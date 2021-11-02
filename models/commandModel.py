@@ -242,6 +242,11 @@ def control_command_check(graders, ans):
                     print_at('Error of printing distribution', graders.grader.tg)
                 return command_checked
 
+            elif (ans == "--test_tg"):
+                link_details = graders.grader.web_controller.get_link_details('standard')
+                print(link_details)
+                return command_checked
+
             elif (ans == "-tg"):
                 gradingController.resume_standard_mode(graders)
                 token = authModel.get_grader_tgToken_from_cc(graders)
