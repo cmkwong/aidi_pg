@@ -110,7 +110,7 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
           for (const version in filters) {
             description = [...result.querySelectorAll(filters[version])]
               ?.map((des) => des.innerText.substring(0, 200))
-              .join("\n");
+              .join("\\n");
             if (description) break;
           }
           return description;
@@ -132,18 +132,17 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
         function form_result_text(results) {
           let link_details = results.map((result) => {
             let text = "";
-            text += `${result["title"]}(${result["type"]})\n`;
-            text += `${result["description"].substring(0, 300)}\n`;
-            text += `${result["footnote"]}\n`;
-            text += `${result["link"]}\n`;
+            text += `${result["title"]}(${result["type"]})\\n`;
+            text += `${result["description"].substring(0, 300)}\\n`;
+            text += `${result["footnote"]}\\n`;
+            text += `${result["link"]}\\n`;
             return text;
           });
           return link_details;
         }
         
-        function getResults(project_type) {
+        function getResults() {
           let all_resultDict;
-
             let all_parsecResult = [
               ...document
                 .querySelector("iframe")
@@ -175,7 +174,7 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
             });
           return all_resultDict;
         }
-        let results = getResults('standard');
+        let results = getResults();
         let link_details = form_result_text(results);
         return link_details
     """,
