@@ -1,7 +1,7 @@
 from controllers import gradingController, dbController, webController
 
 command = False
-VERSION = "0.0.18"
+VERSION = "0.0.19"
 
 default_url = "https://crowdcollect2.siri.apple.com/main/project/"
 db_controller = dbController.Database()
