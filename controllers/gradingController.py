@@ -193,21 +193,18 @@ class base_grader:
             return False
 
         # get query text
-        self.query_text = self.get_query_text()
-        if self.query_text == None:
+        query_prepare_ok = self.query_prepare()
+        if not query_prepare_ok:
             return False
-        self.query_code = self.web_controller.get_queryCode_from_url() # right after the getting query text successful
-        if self.query_code == None:
-            return False
-        self.query_link = self.web_controller.get_motherTag_url()
-        self.new_query = False
 
         self.grader_action_count += 1
         return True
 
     def project_setup(self):
+        # get query link, but may be not very updated
+        self.query_link = self.web_controller.get_motherTag_url()
         # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
+        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url(self.query_link)
         if not self.project_id or not self.project_locale:
             print_at("Invalid grading in this page.", self.tg, self.print_allowed)
             return False
@@ -220,6 +217,16 @@ class base_grader:
             self.project_code = infoModel.get_project_code(self.web_controller)  # get the project code if have not seen before
             config.projects_code[self.project_id] = self.project_code           # store the project_code into global dictionary (config)
         self.project_type = config.projects_code[self.project_id]['project_type']
+        return True
+
+    def query_prepare(self):
+        self.query_text = self.get_query_text()
+        if self.query_text == None:
+            return False
+        self.query_code = self.web_controller.get_queryCode_from_url()  # right after the getting query text successful
+        if self.query_code == None:
+            return False
+        self.new_query = False
         return True
 
     def update_status(self):

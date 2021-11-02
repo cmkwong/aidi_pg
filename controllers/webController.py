@@ -177,12 +177,11 @@ class Web:
             query_code = result.group(1)
         return query_code
 
-    def get_projectId_locale_from_url(self):
-        project_link = self.get_motherTag_url()
+    def get_projectId_locale_from_url(self, url):
         project_id, project_locale = None, None
 
         # project_id and project locale
-        result = re.search(r"/project/(\S+?)/grading/(\S+?)/", project_link)
+        result = re.search(r"/project/(\S+?)/grading/(\S+?)/", url)
         if result:
             project_id, project_locale = result.group(1), result.group(2)
         return project_id, project_locale
