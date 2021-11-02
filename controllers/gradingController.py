@@ -325,20 +325,17 @@ class base_grader:
 
     def get_links_and_details(self):
         refer_time = time.time()
-        links = []
         link_details = []
-        while (len(links) == 0):
+        while (len(link_details) == 0):
             try:
                 if (time.time() - refer_time) > self.info_timeout:
                     return None
-                # get links
-                links = self.web_controller.get_result_links(self.project_type)
-                # get links text
+                # get links and detailed text
                 link_details = self.web_controller.get_link_details(self.project_type)
                 time.sleep(0.5)
             except:
                 continue  # continue looping
-        return links, link_details
+        return link_details
 
     def execute(self, ans):
         renew_ok = self.renew_status()

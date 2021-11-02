@@ -86,29 +86,83 @@ GET_RESULT_LINKS_COMMAND = {
     """
 }
 
-GET_LINK_DETAILS_COMMAND = {
+GET_RESULT_LINK_DETAILS_COMMAND = {
     "standard": """
-        const results = document.getElementsByClassName('iframe')[0].getElementsByTagName('iframe').item(0).contentDocument.querySelectorAll("div.parsec-result");
-        details = [];
-        for (let i=0; i<results.length; i++) {
-            let title = '';
-            if (results[i].querySelector('.title')) { 
-                title = results[i].querySelector('.title').textContent.trim();
-            } else {
-                title = "Empty Title";
-            };
-            let description = '';
-            let description_list = results[i].querySelectorAll('.description');
-            if (description_list.length !== 0) {
-                for (let k=0; k < description_list.length; k++) {
-                    description += description_list[k].textContent.trim() + '\\n';
-                }
-            } else {
-                description = "Empty Description";
-            };
-            details.push(title + '\\n' + description);
+        function _get_result_title(result) {
+          const filters = {
+            v1: ".title",
+            v2: ".result-card-title",
+          };
+          let title;
+          for (const version in filters) {
+            title = result.querySelector(filters[version])?.innerText;
+            if (title) break;
+          }
+          return title;
         }
-        return details;
+        
+        function _get_result_description(result) {
+          const filters = {
+            v1: ".description",
+            v2: ".result-card-description",
+          };
+          let description;
+          for (const version in filters) {
+            description = [...result.querySelectorAll(filters[version])]
+              ?.map((des) => des.innerText.substring(0, 200))
+              .join("\n");
+            if (description) break;
+          }
+          return description;
+        }
+        
+        function _get_result_footnote(result) {
+          const filters = {
+            v1: ".footnote",
+            v2: ".result-card-footnote",
+          };
+          let footnote;
+          for (const version in filters) {
+            footnote = result.querySelector(filters[version])?.innerText;
+            if (footnote) break;
+          }
+          return footnote;
+        }
+        
+        function getResults(project_type) {
+          let all_resultDict;
+
+            let all_parsecResult = [
+              ...document
+                .querySelector("iframe")
+                .contentDocument.querySelectorAll(".result"),
+            ];
+            all_parsecResult.length !== 0
+              ? all_parsecResult
+              : (all_parsecResult = [
+                  ...document
+                    .getElementsByClassName("iframe")[0]
+                    .getElementsByTagName("iframe")
+                    .item(0)
+                    .contentDocument.querySelectorAll(".parsec-result"),
+                ]);
+            all_resultDict = all_parsecResult.map((parsecResult) => {
+              let type = parsecResult.parentNode.className.split(" ")[1];
+              let title = _get_result_title(parsecResult);
+              let description = _get_result_description(parsecResult);
+              let footnote = _get_result_footnote(parsecResult);
+              let link = parsecResult.querySelector("a")?.getAttribute("href");
+              let resultDict = {
+                type: type ? type : "",
+                title: title ? title : "",
+                description: description ? description : "",
+                footnote: footnote ? footnote : "",
+                link: link ? link : "",
+              };
+              return resultDict;
+            });
+          return all_resultDict;
+        }
     """,
     "sbs": """
         const details = [];

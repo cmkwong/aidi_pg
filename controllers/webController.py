@@ -134,7 +134,7 @@ class Web:
 
     def get_link_details(self, project_type):
         self.back_tag_one()
-        js_code = config.GET_LINK_DETAILS_COMMAND[project_type]
+        js_code = config.GET_RESULT_LINK_DETAILS_COMMAND[project_type]
         link_details = self.browser.execute_script(js_code)
         return link_details
 
