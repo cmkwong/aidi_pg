@@ -1,10 +1,11 @@
 from models import infoModel
 
-def _form_result_text(link_detail, text=''):
-    text += "{}({})\n".format(link_detail['title'], link_detail['type'])
-    text += "{}\n".format(link_detail['description'][:300])
-    text += "{}\n".format(link_detail[link_detail['footnote']])
-    text += "{}\n".format(link_detail[link_detail['link']])
+def _form_result_text(link_detail):
+    text = ''
+    text += "type: {}:\n{}\n".format(link_detail['title'], link_detail['type'])
+    text += "{}\n".format(link_detail['description'][:200])
+    text += "footnote: {}\n".format(link_detail['footnote'])
+    text += "link: {}\n".format(link_detail['link'])
     return text
 
 def _form_tg_send_text(search_date, query_text, web_search_link, max_index, link_details):
@@ -15,13 +16,14 @@ def _form_tg_send_text(search_date, query_text, web_search_link, max_index, link
     # link details text and links
     for i in range(max_index):
         text += "\n\n-*-*-*-*-*- " + str(i + 1) + " -*-*-*--*-*-"
-        text += '\n' + _form_result_text(link_details[i], text)
+        text += '\n' + _form_result_text(link_details[i])
 
     # create javascript code
     text += "\n\n['{}'".format(web_search_link)
     for i in range(max_index):
         text += ",'{}'".format(link_details[i]['link'])
     text += "].forEach(link => window.open(link));"
+    return text
 
 # for tg_bot.py used
 def send_tg_info(grader, old_query_text=None):
