@@ -129,18 +129,6 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
           return footnote;
         }
         
-        function form_result_text(results) {
-          let link_details = results.map((result) => {
-            let text = "";
-            text += `${result["title"]}(${result["type"]})\\n`;
-            text += `${result["description"].substring(0, 300)}\\n`;
-            text += `${result["footnote"]}\\n`;
-            text += `${result["link"]}\\n`;
-            return text;
-          });
-          return link_details;
-        }
-        
         function getResults() {
           let all_resultDict;
             let all_parsecResult = [
@@ -174,9 +162,8 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
             });
           return all_resultDict;
         }
-        let results = getResults();
-        let link_details = form_result_text(results);
-        return link_details
+        let link_details = getResults();
+        return link_details ? link_details : []
     """,
     "sbs": """
         const details = [];
