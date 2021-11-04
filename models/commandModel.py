@@ -313,7 +313,7 @@ def control_command_check(graders, ans):
                 return command_checked
 
             elif (ans == "-outcheat"):
-                path = "/Desktop"
+                path = "../../../Desktop"
                 file_name = "cheatsheet.csv"
                 osSystem.output_cheat_sheet(path, file_name)
                 return command_checked
