@@ -44,15 +44,23 @@ def download_driver(executable_path):   # '../driver/chromedriver'
 def show_img(path):
     os.system('open {}'.format(path))
 
+def read_cheat_sheet(path, file_name):
+    config.cheat_sheet = set()
+    total_line = 0
+    with open(os.path.join(path, file_name), 'r') as f:
+        reader = csv.reader(f)
+        for (query_text, _, project_id, query_code) in reader:
+            config.cheat_sheet.add((query_text, project_id, query_code))
+            total_line += 1
+    print("Total read: {}".format(total_line))
+
 def output_cheat_sheet(path, file_name):
     URL = "https://crowdcollect2.siri.apple.com/main/project/{}/browsing/s/{}/r/{}"
     with open(os.path.join(path, file_name), 'a') as f:
         writer = csv.writer(f)
         # loop for files
-        for (prj_name, prj_id) in config.cheat_sheet.keys():
-            # loop for items in a file
-            for (query_code, query_text) in config.cheat_sheet[(prj_name, prj_id)]:
-                url = URL.format(prj_id, query_code, query_code)
-                writer.writerow([query_text, url, prj_name, prj_id, query_code])
+        for (query_text, project_id, query_code) in config.cheat_sheet:
+            url = URL.format(project_id, query_code, query_code)
+            writer.writerow([query_text, url, project_id, query_code])
         f.close()
-    config.cheat_sheet = {}
+    config.cheat_sheet = set()
