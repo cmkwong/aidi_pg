@@ -9,6 +9,7 @@ from utils import osSystem
 import config
 import time
 import re
+import os
 
 class Web:
     def __init__(self, init_url):
@@ -389,9 +390,14 @@ class Web:
         textarea.send_keys(text)
         return True
 
-    def listen_next_button(self):
-        ans_str = self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': config.LISTEN_ANS_COMMAND['standard']})
-        print(ans_str)
+    def get_cheat_sheet_querys(self):
+        query_codes = self.browser.execute_script(config.GET_CHEAT_QUERY_CODE)
+        query_texts = self.browser.execute_script(config.GET_CHEAT_QUERY_TEXT)
+        project_name, project_id = self.browser.execute_script(config.GET_CHEAT_PROJECT_NAME), self.browser.execute_script(config.GET_CHEAT_PROJECT_ID)
+        config.cheat_sheet[project_name, project_id] = {}
+        for query_code, query_text in zip(query_codes, query_texts):
+            config.cheat_sheet[(project_name, project_id)].add((query_code, query_text))
+        print("Project name: {} \nUpdated: {} querys".format(project_name, len(query_codes)))
 
     def quite_driver(self):
         self.browser.quit()

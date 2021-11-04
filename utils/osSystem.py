@@ -1,4 +1,5 @@
 from zipfile import ZipFile
+import config
 import os
 
 def get_required_file_name_startWith(path, startwith):
@@ -41,3 +42,13 @@ def download_driver(executable_path):   # '../driver/chromedriver'
 
 def show_img(path):
     os.system('open {}'.format(path))
+
+def output_cheat_sheet(path, file_name):
+    url_format = "https://crowdcollect2.siri.apple.com/main/project/{}/browsing/s/{}/r/{}"
+    with open(os.path.join(path, file_name), 'a') as f:
+        # loop for files
+        for (prj_name, prj_id) in config.cheat_sheet.keys():
+            # loop for items in a file
+            for (query_code, query_text) in config.cheat_sheet[(prj_name, prj_id)]:
+                f.write("{},{},{}\n".format(prj_name, query_text, url_format.format(prj_id, query_code, query_code)))
+        f.close()

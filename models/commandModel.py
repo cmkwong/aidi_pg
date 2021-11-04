@@ -308,8 +308,14 @@ def control_command_check(graders, ans):
                     print("{}: {}".format(key, value))
                 return command_checked
 
-            elif (ans == "-listen"):
-                graders.grader.web_controller.listen_next_button()
+            elif (ans == "-getcheat"):
+                graders.grader.web_controller.get_cheat_sheet_querys()
+                return command_checked
+
+            elif (ans == "-outcheat"):
+                path = "/Desktop"
+                file_name = "cheatsheet.csv"
+                osSystem.output_cheat_sheet(path, file_name)
                 return command_checked
 
         print("Invalid Command")
