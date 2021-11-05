@@ -2,7 +2,7 @@ from models import infoModel
 
 def _form_result_text(link_detail):
     text = ''
-    text += "type: {}:\n{}\n".format(link_detail['title'], link_detail['type'])
+    text += "type: {}:\n{}\n".format(link_detail['type'], link_detail['title'])
     text += "{}\n".format(link_detail['description'][:200])
     text += "footnote: {}\n".format(link_detail['footnote'])
     text += "link: {}\n".format(link_detail['link'])
