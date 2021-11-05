@@ -53,14 +53,24 @@ def read_cheat_sheet(path, file_name):
             config.cheat_sheet.add((query_text, project_id, query_code))
             total_line += 1
     print("Total read: {}".format(total_line))
+    print("Local: {}".format(len(config.cheat_sheet)))
 
 def output_cheat_sheet(path, file_name):
+    # read the MAC cheatsheet if existed
+    if (os.path.isfile(os.path.join(path, file_name))):
+        read_cheat_sheet(path, file_name)
+        os.remove(os.path.join(path, file_name))
+        print("Removed file: {}".format(file_name))
     URL = "https://crowdcollect2.siri.apple.com/main/project/{}/browsing/s/{}/r/{}"
+    total_line = 0
     with open(os.path.join(path, file_name), 'a') as f:
         writer = csv.writer(f)
         # loop for files
         for (query_text, project_id, query_code) in config.cheat_sheet:
             url = URL.format(project_id, query_code, query_code)
             writer.writerow([query_text, url, project_id, query_code])
+            total_line += 1
         f.close()
+    print("Total write: {}".format(total_line))
     config.cheat_sheet = set()
+    print("Local cleaned")

@@ -396,7 +396,7 @@ class Web:
         project_id = self.browser.execute_script(config.GET_CHEAT_PROJECT_ID)
         for query_code, query_text in zip(query_codes, query_texts):
             config.cheat_sheet.add((query_text, project_id, query_code))
-        print("Project id: {} \nUpdated: {} querys".format(project_id, len(query_codes)))
+        print("Project id: {} \nGot: {} querys \nLocal: {}".format(project_id, len(query_codes), len(config.cheat_sheet)))
 
     def quite_driver(self):
         self.browser.quit()
