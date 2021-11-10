@@ -31,6 +31,7 @@ class Database:
         self.get_version_url = self.mainUrl + "api/v1/system/version"
         self.get_expired_date_url = self.mainUrl + "api/v1/user/expired?grader={}"
         self.check_health_url = self.mainUrl + "api/v1/system/clientsHealthStatus"
+        self.update_query_answer_url = self.mainUrl + "api/v1/query?insertAns=true"
 
     # def grader_id_to_login_info(self, grader_id):
     #     role_filter = {
@@ -338,6 +339,9 @@ class Database:
             print_at("No Conflict Detected", tg, print_allowed)
             return None
         return conflict
+
+    def send_query_answer(self, data):
+        requests.post(self.update_query_answer_url, data)
 
     def check_health_status(self, version, grader_id):
         usr_name = authModel.get_usrName_from_graderId(grader_id)

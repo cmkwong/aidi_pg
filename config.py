@@ -182,6 +182,200 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
     """
 }
 
+GET_QUERY_ANSWER_COMMAND = {
+    "standard": """
+        function getProjectLink_Id_Locale_Querycode() {
+          const url = window.location["href"];
+          const re_id_locale = /\/project\/(\S+?)\/grading\/(\S+?)\/s\/(\S+?)\//;
+          const matched_array = url.match(re_id_locale);
+          if (matched_array) {
+            return [url, matched_array[1], matched_array[2], matched_array[3]];
+          }
+          return ["", "", "", ""];
+        }
+        
+        function getProjectType(project_id) {
+          // return project type: sbs, standard
+          const re_sbs = /(sbs)/;
+          const result = project_id.match(re_sbs);
+          if (result) {
+            return "sbs";
+          } else return "standard";
+        }
+        
+        function getSearchDateLocation(project_type) {
+          if (project_type === "standard") {
+            const re_date = /from (.+?)\./;
+            return document
+              .querySelector(".message.blue")
+              .querySelector("p")
+              .firstChild.textContent.match(re_date)[1];
+          } else if (project_type === "sbs") {
+            return document.querySelector(".html-widget-wrapper").querySelector("p")
+              .textContent;
+          }
+        }
+        
+        function getAnswer(project_type) {
+          if (project_type === "standard") {
+            let _ans = [];
+            [...Array(MAX_STANDARD_ANSWER_LEN).keys()].forEach((el) => {
+              if (
+                document.getElementById(
+                  `result${el}_validationresult${el}_inappropriate`
+                )?.checked
+              ) {
+                _ans.push("i");
+                return;
+              }
+              if (
+                document.getElementById(
+                  `result${el}_validationresult${el}_wrong_language`
+                )?.checked
+              ) {
+                _ans.push("l");
+                return;
+              }
+              if (
+                document.getElementById(
+                  `result${el}_validationresult${el}_cannot_be_judged`
+                )?.checked
+              ) {
+                _ans.push("x");
+                return;
+              }
+              if (document.getElementById(`result${el}_relevanceexcellent`)?.checked) {
+                _ans.push("e");
+                return;
+              }
+              if (document.getElementById(`result${el}_relevancegood`)?.checked) {
+                _ans.push("g");
+                return;
+              }
+              if (document.getElementById(`result${el}_relevancefair`)?.checked) {
+                _ans.push("f");
+                return;
+              }
+              if (document.getElementById(`result${el}_relevancebad`)?.checked) {
+                _ans.push("b");
+                return;
+              }
+            });
+            const ans_str = _ans.join("");
+            return ans_str;
+          }
+        }
+        
+        function getGrader() {
+          return document
+            .querySelector("#dd-menu__shared_component__-1-item0")
+            .innerText.trim()
+            .replace(/ /g, "");
+        }
+        
+        function getResults(project_type) {
+          let all_resultDict;
+          if (project_type === "standard") {
+            let all_parsecResult = [
+              ...document
+                .querySelector("iframe")
+                .contentDocument.querySelectorAll(".result"),
+            ];
+            all_parsecResult.length !== 0
+              ? all_parsecResult
+              : (all_parsecResult = [
+                  ...document
+                    .getElementsByClassName("iframe")[0]
+                    .getElementsByTagName("iframe")
+                    .item(0)
+                    .contentDocument.querySelectorAll(".parsec-result"),
+                ]);
+            all_resultDict = all_parsecResult.map((parsecResult) => {
+              let type = parsecResult.parentNode.className.split(" ")[1];
+              let title = _get_result_title(parsecResult);
+              let description = _get_result_description(parsecResult);
+              let footnote = _get_result_footnote(parsecResult);
+              let link = parsecResult.querySelector("a")?.getAttribute("href");
+              let resultDict = {
+                type: type ? type : "",
+                title: title ? title : "",
+                description: description ? description : "",
+                footnote: footnote ? footnote : "",
+                link: link ? link : "",
+              };
+              return resultDict;
+            });
+          } else if (project_type === "sbs") {
+            all_resultDict = [];
+          }
+          return all_resultDict;
+        }
+        
+        function getQueryText(project_type) {
+          if (project_type === "standard") {
+            return document
+              .querySelector("iframe")
+              .contentDocument.querySelector(".search input")
+              .getAttribute("value");
+          } else if (project_type === "valid") {
+            return document.querySelector("#widget-container h1").innerText;
+          } else if (project_type === "sbs") {
+            return document.querySelector(".utterance").innerText;
+          } else if (project_type === "token") {
+            return document.querySelector("#input-field").querySelector("input").value;
+          } else if (project_type === "classify") {
+            return document.querySelector("#display-section").querySelector("h1")
+              .textContent;
+          }
+        }
+        
+        function getInsertedAllowed(nextBtn) {
+          try {
+            if (nextBtn.classList.contains("notInsert")) {
+              return "false";
+            }
+            return "true";
+          } catch {
+            (err) => {
+              console.log(err);
+            };
+          }
+        }
+    
+        function getQueryPostData() {
+          try {
+            let [query_link, project_id, locale, query_code] =
+              getProjectLink_Id_Locale_Querycode();
+            let project_type = getProjectType(project_id);
+            let searchDateLocation = getSearchDateLocation(project_type);
+            let query_text = getQueryText(project_type);
+            let grader_ans = getAnswer(project_type);
+            let grader = getGrader();
+            let results = getResults(project_type);
+            let data = {
+              searchDateLocation: searchDateLocation,
+              query_text: query_text,
+              query_link: query_link,
+              grader_ans: grader_ans,
+              grader: grader,
+              project_id: project_id,
+              locale: locale,
+              query_code: query_code,
+              results: results,
+            };
+            return data;
+          } catch {
+            (err) => {
+              console.log(err);
+            };
+          }
+        }
+        
+        return getQueryPostData();
+    
+    """
+}
+
 GET_SEARCH_DATE_COMMAND = {
     "standard": """
         const re_date = /from (.+?)\./;

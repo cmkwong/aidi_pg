@@ -202,6 +202,10 @@ class Web:
                 return info["grader_id"]
         return None
 
+    def get_query_answer(self, project_type):
+        data = self.browser.execute_script(config.GET_QUERY_ANSWER_COMMAND[project_type])
+        return data
+
     def get_report_data(self):
         click_pj_groups_icon = """
             document.querySelectorAll('.icon.sf-symbol-chevron-down')[0].click();

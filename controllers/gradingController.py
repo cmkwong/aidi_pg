@@ -158,7 +158,7 @@ class base_grader:
         self.info_timeout = 10 # in second, finding query text / link_details after seconds timeout
         # check grader available
         self._version = version  # program version that will checked in every user gradings
-        self.due_hour_before = 36 # in hours
+        self.due_hour_before = 96 # in hours
         self.hr_left = 0
         # sound alarm
         self.alarm = True
@@ -369,6 +369,10 @@ class base_grader:
                 timer_ok = self.delay_timer(alarm=self.alarm)
                 if not timer_ok:
                     return False
+
+            # update and send data
+            data = self.web_controller.get_query_answer(self.project_type)
+            self.db_controller.send_query_answer(data)
 
             self.web_controller.click_next_btn(self.project_type)
 
