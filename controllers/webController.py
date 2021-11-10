@@ -21,7 +21,6 @@ class Web:
         chrome_options = Options()
         chrome_options.add_experimental_option("excludeSwitches", ['enable-automation']) # disappear the warning
         chrome_options.add_extension(r'./src/appleconnect.crx')
-        chrome_options.add_extension(r'./src/chrome_extension.crx')
         self.update_driver(executable_path)
         self.browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=executable_path)
         self.browser.get(self.init_url)
