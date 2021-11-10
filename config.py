@@ -208,7 +208,7 @@ GET_QUERY_ANSWER_COMMAND = {
           for (const version in filters) {
             description = [...result.querySelectorAll(filters[version])]
               ?.map((des) => des.innerText.substring(0, 200))
-              .join("\n");
+              .join("\\n");
             if (description) break;
           }
           return description;
