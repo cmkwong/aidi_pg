@@ -2,6 +2,8 @@ import asyncio
 import time
 import aiohttp
 import requests
+import threading
+from utils import osSystem
 from aiohttp.client import ClientSession
 
 mainUrl = "https://aidi-work-helper.herokuapp.com/"
@@ -74,3 +76,9 @@ start = time.time()
 project_list = project_finish_update(project_id, locale, grader)
 end = time.time()
 print(f'post project finished in {end - start} seconds')
+
+start = time.time()
+args = ("CEval-random-open-2021-relevance-saf-2021-10-28-a", "zh_HK", "threading")
+osSystem.thread_start(project_finish_update, "CEval-random-open-2021-relevance-saf-2021-10-28-a", "zh_HK", "threading")
+end = time.time()
+print(f'post project finished(threading) in {end - start} seconds')

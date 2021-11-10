@@ -2,6 +2,7 @@ from zipfile import ZipFile
 import config
 import os
 import csv
+import threading
 
 def get_required_file_name_startWith(path, startwith):
     for filename in os.listdir(path):
@@ -74,3 +75,7 @@ def output_cheat_sheet(path, file_name):
     print("Total write: {}".format(total_line))
     config.cheat_sheet = set()
     print("Local cleaned")
+
+def thread_start(fn, *args):
+    thread = threading.Thread(target=fn, args=args)
+    thread.start()
