@@ -184,6 +184,49 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
 
 GET_QUERY_ANSWER_COMMAND = {
     "standard": """
+        const MAX_STANDARD_ANSWER_LEN = 6;
+        
+        function _get_result_title(result) {
+          const filters = {
+            v1: ".title",
+            v2: ".result-card-title",
+          };
+          let title;
+          for (const version in filters) {
+            title = result.querySelector(filters[version])?.innerText;
+            if (title) break;
+          }
+          return title;
+        }
+        
+        function _get_result_description(result) {
+          const filters = {
+            v1: ".description",
+            v2: ".result-card-description",
+          };
+          let description;
+          for (const version in filters) {
+            description = [...result.querySelectorAll(filters[version])]
+              ?.map((des) => des.innerText.substring(0, 200))
+              .join("\n");
+            if (description) break;
+          }
+          return description;
+        }
+        
+        function _get_result_footnote(result) {
+          const filters = {
+            v1: ".footnote",
+            v2: ".result-card-footnote",
+          };
+          let footnote;
+          for (const version in filters) {
+            footnote = result.querySelector(filters[version])?.innerText;
+            if (footnote) break;
+          }
+          return footnote;
+        }
+        
         function getProjectLink_Id_Locale_Querycode() {
           const url = window.location["href"];
           const re_id_locale = /\/project\/(\S+?)\/grading\/(\S+?)\/s\/(\S+?)\//;
