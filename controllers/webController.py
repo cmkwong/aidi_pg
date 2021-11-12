@@ -66,11 +66,15 @@ class Web:
         js_code = "window.document.getElementsByClassName('" + class_name + "').click();"
         self.browser.execute_script(js_code)
 
-    def click_all_links(self, max_answer_slots, project_type):
+    def click_all_results(self, max_answer_slots, project_type):
         # click results
-        self.browser.execute_script(config.CLICK_ALL_RESULTS_COMMAND[project_type] % max_answer_slots)
-        # open web search
-        self.click_web_search(project_type)
+        try:
+            self.browser.execute_script(config.CLICK_ALL_RESULTS_COMMAND[project_type] % max_answer_slots)
+            # open web search
+            self.click_web_search(project_type)
+            self.back_tag_one()
+        except:
+            print("error of click all results")
 
     def click_web_search(self, project_type):
         self.back_tag_one()
@@ -201,7 +205,11 @@ class Web:
         return None
 
     def get_query_answer(self, project_type):
-        data = self.browser.execute_script(config.GET_QUERY_ANSWER_COMMAND[project_type])
+        data = None
+        try:
+            data = self.browser.execute_script(config.GET_QUERY_ANSWER_COMMAND[project_type])
+        except:
+            pass
         return data
 
     def get_report_data(self):
