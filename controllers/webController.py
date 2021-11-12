@@ -67,9 +67,8 @@ class Web:
         self.browser.execute_script(js_code)
 
     def click_all_links(self, max_answer_slots, project_type):
-        # open three results
-        links = self.get_result_links(project_type)
-        self.open_links_new_tags(links, max_answer_slots)
+        # click results
+        self.browser.execute_script(config.CLICK_ALL_RESULTS_COMMAND[project_type] % max_answer_slots)
         # open web search
         self.click_web_search(project_type)
 

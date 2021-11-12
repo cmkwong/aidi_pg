@@ -1,5 +1,5 @@
 from views.prints import *
-from utils import sounds
+from utils import sounds, osSystem
 import time
 import numpy as np
 
@@ -22,7 +22,7 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         return True
     elif (ans == '~'):
         try:
-            controller.click_all_links(max_answer_slots, project_type)
+            osSystem.thread_start(controller.click_all_links, max_answer_slots, project_type)
         except:
             print_at("Not available '~'", tg)
             return True

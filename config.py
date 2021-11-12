@@ -54,6 +54,32 @@ GET_WEB_SEARCH_LINK_COMMAND = {
     "sbs": """return document.querySelector('.punchout-link').getAttribute('href');""",
 }
 
+CLICK_ALL_RESULTS_COMMAND = {
+    "standard": """
+        function click_all_results(max_length) {
+          let all_parsecResult = [
+            ...document
+              .querySelector("iframe")
+              .contentDocument.querySelectorAll(".result"),
+          ];
+          all_parsecResult.length !== 0
+            ? all_parsecResult
+            : (all_parsecResult = [
+                ...document
+                  .getElementsByClassName("iframe")[0]
+                  .getElementsByTagName("iframe")
+                  .item(0)
+                  .contentDocument.querySelectorAll(".parsec-result"),
+              ]);
+          all_parsecResult.slice(0, max_length).forEach((el) => {
+            el.querySelector("a").click();
+          });
+        }
+        const max_len = Number('%s');
+        click_all_results(max_len);
+    """
+}
+
 GET_RESULT_LINKS_COMMAND = {
     "standard": """
             let all_parsecResult = [
