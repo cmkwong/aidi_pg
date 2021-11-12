@@ -105,10 +105,13 @@ class Web:
         self.click_web_search(project_type)
         self.close_other_tags()
 
-    def flash_all_tags(self, max_answer_slots, project_type):
-        # click on all links
+    def flash_all_results(self, max_answer_slots, project_type):
         self.click_all_results(max_answer_slots, project_type)
         self.close_other_tags()
+
+    def flash_all_tags(self, max_answer_slots, project_type):
+        # click on all links
+        self.flash_all_results(max_answer_slots, project_type)
         # flash web search
         self.flash_web_search(project_type)
         return True
