@@ -357,7 +357,7 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_web_search(self.project_type)
+                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
@@ -434,8 +434,8 @@ class base_grader:
         if not timer_ok:
             return False
 
-        # press web search
-        self.web_controller.flash_web_search(self.project_type)
+        # press all web search
+        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
 
         # grading ans that from database
         grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)

@@ -106,21 +106,10 @@ class Web:
         self.close_other_tags()
 
     def flash_all_tags(self, max_answer_slots, project_type):
-        # get links
-        try:
-            links = self.get_result_links(project_type)
-        except:
-            links = []
-            return False
-        # open the links one-by-one
-        links = links[:max_answer_slots]
-        for link in links:
-            try:
-                self.browser.execute_script("window.open('%s');" % link)
-                self.close_other_tags()
-            except:
-                print("A result link cannot open: \n", link)
-        # open web search
+        # click on all links
+        self.click_all_results(max_answer_slots, project_type)
+        self.close_other_tags()
+        # flash web search
         self.flash_web_search(project_type)
         return True
 
