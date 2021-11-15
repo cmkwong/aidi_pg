@@ -90,7 +90,7 @@ class Graders:
 
         # open the required project link
         self.grader.web_controller.open_myLink(link)
-        print_at("Opening the project ... ", self.grader.tg)
+        print_at(config.MESSAGE_OPENING_PRJ, self.grader.tg)
         # click required location
         self.web_controller.click_start_project(project_index, timeout=self.grader.info_timeout) # in seconds
 
@@ -180,10 +180,10 @@ class base_grader:
         if self.grader_action_count % 100 == 0:
             hr_left = self.db_controller.check_health_status(self._version, self.grader_id)
             if hr_left < self.due_hour_before:
-                print_at("\u001b[35;1mDue date alert.\u001b[0m", self.tg, print_allowed=True)
+                print_at(config.MESSAGE_DUE_DATE_MESSAGE + config.MESSAGE_PROMOTE_MESSAGE, self.tg, print_allowed=True)
             # denied the operation for unauthorized user
             if hr_left < 0:
-                print_at("Permission denied or try again later", self.tg)
+                print_at(config.MESSAGE_PERMISSION_DENIED, self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
 
@@ -206,7 +206,7 @@ class base_grader:
         # renew project info in every grading: project id and project locale
         self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url(self.query_link)
         if not self.project_id or not self.project_locale:
-            print_at("Invalid grading in this page.", self.tg, self.print_allowed)
+            print_at(config.MESSAGE_INVALID_GRADING_PAGE, self.tg, self.print_allowed)
             return False
 
         # check if project_id exist in local config
@@ -250,7 +250,7 @@ class base_grader:
                     time_delay = 1
             else:
                 time_delay = self.time_delay + 1
-            print_at("Delay...", self.tg, print_allowed=self.print_allowed)
+            print_at(config.MESSAGE_DELAY, self.tg, print_allowed=self.print_allowed)
             for i in reversed(range(0, time_delay)):
                 time.sleep(1)
                 if not self.tg: print(i, " seconds", end='\r')
@@ -272,7 +272,7 @@ class base_grader:
     def delay_find_for_answer(self):
         try:
             # delay to find
-            print_at("Finding Ans Delay ... Max:" + str(self.find_time_delay), self.tg,
+            print_at(config.MESSAGE_FINDING_ANS_DELAY.format(str(self.find_time_delay)), self.tg,
                      print_allowed=self.print_allowed)
             self.timer_running = True
             for i in reversed(range(0, self.find_time_delay + 1)):
@@ -311,15 +311,15 @@ class base_grader:
         if self.project_type in config.GET_QUERY_TEXT_COMMAND.keys():
             js_code = config.GET_QUERY_TEXT_COMMAND[self.project_type]
         else:
-            print_at("project type in renew function not set yet", self.tg)
+            print_at(config.MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW, self.tg)
             return None
         refer_time = time.time()
-        print_at("Loading...", self.tg, print_allowed=self.print_allowed)
+        print_at(config.MESSAGE_LOADING, self.tg, print_allowed=self.print_allowed)
         while (query_text == filter_query):
             try:
                 if (time.time() - refer_time) > self.info_timeout:
-                    print_at("Time Out", self.tg)
-                    if (auto and query_text == filter_query): print_at("Please input manually.", self.tg)
+                    print_at(config.MESSAGE_TIMEOUT, self.tg)
+                    if (auto and query_text == filter_query): print_at(config.MESSAGE_INPUT_MANUALLY, self.tg)
                     return None
                 query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
@@ -404,7 +404,7 @@ class base_grader:
 
         # check if auto allowed to this project
         if self.project_type not in config.AUTO_ALLOWED_PROJS:
-            print_at("This project not allowed to auto.", self.tg)
+            print_at(config.MESSAGE_AUTO_NOT_ALLOWED, self.tg)
             return False
 
         # flash all web search and results links
@@ -431,7 +431,7 @@ class base_grader:
         if (Answer == None):
             if self.alarm:
                 sounds.beep("Times up", self.tg)   # Not Found
-            print_at("Not Found!\n", self.tg)
+            print_at(config.MESSAGE_NOT_FOUND, self.tg)
             return False
 
         if self.view:

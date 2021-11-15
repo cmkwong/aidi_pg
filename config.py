@@ -562,6 +562,36 @@ GET_CHEAT_PROJECT_ID = """
     return get_project_id();
 """
 
+# --------------------------------- MESSAGE ------------------------------ #
+MESSAGE_RED_WRAPPER = "\u001b[35;5;1m{}\u001b[0m"
+MESSAGE_GREEN_WRAPPER = "\u001b[35;5;40m{}\u001b[0m"
+MESSAGE_DUE_DATE_MESSAGE =                              MESSAGE_RED_WRAPPER.format("Due date alert.")
+MESSAGE_NOT_CORRECT_ANS =                               MESSAGE_RED_WRAPPER.format("--------Not correct ans detected.--------")
+MESSAGE_NO_PROJECT_CODE_IN_STANDARD_PROJECT_TYPE =      MESSAGE_RED_WRAPPER.format("No project code in standard project type.")
+MESSAGE_WRONG_LEN_ANS =                                 MESSAGE_RED_WRAPPER.format("Wrong length of answer.")
+MESSAGE_COMMENTS_NEEDED =                               MESSAGE_RED_WRAPPER.format("Comments needed.")
+MESSAGE_NO_PROJECT_TYPE_SET =                           MESSAGE_RED_WRAPPER.format("Project type not setup correctly.")
+MESSAGE_LIMIT_REACHED =                                 MESSAGE_RED_WRAPPER.format("Limit Reached.")
+MESSAGE_BASE_COMMAND_NOT_AVAILABLE =                    MESSAGE_RED_WRAPPER.format("Not available '{}'")
+MESSAGE_PERMISSION_DENIED =                             MESSAGE_RED_WRAPPER.format("Permission denied or try again later.")
+MESSAGE_INVALID_GRADING_PAGE =                          MESSAGE_RED_WRAPPER.format("Invalid grading in this page.")
+MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW =               MESSAGE_RED_WRAPPER.format("project type in renew function not set yet")
+MESSAGE_TIMEOUT =                                       MESSAGE_RED_WRAPPER.format("Time Out")
+MESSAGE_OPENING_PRJ =                                   MESSAGE_GREEN_WRAPPER.format("Opening the project ... ")
+MESSAGE_NO_FINISHED_POP =                               MESSAGE_RED_WRAPPER.format("No Finished Pop-up")
+MESSAGE_NO_CONFLICT =                                   MESSAGE_GREEN_WRAPPER.format("No Conflict")
+MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, MESSAGE_GREEN_WRAPPER.format('Error Page Sent'))
+MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $78/1m (STANDARD)\n  PLAN B: $177/3m {MESSAGE_GREEN_WRAPPER.format('(25% OFF)')}\n************************\n\n"
+
+MESSAGE_LOADING =                                       "Loading..."
+MESSAGE_DELAY =                                         "Delay..."
+MESSAGE_FINDING_ANS_DELAY =                             "Finding Ans Delay ... Max: {}"
+MESSAGE_INPUT_MANUALLY =                                "Please input manually."
+MESSAGE_AUTO_NOT_ALLOWED =                              "This project not allowed to auto."
+MESSAGE_NOT_FOUND =                                     "Not Found!"
+
+
+# --------------------------------- HELPER ------------------------------ #
 help_command = {
 
     "spot12/saf/eval3": {

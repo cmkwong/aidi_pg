@@ -115,9 +115,9 @@ class Database:
         }
         res = requests.post(self.prj_finish_url, data)
         if res.status_code == 200:
-            print_at("{}({})\n \u001b[32;1mError Page Sent\u001b[0m.".format(project_id, locale), tg)
+            print_at(config.MESSAGE_ERROR_PAGE_SENT.format(project_id, locale), tg)
         else:
-            print_at("No Finished Pop-up.", tg)
+            print_at(config.MESSAGE_NO_FINISHED_POP, tg)
 
     def create_grader_table_by_id(self):
         grader_by_id = {}
@@ -312,7 +312,7 @@ class Database:
         # find the query_datas
         res = requests.get(self.find_many_queries_from_project_id_url.format(project_id, max_queries))
         if res.status_code != 200:
-            print_at("No Such project", tg, print_allowed)
+            print_at(config.MESSAGE_NOT_FOUND, tg, print_allowed)
             return None
         query_datas = res.json()['data']
         query_ids = self._get_query_ids_from_query_datas(query_datas)
@@ -336,7 +336,7 @@ class Database:
                 conflict.links.append(query_data["query_link"])
                 conflict.total += 1
         if conflict.total == 0:
-            print_at("No Conflict Detected", tg, print_allowed)
+            print_at(config.MESSAGE_NO_CONFLICT, tg, print_allowed)
             return None
         return conflict
 

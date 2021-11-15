@@ -239,7 +239,7 @@ def control_command_check(graders, ans):
                                                                             graders.grader.query_code)
                     gradingController.print_popular_ans_detail(Answer, graders.grader.tg)
                 except:
-                    print_at('Error of printing distribution', graders.grader.tg)
+                    print_at(config.MESSAGE_NOT_FOUND, graders.grader.tg)
                 return command_checked
 
             elif (ans == "--test_tg"):
