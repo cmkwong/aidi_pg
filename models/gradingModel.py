@@ -56,7 +56,7 @@ def pattern_one(a, num, web_controller, tg=None):
         elif (a == 'b'):
             web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
         else:
-            print_at(config.MESSAGE_NOT_CORRECT_ANS, tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
     return True
 
@@ -179,7 +179,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         elif ans[0] is 'b':
             web_controller.select_query_click('#query_topicother_ambiguous_or_unknown')
         else:
-            print_at(config.MESSAGE_NOT_CORRECT_ANS, tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
         # goal
         if ans[1] is '1':
@@ -201,7 +201,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         elif ans[1] is '9':
             web_controller.select_query_click('#query_goalunknown_other')
         else:
-            print_at(config.MESSAGE_NOT_CORRECT_ANS, tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
         if len(ans) > 2:
             # loop: set the check false (reset)
@@ -222,7 +222,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             for c in ans[2:]:
                 pos = str_ans.find(c)
                 if pos == -1:
-                    print_at(config.MESSAGE_NOT_CORRECT_ANS, tg)
+                    print_at(config.MESSAGE_WRONG_ANS, tg)
                     return False
                 time.sleep(0.1)
                 web_controller.browser.execute_script(
@@ -250,7 +250,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             web_controller.click_by_id("query_validationother")
             web_controller.textarea_words("#text-widget-wrapper textarea", ans)
         else:
-            print_at(config.MESSAGE_NOT_CORRECT_ANS, tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
         return True
 
@@ -301,7 +301,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                         elif command[0] == 'd':
                             web_controller.browser.execute_script(js_code % (strength + 3))
                         else:
-                            print_at(config.MESSAGE_NOT_CORRECT_ANS, tg)
+                            print_at(config.MESSAGE_WRONG_ANS, tg)
                             return False
                     else:
                         print_at(config.MESSAGE_WRONG_LEN_ANS, tg)

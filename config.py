@@ -569,29 +569,29 @@ class bcolor:
     BLINK = '\u001b[5;30;43m{}\u001b[0m'
     STAR = '**{}**'
 MESSAGE_DUE_DATE_MESSAGE =                              bcolor.WARNING.format("Due date alert.")
-MESSAGE_NOT_CORRECT_ANS =                               bcolor.WARNING.format("--------Not correct ans detected.--------")
+MESSAGE_WRONG_ANS =                                     bcolor.WARNING.format("Wrong ans.")
 MESSAGE_NO_PROJECT_CODE_IN_STANDARD_PROJECT_TYPE =      bcolor.WARNING.format("No project code in standard project type.")
 MESSAGE_WRONG_LEN_ANS =                                 bcolor.WARNING.format("Wrong length of answer.")
 MESSAGE_COMMENTS_NEEDED =                               bcolor.WARNING.format("Comments needed.")
 MESSAGE_NO_PROJECT_TYPE_SET =                           bcolor.WARNING.format("Project type not setup correctly.")
-MESSAGE_LIMIT_REACHED =                                 bcolor.WARNING.format("Limit Reached.")
 MESSAGE_BASE_COMMAND_NOT_AVAILABLE =                    bcolor.WARNING.format("Not available '{}'")
 MESSAGE_PERMISSION_DENIED =                             bcolor.WARNING.format("Permission denied or try again later.")
 MESSAGE_INVALID_GRADING_PAGE =                          bcolor.WARNING.format("Invalid grading in this page.")
 MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW =               bcolor.WARNING.format("project type in renew function not set yet")
 MESSAGE_TIMEOUT =                                       bcolor.WARNING.format("Time Out")
 MESSAGE_NO_FINISHED_POP =                               bcolor.WARNING.format("No Finished Pop-up")
-MESSAGE_OPENING_PRJ =                                   bcolor.OKGREEN.format("Opening the project ... ")
 MESSAGE_NO_CONFLICT =                                   bcolor.OKGREEN.format("No Conflict")
 MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, bcolor.OKGREEN.format('Error Page Sent'))
 MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $78/1m (STANDARD)\n  PLAN B: $177/3m {bcolor.BLINK.format('(25% OFF)')}\n************************\n\n"
 
+MESSAGE_OPENING_PRJ =                                   "Opening the project ... "
 MESSAGE_LOADING =                                       "Loading..."
 MESSAGE_DELAY =                                         "Delay..."
 MESSAGE_FINDING_ANS_DELAY =                             "Finding Ans Delay ... Max: {}"
 MESSAGE_INPUT_MANUALLY =                                "Please input manually."
 MESSAGE_AUTO_NOT_ALLOWED =                              "This project not allowed to auto."
 MESSAGE_NOT_FOUND =                                     "Not Found!"
+MESSAGE_LIMIT_REACHED =                                 "Limit Reached."
 
 
 # --------------------------------- HELPER ------------------------------ #
