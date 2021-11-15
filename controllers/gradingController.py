@@ -170,7 +170,7 @@ class base_grader:
         # training mode, if so, find ans from most popular one
         self.training = False
 
-    def renew_status(self):
+    def renew_status(self, auto):
 
         # update grader_id (for access the DB)
         if self.grader_id is None:
@@ -193,7 +193,7 @@ class base_grader:
             return False
 
         # get query text
-        query_prepare_ok = self.query_prepare()
+        query_prepare_ok = self.query_prepare(auto)
         if not query_prepare_ok:
             return False
 
@@ -219,8 +219,8 @@ class base_grader:
         self.project_type = config.projects_code[self.project_id]['project_type']
         return True
 
-    def query_prepare(self):
-        self.query_text = self.get_query_text()
+    def query_prepare(self, auto):
+        self.query_text = self.get_query_text(auto)
         if self.query_text == None:
             return False
         self.query_code = self.web_controller.get_queryCode_from_url()  # right after the getting query text successful
@@ -303,8 +303,11 @@ class base_grader:
             self.timer_running = False
             return False
 
-    def get_query_text(self, filter_query=None):
-        query_text, filter_query = filter_query, filter_query
+    def get_query_text(self, auto=False):
+        if not auto:
+            query_text, filter_query = None, None
+        else:
+            query_text, filter_query = self.p_query_text, self.p_query_text
         if self.project_type in config.GET_QUERY_TEXT_COMMAND.keys():
             js_code = config.GET_QUERY_TEXT_COMMAND[self.project_type]
         else:
@@ -316,6 +319,7 @@ class base_grader:
             try:
                 if (time.time() - refer_time) > self.info_timeout:
                     print_at("Time Out", self.tg)
+                    if (auto and query_text == filter_query): print_at("Please input manually.", self.tg)
                     return None
                 query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
@@ -338,9 +342,10 @@ class base_grader:
         return link_details
 
     def execute(self, ans):
-        renew_ok = self.renew_status()
+        renew_ok = self.renew_status(auto=False)
         if not renew_ok:
             return False
+
         # check if there is base command: ~, `, !
         base_command = gradingModel.base_code_check(self.web_controller, self.project_type, ans, max_answer_slots=self.project_code["max_answer_slots"], tg=self.tg)
         if base_command:
@@ -357,7 +362,7 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
+                self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
@@ -389,7 +394,7 @@ class base_grader:
     def auto_execute(self):
 
         # auto mode
-        renew_ok = self.renew_status()
+        renew_ok = self.renew_status(auto=True)
         if not renew_ok:
             return False
 
@@ -397,6 +402,9 @@ class base_grader:
         if self.project_type not in config.AUTO_ALLOWED_PROJS:
             print_at("This project not allowed to auto.", self.tg)
             return False
+
+        # flash all web search and results links
+        self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
 
         if self.view:
             print_at("text: " + self.query_text, self.tg)
@@ -433,9 +441,6 @@ class base_grader:
         timer_ok = self.delay_timer(time_used=Answer.find_time_used, alarm=False)
         if not timer_ok:
             return False
-
-        # press all web search
-        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
 
         # grading ans that from database
         grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)

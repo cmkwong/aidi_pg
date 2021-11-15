@@ -77,7 +77,8 @@ CLICK_ALL_RESULTS_COMMAND = {
         }
         const max_len = Number('%s');
         click_all_results(max_len);
-    """
+    """,
+    "sbs": ""
 }
 
 GET_RESULT_LINKS_COMMAND = {
@@ -442,7 +443,8 @@ GET_QUERY_ANSWER_COMMAND = {
         
         return getQueryPostData();
     
-    """
+    """,
+    "sbs": ""
 }
 
 GET_SEARCH_DATE_COMMAND = {

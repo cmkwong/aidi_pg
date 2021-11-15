@@ -8,7 +8,6 @@ class Telegram_Bot:
     def __init__(self, token):
         self.chat_id = False
         self.bot = telebot.TeleBot(token)
-        self.old_query_text = None
         self.current_query_text = False
         self.tg_available = False
         self.gradingFinish = False
@@ -26,7 +25,7 @@ class Telegram_Bot:
                     graders.grader.new_query = False
 
             if graders.auto_available is False:
-                self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text)
+                self.current_query_text = tgModel.send_tg_info(graders.grader)
                 self.next_query_check()
                 # inside grader.py, need to set False for user input manually
                 graders.auto_mode = False
@@ -116,7 +115,7 @@ class Telegram_Bot:
                 if graders.grader.grader_level >= 2:
                     try:
                         graders.grader.project_setup()
-                        graders.grader.query_prepare()
+                        graders.grader.query_prepare(auto=False)
                         self.bot.send_message(message.chat.id, "Finding: {} ({})".format(graders.grader.query_text, graders.grader.query_code))
                         Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                                 graders.grader.project_locale,
@@ -359,9 +358,8 @@ class Telegram_Bot:
                     if self.gradingFinish:
                         # waiting until next query next query
                         self.gradingFinish = False
-                        self.old_query_text = self.current_query_text
                         if graders.auto_mode == False:
-                            self.current_query_text = tgModel.send_tg_info(graders.grader, old_query_text=self.old_query_text)
+                            self.current_query_text = tgModel.send_tg_info(graders.grader)
                             self.next_query_check()
                     if graders.auto_mode == False:
                         self.bot.send_message(self.chat_id, "Input:")
