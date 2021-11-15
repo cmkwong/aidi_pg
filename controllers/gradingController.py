@@ -398,6 +398,10 @@ class base_grader:
         if not renew_ok:
             return False
 
+        # debug
+        print_at('current text: {}'.format(self.query_text), self.tg, self.print_allowed)
+        print_at('previous text: {}'.format(self.p_query_text), self.tg, self.print_allowed)
+
         # check if auto allowed to this project
         if self.project_type not in config.AUTO_ALLOWED_PROJS:
             print_at("This project not allowed to auto.", self.tg)

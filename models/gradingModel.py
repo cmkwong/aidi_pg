@@ -22,7 +22,7 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         return True
     elif (ans == '~'):
         try:
-            osSystem.thread_start(controller.click_all_results, max_answer_slots, project_type)
+            controller.click_all_results(max_answer_slots, project_type)
         except:
             print_at("Not available '~'", tg)
             return True
