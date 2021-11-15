@@ -563,25 +563,27 @@ GET_CHEAT_PROJECT_ID = """
 """
 
 # --------------------------------- MESSAGE ------------------------------ #
-MESSAGE_RED_WRAPPER = "\u001b[35;5;1m{}\u001b[0m"
-MESSAGE_GREEN_WRAPPER = "\u001b[35;5;40m{}\u001b[0m"
-MESSAGE_DUE_DATE_MESSAGE =                              MESSAGE_RED_WRAPPER.format("Due date alert.")
-MESSAGE_NOT_CORRECT_ANS =                               MESSAGE_RED_WRAPPER.format("--------Not correct ans detected.--------")
-MESSAGE_NO_PROJECT_CODE_IN_STANDARD_PROJECT_TYPE =      MESSAGE_RED_WRAPPER.format("No project code in standard project type.")
-MESSAGE_WRONG_LEN_ANS =                                 MESSAGE_RED_WRAPPER.format("Wrong length of answer.")
-MESSAGE_COMMENTS_NEEDED =                               MESSAGE_RED_WRAPPER.format("Comments needed.")
-MESSAGE_NO_PROJECT_TYPE_SET =                           MESSAGE_RED_WRAPPER.format("Project type not setup correctly.")
-MESSAGE_LIMIT_REACHED =                                 MESSAGE_RED_WRAPPER.format("Limit Reached.")
-MESSAGE_BASE_COMMAND_NOT_AVAILABLE =                    MESSAGE_RED_WRAPPER.format("Not available '{}'")
-MESSAGE_PERMISSION_DENIED =                             MESSAGE_RED_WRAPPER.format("Permission denied or try again later.")
-MESSAGE_INVALID_GRADING_PAGE =                          MESSAGE_RED_WRAPPER.format("Invalid grading in this page.")
-MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW =               MESSAGE_RED_WRAPPER.format("project type in renew function not set yet")
-MESSAGE_TIMEOUT =                                       MESSAGE_RED_WRAPPER.format("Time Out")
-MESSAGE_OPENING_PRJ =                                   MESSAGE_GREEN_WRAPPER.format("Opening the project ... ")
-MESSAGE_NO_FINISHED_POP =                               MESSAGE_RED_WRAPPER.format("No Finished Pop-up")
-MESSAGE_NO_CONFLICT =                                   MESSAGE_GREEN_WRAPPER.format("No Conflict")
-MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, MESSAGE_GREEN_WRAPPER.format('Error Page Sent'))
-MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $78/1m (STANDARD)\n  PLAN B: $177/3m {MESSAGE_GREEN_WRAPPER.format('(25% OFF)')}\n************************\n\n"
+class bcolor:
+    WARNING = '\u001b[38;5;196m{}\u001b[0m'
+    OKGREEN = '\u001b[38;5;48m{}\u001b[0m'
+    BLINK = '\u001b[5;30;43m{}\u001b[0m'
+MESSAGE_DUE_DATE_MESSAGE =                              bcolor.WARNING.format("Due date alert.")
+MESSAGE_NOT_CORRECT_ANS =                               bcolor.WARNING.format("--------Not correct ans detected.--------")
+MESSAGE_NO_PROJECT_CODE_IN_STANDARD_PROJECT_TYPE =      bcolor.WARNING.format("No project code in standard project type.")
+MESSAGE_WRONG_LEN_ANS =                                 bcolor.WARNING.format("Wrong length of answer.")
+MESSAGE_COMMENTS_NEEDED =                               bcolor.WARNING.format("Comments needed.")
+MESSAGE_NO_PROJECT_TYPE_SET =                           bcolor.WARNING.format("Project type not setup correctly.")
+MESSAGE_LIMIT_REACHED =                                 bcolor.WARNING.format("Limit Reached.")
+MESSAGE_BASE_COMMAND_NOT_AVAILABLE =                    bcolor.WARNING.format("Not available '{}'")
+MESSAGE_PERMISSION_DENIED =                             bcolor.WARNING.format("Permission denied or try again later.")
+MESSAGE_INVALID_GRADING_PAGE =                          bcolor.WARNING.format("Invalid grading in this page.")
+MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW =               bcolor.WARNING.format("project type in renew function not set yet")
+MESSAGE_TIMEOUT =                                       bcolor.WARNING.format("Time Out")
+MESSAGE_NO_FINISHED_POP =                               bcolor.WARNING.format("No Finished Pop-up")
+MESSAGE_OPENING_PRJ =                                   bcolor.OKGREEN.format("Opening the project ... ")
+MESSAGE_NO_CONFLICT =                                   bcolor.OKGREEN.format("No Conflict")
+MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, bcolor.OKGREEN.format('Error Page Sent'))
+MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $78/1m (STANDARD)\n  PLAN B: $177/3m {bcolor.BLINK.format('(25% OFF)')}\n************************\n\n"
 
 MESSAGE_LOADING =                                       "Loading..."
 MESSAGE_DELAY =                                         "Delay..."
