@@ -565,8 +565,9 @@ GET_CHEAT_PROJECT_ID = """
 # --------------------------------- MESSAGE ------------------------------ #
 class bcolor:
     WARNING = '\u001b[38;5;196m{}\u001b[0m'
-    OKGREEN = '\u001b[38;5;48m{}\u001b[0m'
+    OKGREEN = '\u001b[38;5;40m{}\u001b[0m'
     BLINK = '\u001b[5;30;43m{}\u001b[0m'
+    STAR = '**{}**'
 MESSAGE_DUE_DATE_MESSAGE =                              bcolor.WARNING.format("Due date alert.")
 MESSAGE_NOT_CORRECT_ANS =                               bcolor.WARNING.format("--------Not correct ans detected.--------")
 MESSAGE_NO_PROJECT_CODE_IN_STANDARD_PROJECT_TYPE =      bcolor.WARNING.format("No project code in standard project type.")
