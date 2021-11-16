@@ -26,10 +26,11 @@ def _form_tg_send_text(search_date, query_text, web_search_link, max_index, link
     return text
 
 # for tg_bot.py used
-def send_tg_info(grader, old_query_text=None):
+def send_tg_info(grader):
 
     # get query text (plus condition)
-    query_text = grader.get_query_text(filter_query=old_query_text)
+    grader.query_prepare(auto=False)
+    query_text = grader.query_text
     if not query_text:
         return False
     try:

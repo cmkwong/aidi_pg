@@ -34,4 +34,4 @@ def print_status(grader):
     done = str(grader.query_done).strip()
     delays = str(grader.time_delay).strip()
     md = str(grader.manual_timer).strip()
-    print_at("Done: " + done + " t-" + delays + " MD-" + md + "\n", grader.tg, grader.print_allowed)
+    print_at("Done: {} t-{} MD-{}\n".format(done, delays, md), grader.tg, grader.print_allowed)

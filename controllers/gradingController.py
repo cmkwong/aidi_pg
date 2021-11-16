@@ -90,7 +90,7 @@ class Graders:
 
         # open the required project link
         self.grader.web_controller.open_myLink(link)
-        print_at("Opening the project ... ", self.grader.tg)
+        print_at(config.MESSAGE_OPENING_PRJ, self.grader.tg)
         # click required location
         self.web_controller.click_start_project(project_index, timeout=self.grader.info_timeout) # in seconds
 
@@ -170,7 +170,7 @@ class base_grader:
         # training mode, if so, find ans from most popular one
         self.training = False
 
-    def renew_status(self):
+    def renew_status(self, auto):
 
         # update grader_id (for access the DB)
         if self.grader_id is None:
@@ -180,10 +180,10 @@ class base_grader:
         if self.grader_action_count % 100 == 0:
             hr_left = self.db_controller.check_health_status(self._version, self.grader_id)
             if hr_left < self.due_hour_before:
-                print_at("\u001b[35;1mDue date alert.\u001b[0m", self.tg, print_allowed=True)
+                print_at(config.MESSAGE_DUE_DATE_MESSAGE + config.MESSAGE_PROMOTE_MESSAGE, self.tg, print_allowed=True)
             # denied the operation for unauthorized user
             if hr_left < 0:
-                print_at("Permission denied or try again later", self.tg)
+                print_at(config.MESSAGE_PERMISSION_DENIED, self.tg)
                 self.grader_action_count = 0 # reset to 0 then next time check again
                 return False
 
@@ -193,7 +193,7 @@ class base_grader:
             return False
 
         # get query text
-        query_prepare_ok = self.query_prepare()
+        query_prepare_ok = self.query_prepare(auto)
         if not query_prepare_ok:
             return False
 
@@ -206,7 +206,7 @@ class base_grader:
         # renew project info in every grading: project id and project locale
         self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url(self.query_link)
         if not self.project_id or not self.project_locale:
-            print_at("Invalid grading in this page.", self.tg, self.print_allowed)
+            print_at(config.MESSAGE_INVALID_GRADING_PAGE, self.tg, self.print_allowed)
             return False
 
         # check if project_id exist in local config
@@ -219,8 +219,8 @@ class base_grader:
         self.project_type = config.projects_code[self.project_id]['project_type']
         return True
 
-    def query_prepare(self):
-        self.query_text = self.get_query_text()
+    def query_prepare(self, auto):
+        self.query_text = self.get_query_text(auto)
         if self.query_text == None:
             return False
         self.query_code = self.web_controller.get_queryCode_from_url()  # right after the getting query text successful
@@ -250,7 +250,7 @@ class base_grader:
                     time_delay = 1
             else:
                 time_delay = self.time_delay + 1
-            print_at("Delay...", self.tg, print_allowed=self.print_allowed)
+            print_at(config.MESSAGE_DELAY, self.tg, print_allowed=self.print_allowed)
             for i in reversed(range(0, time_delay)):
                 time.sleep(1)
                 if not self.tg: print(i, " seconds", end='\r')
@@ -272,7 +272,7 @@ class base_grader:
     def delay_find_for_answer(self):
         try:
             # delay to find
-            print_at("Finding Ans Delay ... Max:" + str(self.find_time_delay), self.tg,
+            print_at(config.MESSAGE_FINDING_ANS_DELAY.format(str(self.find_time_delay)), self.tg,
                      print_allowed=self.print_allowed)
             self.timer_running = True
             for i in reversed(range(0, self.find_time_delay + 1)):
@@ -303,19 +303,23 @@ class base_grader:
             self.timer_running = False
             return False
 
-    def get_query_text(self, filter_query=None):
-        query_text, filter_query = filter_query, filter_query
+    def get_query_text(self, auto=False):
+        if not auto:
+            query_text, filter_query = None, None
+        else:
+            query_text, filter_query = self.p_query_text, self.p_query_text
         if self.project_type in config.GET_QUERY_TEXT_COMMAND.keys():
             js_code = config.GET_QUERY_TEXT_COMMAND[self.project_type]
         else:
-            print_at("project type in renew function not set yet", self.tg)
+            print_at(config.MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW, self.tg)
             return None
         refer_time = time.time()
-        print_at("Loading...", self.tg, print_allowed=self.print_allowed)
+        print_at(config.MESSAGE_LOADING, self.tg, print_allowed=self.print_allowed)
         while (query_text == filter_query):
             try:
                 if (time.time() - refer_time) > self.info_timeout:
-                    print_at("Time Out", self.tg)
+                    print_at(config.MESSAGE_TIMEOUT, self.tg)
+                    if (auto and query_text == filter_query): print_at(config.MESSAGE_INPUT_MANUALLY, self.tg)
                     return None
                 query_text = self.web_controller.browser.execute_script(js_code)
                 time.sleep(0.5)
@@ -338,9 +342,10 @@ class base_grader:
         return link_details
 
     def execute(self, ans):
-        renew_ok = self.renew_status()
+        renew_ok = self.renew_status(auto=False)
         if not renew_ok:
             return False
+
         # check if there is base command: ~, `, !
         base_command = gradingModel.base_code_check(self.web_controller, self.project_type, ans, max_answer_slots=self.project_code["max_answer_slots"], tg=self.tg)
         if base_command:
@@ -357,7 +362,7 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
+                self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
@@ -389,14 +394,21 @@ class base_grader:
     def auto_execute(self):
 
         # auto mode
-        renew_ok = self.renew_status()
+        renew_ok = self.renew_status(auto=True)
         if not renew_ok:
             return False
 
+        # debug
+        print_at('current text: {}'.format(self.query_text), self.tg, self.print_allowed)
+        print_at('previous text: {}'.format(self.p_query_text), self.tg, self.print_allowed)
+
         # check if auto allowed to this project
         if self.project_type not in config.AUTO_ALLOWED_PROJS:
-            print_at("This project not allowed to auto.", self.tg)
+            print_at(config.MESSAGE_AUTO_NOT_ALLOWED, self.tg)
             return False
+
+        # flash all web search and results links
+        self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
 
         if self.view:
             print_at("text: " + self.query_text, self.tg)
@@ -419,7 +431,7 @@ class base_grader:
         if (Answer == None):
             if self.alarm:
                 sounds.beep("Times up", self.tg)   # Not Found
-            print_at("Not Found!\n", self.tg)
+            print_at(config.MESSAGE_NOT_FOUND, self.tg)
             return False
 
         if self.view:
@@ -433,9 +445,6 @@ class base_grader:
         timer_ok = self.delay_timer(time_used=Answer.find_time_used, alarm=False)
         if not timer_ok:
             return False
-
-        # press all web search
-        self.web_controller.flash_all_tags(self.project_code["max_answer_slots"], self.project_type)
 
         # grading ans that from database
         grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)

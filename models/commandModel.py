@@ -232,14 +232,14 @@ def control_command_check(graders, ans):
             elif (ans == "-dist"):
                 try:
                     graders.grader.project_setup()
-                    graders.grader.query_prepare()
+                    graders.grader.query_prepare(auto=False)
                     print("Finding: {} ({})".format(graders.grader.query_text, graders.grader.query_code))
                     Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                             graders.grader.project_locale,
                                                                             graders.grader.query_code)
                     gradingController.print_popular_ans_detail(Answer, graders.grader.tg)
                 except:
-                    print_at('Error of printing distribution', graders.grader.tg)
+                    print_at(config.MESSAGE_NOT_FOUND, graders.grader.tg)
                 return command_checked
 
             elif (ans == "--test_tg"):

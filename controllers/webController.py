@@ -109,13 +109,6 @@ class Web:
         self.click_all_results(max_answer_slots, project_type)
         self.close_other_tags()
 
-    def flash_all_tags(self, max_answer_slots, project_type):
-        # click on all links
-        self.flash_all_results(max_answer_slots, project_type)
-        # flash web search
-        self.flash_web_search(project_type)
-        return True
-
     def get_web_search_link(self, project_type):
         js_code = config.GET_WEB_SEARCH_LINK_COMMAND[project_type]
         link = self.browser.execute_script(js_code)
@@ -198,7 +191,7 @@ class Web:
 
     def get_query_answer(self, project_type):
         data = None
-        try:
+        try: # prevent getting error if it is not project expected
             data = self.browser.execute_script(config.GET_QUERY_ANSWER_COMMAND[project_type])
         except:
             pass

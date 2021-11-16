@@ -3,19 +3,17 @@ from utils.inputs import *
 
 # for tg project list
 def get_project_list_text(prev_project_index, projects_info, tg=False):
-    # define highlight text (tg or non-tg)
-    if not tg:
-        hl_start, hl_end = "\u001b[32;1m", "\u001b[0m"
-    else:
-        hl_start, hl_end = "**", "**"
-
     # build the text menu
     txt = ''
     txt += "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n"
     txt += "Please choose the required project Number: \n"
     for index, project in enumerate(projects_info):
         if index == prev_project_index:
-            txt += "{}{}: {}{}\n".format(hl_start, str(index+1), project["name"], hl_end)
+            # define highlight text (tg or non-tg)
+            if not tg:
+                txt += config.bcolor.OKGREEN.format("{}: {}\n".format(str(index+1), project["name"]))
+            else:
+                txt += config.bcolor.STAR.format("{}: {}\n".format(str(index + 1), project["name"]))
         else:
             txt += "{}: {})\n".format(str(index + 1), project["name"])
     return txt

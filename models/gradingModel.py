@@ -1,7 +1,8 @@
 from views.prints import *
-from utils import sounds, osSystem
+from utils import sounds
 import time
 import numpy as np
+import config
 
 def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
     if (ans == '`'):
@@ -9,7 +10,7 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         try:
             controller.click_web_search(project_type)
         except:
-            print_at("Not available '`'", tg)
+            print_at(config.MESSAGE_BASE_COMMAND_NOT_AVAILABLE.format('`'), tg)
             return True # None is Error
         return True
     elif (ans == '!'):
@@ -17,14 +18,14 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         try:
             controller.close_other_tags()
         except:
-            print_at("Not available '!'", tg)
+            print_at(config.MESSAGE_BASE_COMMAND_NOT_AVAILABLE.format('!'), tg)
             return True
         return True
     elif (ans == '~'):
         try:
-            osSystem.thread_start(controller.click_all_results, max_answer_slots, project_type)
+            controller.click_all_results(max_answer_slots, project_type)
         except:
-            print_at("Not available '~'", tg)
+            print_at(config.MESSAGE_BASE_COMMAND_NOT_AVAILABLE.format('~'), tg)
             return True
         return True
     elif ans == '[':
@@ -55,7 +56,7 @@ def pattern_one(a, num, web_controller, tg=None):
         elif (a == 'b'):
             web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
         else:
-            print_at("--------Not correct ans detected.--------", tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
     return True
 
@@ -73,7 +74,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
 
         # check if no project code, return False
         if not project_code:
-            print_at("No project code in standard project type.", tg)
+            print_at(config.MESSAGE_NO_PROJECT_CODE_IN_STANDARD_PROJECT_TYPE, tg)
             return False
         max_answer_slots = project_code["max_answer_slots"] # assign as local variable
 
@@ -97,7 +98,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
 
         # checking wrong length
         if not valid_answer_length(ans, web_controller, max_answer_slots, project_type):
-            print_at("Wrong length of answer.", tg)
+            print_at(config.MESSAGE_WRONG_LEN_ANS, tg)
             return False
 
         # grading answer
@@ -178,7 +179,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         elif ans[0] is 'b':
             web_controller.select_query_click('#query_topicother_ambiguous_or_unknown')
         else:
-            print_at("--------Not correct ans detected.--------", tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
         # goal
         if ans[1] is '1':
@@ -200,7 +201,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         elif ans[1] is '9':
             web_controller.select_query_click('#query_goalunknown_other')
         else:
-            print_at("--------Not correct ans detected.--------", tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
         if len(ans) > 2:
             # loop: set the check false (reset)
@@ -221,7 +222,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             for c in ans[2:]:
                 pos = str_ans.find(c)
                 if pos == -1:
-                    print_at("--------Not correct ans detected.--------", tg)
+                    print_at(config.MESSAGE_WRONG_ANS, tg)
                     return False
                 time.sleep(0.1)
                 web_controller.browser.execute_script(
@@ -249,7 +250,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             web_controller.click_by_id("query_validationother")
             web_controller.textarea_words("#text-widget-wrapper textarea", ans)
         else:
-            print_at("--------Not correct ans detected.--------", tg)
+            print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
         return True
 
@@ -261,7 +262,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         if len(ans) > 1:
             split_list = ans.split(' ', 1)
             if len(split_list) == 1:
-                print_at("Wrong command", tg)
+                print_at(config.MESSAGE_WRONG_LEN_ANS, tg)
                 return False
             command, comment = split_list[0], split_list[1]
 
@@ -275,7 +276,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             web_controller.click_by_id("query_validationno_other")
             # other need comment
             if len(comment) == 0:
-                print_at("It need comments", tg)
+                print_at(config.MESSAGE_COMMENTS_NEEDED, tg)
                 return False
             web_controller.insert_comment(project_type, comment)
         # if have sufficient information to judge Siri's responses
@@ -300,14 +301,14 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                         elif command[0] == 'd':
                             web_controller.browser.execute_script(js_code % (strength + 3))
                         else:
-                            print_at("Not correct command", tg)
+                            print_at(config.MESSAGE_WRONG_ANS, tg)
                             return False
                     else:
-                        print_at("Wrong length of command", tg)
+                        print_at(config.MESSAGE_WRONG_LEN_ANS, tg)
                         return False
                 # insert comment
                 if len(comment) == 0:
-                    print_at("Need comments", tg)
+                    print_at(config.MESSAGE_COMMENTS_NEEDED, tg)
                     return False
                 web_controller.insert_comment(project_type, comment)
         # flash web search
@@ -315,15 +316,14 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         return True
 
     else:
-        print_at("Project type not setup correctly.", tg)
+        print_at(config.MESSAGE_NO_PROJECT_TYPE_SET, tg)
         return False
 
 def check_limit_reached(grader):
     # check if the done reached the custom limit
     if (grader.query_done >= grader.done_upper_limit) and (grader.done_upper_limit > 0):
-        print_at("Limit Reached.\n", grader.tg)
+        print_at(config.MESSAGE_LIMIT_REACHED, grader.tg)
         sounds.beep("Times up", grader.tg)
-        done_upper_limit = -1 # reset
         return True
     return False
 
