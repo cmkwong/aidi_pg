@@ -72,7 +72,7 @@ CLICK_ALL_RESULTS_COMMAND = {
                   .contentDocument.querySelectorAll(".parsec-result"),
               ]);
           all_parsecResult.slice(0, max_length).forEach((el) => {
-            el.querySelector("a").click();
+            el.querySelector("a")?.click();
           });
         }
         const max_len = Number('%s');
