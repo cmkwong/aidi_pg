@@ -582,7 +582,7 @@ MESSAGE_TIMEOUT =                                       bcolor.WARNING.format("T
 MESSAGE_NO_FINISHED_POP =                               bcolor.WARNING.format("No Finished Pop-up")
 MESSAGE_NO_CONFLICT =                                   bcolor.OKGREEN.format("No Conflict")
 MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, bcolor.OKGREEN.format('Error Page Sent'))
-MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $78/1m (STANDARD)\n  PLAN B: $177/3m {bcolor.BLINK.format('(25% OFF)')}\n************************\n\n"
+MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $249/1m (STANDARD)\n  PLAN B: $598/3m {bcolor.BLINK.format('(20% OFF)')}\n  {bcolor.OKGREEN.format('-pay')}\n************************\n\n"
 
 MESSAGE_OPENING_PRJ =                                   "Opening the project ... "
 MESSAGE_LOADING =                                       "Loading..."
