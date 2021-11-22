@@ -346,9 +346,9 @@ class Database:
 
     def update_project_list(self, project_list):
         data = {
-            "list": project_list
+            "projects": project_list
         }
-        res = requests.post(self.update_project_list_url, data)
+        res = requests.post(self.update_project_list_url, json=data)
         if res.status_code == 200:
             print(config.MESSAGE_SUCCESS)
         else:
