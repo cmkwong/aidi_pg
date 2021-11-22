@@ -580,7 +580,10 @@ MESSAGE_INVALID_GRADING_PAGE =                          bcolor.WARNING.format("I
 MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW =               bcolor.WARNING.format("project type in renew function not set yet")
 MESSAGE_TIMEOUT =                                       bcolor.WARNING.format("Time Out")
 MESSAGE_NO_FINISHED_POP =                               bcolor.WARNING.format("No Finished Pop-up")
+MESSAGE_NOT_SUCCESS =                                   bcolor.WARNING.format("Unsuccessful.")
+MESSAGE_CANCEL =                                        bcolor.OKGREEN.format("Cancelled.")
 MESSAGE_NO_CONFLICT =                                   bcolor.OKGREEN.format("No Conflict")
+MESSAGE_SUCCESS =                                       bcolor.OKGREEN.format("Successful.")
 MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, bcolor.OKGREEN.format('Error Page Sent'))
 MESSAGE_PROMOTE_MESSAGE =                               f"\n\n************************\n  PLAN A: $249/1m (STANDARD)\n  PLAN B: $598/3m {bcolor.BLINK.format('(20% OFF)')}\n  {bcolor.OKGREEN.format('-pay')}\n************************\n\n"
 

@@ -21,3 +21,11 @@ def float_input():
         print("Wrong input")
         return None
     return usr_input
+
+def user_confirm():
+    placeholder = 'Input [y]es to confirm OR others to cancel: '
+    confirm_input = input(placeholder)
+    if confirm_input == 'y' or confirm_input == "yes":
+        return True
+    else:
+        return False

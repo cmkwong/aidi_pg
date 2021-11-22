@@ -1,5 +1,5 @@
 import config
-from models import menuModel, reportModel, infoModel, authModel, dbModel
+from models import menuModel, reportModel, infoModel, authModel, dbModel, fileModel
 from controllers import gradingController, tgController
 from utils import inputs, osSystem
 from views.prints import *
@@ -178,6 +178,21 @@ def control_command_check(graders, ans):
                     osSystem.show_img('./src/payme_qr.png')
                 except:
                     print('Please try again.')
+                return command_checked
+
+            elif (ans == "-update"):
+                # update the project list
+                project_list = []
+                try:
+                    project_list = fileModel.get_projectList_from_txt()
+                except:
+                    print("Cannot get the project list")
+                print_projectList_confirm(project_list)
+                confirmed = inputs.user_confirm()  # yes to confirm, else to cancel
+                if confirmed:  # yes to confirm, else to cancel
+                    graders.grader.db_controller.update_project_list(project_list)
+                else:
+                    print(config.MESSAGE_CANCEL)
                 return command_checked
 
         if graders.grader.grader_level >= 2:

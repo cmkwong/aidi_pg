@@ -35,3 +35,10 @@ def print_status(grader):
     delays = str(grader.time_delay).strip()
     md = str(grader.manual_timer).strip()
     print_at("Done: {} t-{} MD-{}\n".format(done, delays, md), grader.tg, grader.print_allowed)
+
+def print_projectList_confirm(prj_list):
+    txt = ''
+    txt += "{:<3}\u001b[4m{:<50}{:<10}{:<50}\u001b[0m\n".format('', "Project (Head 45 char)", "Locale", "Link (Tail 50 char)")
+    for idx, p in enumerate(prj_list):
+        txt += "{:<3}{:<50}{:<10}{:<50}\n".format(idx + 1, p['name'][:45], p['location'], p['link'][-50:])
+    print(txt)

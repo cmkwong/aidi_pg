@@ -32,6 +32,7 @@ class Database:
         self.get_expired_date_url = self.mainUrl + "api/v1/user/expired?grader={}"
         self.check_health_url = self.mainUrl + "api/v1/system/clientsHealthStatus"
         self.update_query_answer_url = self.mainUrl + "api/v1/query?insertAns=true"
+        self.update_project_list_url = self.mainUrl + "api/v1/project/list"
 
     # def grader_id_to_login_info(self, grader_id):
     #     role_filter = {
@@ -342,6 +343,13 @@ class Database:
 
     def send_query_answer(self, data):
         requests.post(self.update_query_answer_url, data)
+
+    def update_project_list(self, project_list):
+        res = requests.post(self.update_project_list_url, project_list)
+        if res.status_code == 200:
+            print(config.MESSAGE_SUCCESS)
+        else:
+            print(config.MESSAGE_NOT_SUCCESS)
 
     def check_health_status(self, version, grader_id):
         usr_name = authModel.get_usrName_from_graderId(grader_id)
