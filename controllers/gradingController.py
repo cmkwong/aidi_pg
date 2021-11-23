@@ -376,9 +376,8 @@ class base_grader:
                     return False
 
             # update and send data
-            data = self.web_controller.get_query_answer(self.project_type)
-            # self.db_controller.send_query_answer(data)
-            osSystem.thread_start(self.db_controller.send_query_answer, data)
+            # data = self.web_controller.get_query_answer(self.project_type)
+            # osSystem.thread_start(self.db_controller.send_query_answer, data)
 
             self.web_controller.click_next_btn(self.project_type)
 
