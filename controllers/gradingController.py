@@ -379,7 +379,7 @@ class base_grader:
             # data = self.web_controller.get_query_answer(self.project_type)
             # osSystem.thread_start(self.db_controller.send_query_answer, data)
 
-            self.web_controller.click_next_btn(self.project_type)
+            # self.web_controller.click_next_btn(self.project_type)
 
             # update ans into db
             # if self.project_type in config.UPDATE_DB_PROJS:
