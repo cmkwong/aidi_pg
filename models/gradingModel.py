@@ -10,7 +10,7 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         try:
             controller.click_web_search(project_type)
         except:
-            print_at(config.MESSAGE_BASE_COMMAND_NOT_AVAILABLE.format('`'), tg)
+            print_at(config.MESSAGE_BASE_COMMAND_ERROR.format('`'), tg)
             return True # None is Error
         return True
     elif (ans == '!'):
@@ -18,14 +18,14 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         try:
             controller.close_other_tags()
         except:
-            print_at(config.MESSAGE_BASE_COMMAND_NOT_AVAILABLE.format('!'), tg)
+            print_at(config.MESSAGE_BASE_COMMAND_ERROR.format('!'), tg)
             return True
         return True
     elif (ans == '~'):
         try:
             controller.click_all_results(max_answer_slots, project_type)
         except:
-            print_at(config.MESSAGE_BASE_COMMAND_NOT_AVAILABLE.format('~'), tg)
+            print_at(config.MESSAGE_BASE_COMMAND_ERROR.format('~'), tg)
             return True
         return True
     elif ans == '[':

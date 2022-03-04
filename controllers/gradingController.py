@@ -220,6 +220,7 @@ class base_grader:
         return True
 
     def query_prepare(self, auto):
+        self.web_controller.back_tag_one()
         self.query_text = self.get_query_text(auto)
         if self.query_text == None:
             return False
