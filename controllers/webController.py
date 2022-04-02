@@ -44,7 +44,10 @@ class Web:
         for window_handle in self.browser.window_handles:
             if window_handle != self.original_window:
                 self.browser.switch_to.window(window_handle)
-                self.browser.close()
+                try:
+                    self.browser.close()
+                except Exception as e:
+                    print('Please close tags manually')
         self.back_tag_one()
 
     def click_by_id_until(self, id):
