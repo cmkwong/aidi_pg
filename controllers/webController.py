@@ -273,6 +273,10 @@ class Web:
                     report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
         return report
 
+    def findProjectLinkByName(self, prjName, timeout):
+        link = self.browser.execute_script(config.FIND_PRJLINK_BY_NAME % (prjName, timeout * 1000))
+        return link
+
     def open_links_new_tags(self, links, max_tags):
         self.back_tag_one()
         for i, link in enumerate(links):

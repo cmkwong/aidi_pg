@@ -35,7 +35,8 @@ def control_command_check(graders, ans):
                 # update the project list
                 project_list = []
                 try:
-                    project_list = fileModel.get_projectList_from_txt()
+                    graders.grader.web_controller.browser.get('https://crowdcollect2.siri.apple.com/main/projects') # go to the main page first
+                    project_list = fileModel.get_projectList_from_txt(graders.grader.web_controller)
                 except:
                     print("Cannot get the project list")
                 print_projectList_confirm(project_list)

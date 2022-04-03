@@ -562,6 +562,70 @@ GET_CHEAT_PROJECT_ID = """
     return get_project_id();
 """
 
+WAIT_PRJECT_SEARCH_BAR = """
+    function checkPrjSearchBar(timeoutMs) {
+      let timeWas = new Date();
+      const interval = setInterval(() => {
+        let barEl = document.getElementById('workflows-header-search-input');
+        if (barEl) {
+          clearInterval(interval);
+          return barEl;
+        }
+        if (new Date() - timeWas > timeoutMs) {
+          clearInterval(interval);
+          return false;
+        }
+      }, 500);
+    }
+    let timeoutMs = +'%s';
+    let barEl = checkPrjSearchBar(timeoutMs); // find until 5s
+    return barEl;
+"""
+
+FIND_PRJLINK_BY_NAME = """
+    function getPrjLink(prjName, timeoutMs) {
+      let timeWas = new Date();
+      while (true) {
+        let noResultEl = document.getElementsByClassName('projects__no-results');
+        let resultFoundPrjName = document
+          .querySelector('.projects-table')
+          .querySelector('a')
+          ?.innerText.trim();
+        // found result
+        if (resultFoundPrjName === prjName) {
+          link = document.querySelector('.projects-table').querySelector('a').href;
+          return link;
+        }
+        // no result search
+        if (noResultEl) {
+          return false;
+        }
+        if (new Date() - timeWas > timeoutMs) {
+          return false;
+        }
+      }
+    }
+    
+    function checkPrjSearchBar(timeoutMs) {
+      let timeWas = new Date();
+      while (true) {
+        // search bar found
+        if (document.getElementById('workflows-header-search-input')) {
+          return true;
+        }
+        if (new Date() - timeWas > timeoutMs) {
+          return false;
+        }
+      }
+    }
+    let prjName = '%s';
+    let timeoutMs = +'%s';
+    if (checkPrjSearchBar(timeoutMs)) {
+      return getPrjLink('Continuous Eval Certification Sets March 28th 2022', timeoutMs);
+    }
+"""
+
+
 # --------------------------------- MESSAGE ------------------------------ #
 class bcolor:
     WARNING = '\u001b[38;5;196m{}\u001b[0m'
