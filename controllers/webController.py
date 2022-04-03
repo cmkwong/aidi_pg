@@ -274,8 +274,13 @@ class Web:
         return report
 
     def findProjectLinkByName(self, prjName, timeout):
-        link = self.browser.execute_script(config.FIND_PRJLINK_BY_NAME % (prjName, timeout * 1000))
-        return link
+        # check search bar ready or not
+        searchBarReady = self.browser.execute_script(config.CHECK_SEARCH_BAR_READY % timeout)
+        if searchBarReady:
+            self.browser.execute_script(config.ENTER_PRJ_NAME % prjName)
+            link = self.browser.execute_script(config.FIND_PRJLINK_BY_NAME % (prjName, timeout))
+            return link
+        return False
 
     def open_links_new_tags(self, links, max_tags):
         self.back_tag_one()

@@ -582,47 +582,81 @@ WAIT_PRJECT_SEARCH_BAR = """
     return barEl;
 """
 
-FIND_PRJLINK_BY_NAME = """
-    function getPrjLink(prjName, timeoutMs) {
-      let timeWas = new Date();
-      while (true) {
-        let noResultEl = document.getElementsByClassName('projects__no-results');
-        let resultFoundPrjName = document
-          .querySelector('.projects-table')
-          .querySelector('a')
-          ?.innerText.trim();
-        // found result
-        if (resultFoundPrjName === prjName) {
-          link = document.querySelector('.projects-table').querySelector('a').href;
-          return link;
-        }
-        // no result search
-        if (noResultEl) {
-          return false;
-        }
-        if (new Date() - timeWas > timeoutMs) {
-          return false;
-        }
-      }
-    }
-    
+CHECK_SEARCH_BAR_READY = """
     function checkPrjSearchBar(timeoutMs) {
       let timeWas = new Date();
-      while (true) {
+      let ready = false;
+      while (!ready) {
         // search bar found
         if (document.getElementById('workflows-header-search-input')) {
-          return true;
+          ready = true;
         }
         if (new Date() - timeWas > timeoutMs) {
-          return false;
+          ready = false;
+          break;
         }
       }
+      return ready;
+    }
+    let timeoutMs = +'%s';
+    return checkPrjSearchBar(timeoutMs);
+"""
+ENTER_PRJ_NAME = """
+    function enterPrjName(prjName) {
+      document.getElementById('workflows-header-search-input').value = prjName;
+      // fire the change event
+      let event = new Event('change');
+      document.getElementById('workflows-header-search-input').dispatchEvent(event);
+      // console.log('event dispatch');
+    }
+    let prjName = '%s';
+    enterPrjName(prjName);
+"""
+
+FIND_PRJLINK_BY_NAME = """    
+    function getPrjLink(prjName, timeoutMs) {
+      return new Promise((resolve, reject) => {
+        let link;
+        let timeWas = new Date();
+        const prjLinkInterval = setInterval(() => {
+          let noResultEl =
+            document.getElementsByClassName('projects__no-results').length > 0
+              ? true
+              : false;
+          let resultFoundPrjName = document
+            .querySelector('.projects-table')
+            ?.querySelector('a')
+            ?.innerText.trim();
+          // found result
+          if (resultFoundPrjName === prjName) {
+            link = document
+              .querySelector('.projects-table')
+              .querySelector('a').href;
+            clearInterval(prjLinkInterval);
+            resolve(link);
+          }
+          // no result search
+          if (noResultEl) {
+            console.log('no result');
+            clearInterval(prjLinkInterval);
+            reject(link);
+          }
+          if (new Date() - timeWas > timeoutMs) {
+            console.log('timeout');
+            clearInterval(prjLinkInterval);
+            reject(link);
+          }
+        }, 200);
+      });
     }
     let prjName = '%s';
     let timeoutMs = +'%s';
-    if (checkPrjSearchBar(timeoutMs)) {
-      return getPrjLink('Continuous Eval Certification Sets March 28th 2022', timeoutMs);
-    }
+    return getPrjLink(prjName, timeoutMs).then((link) => {
+        return link;
+      })
+      .catch(() => {
+        return false;
+      });
 """
 
 

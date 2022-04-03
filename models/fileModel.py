@@ -9,10 +9,12 @@ def read_txt_file(path, filename):
     f.close()
     return txt
 
-def find_locale_from_prjName(name):
-    result = re.search(r"[a-z][a-z]_[A-Z][A-Z]", name)
+def find_locale_from_prjName(prjLocale):
+    result = re.search(r"([a-z][a-z]_[A-Z][A-Z])", prjLocale)
     if result:
-        return result.group(0)
+        locale = result.group(0)
+        prj_name = prjLocale.replace(f'({locale})', '')
+        return prj_name, locale
 
 def txt2prjdict(txt, web_controller):
     prj_list = []
@@ -25,19 +27,19 @@ def txt2prjdict(txt, web_controller):
             p_dict = {}
             # find if link exist
             if prj.find(linkDelimiter) > 0:
-                prjLocale, link = prj.split(linkDelimiter)
-                prjName, locale = find_locale_from_prjName(prjLocale)
+                prj_locale_str, link = prj.split(linkDelimiter)
+                prjName, locale = find_locale_from_prjName(prj_locale_str)
                 p_dict['name'] = prjName
                 p_dict['location'] = locale
                 p_dict['link'] = linkDelimiter + link
-                prj_list.append(p_dict)
             # no link pre-fill, then find on CC
             else:
-                prjLocale = prj
-                prjName, locale = find_locale_from_prjName(prjLocale)
+                prj_locale_str = prj
+                prjName, locale = find_locale_from_prjName(prj_locale_str)
                 p_dict['name'] = prjName
                 p_dict['location'] = locale
                 p_dict['link'] = web_controller.findProjectLinkByName(prjName, 5000)
+            prj_list.append(p_dict)
     print("Number of projects: {}".format(len(prj_list)))
     return prj_list
 
