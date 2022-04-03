@@ -41,14 +41,15 @@ class Web:
         self.browser.switch_to.window(self.original_window)
 
     def close_other_tags(self):
-        for window_handle in self.browser.window_handles:
-            if window_handle != self.original_window:
-                self.browser.switch_to.window(window_handle)
-                try:
+        try:
+            for window_handle in self.browser.window_handles:
+                if window_handle != self.original_window:
+                    self.browser.switch_to.window(window_handle)
                     self.browser.close()
-                except Exception as e:
-                    print('Please close tags manually')
-        self.back_tag_one()
+                    self.back_tag_one()
+        except Exception as e:
+            print('Please close tags manually')
+            pass
 
     def click_by_id_until(self, id):
         element = WebDriverWait(self.browser.find_element_by_id(id), 5).until(EC.element_to_be_clickable((By.ID, id)))
