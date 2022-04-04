@@ -613,7 +613,8 @@ ENTER_PRJ_NAME = """
     enterPrjName(prjName);
 """
 
-FIND_PRJLINK_BY_NAME = """    
+FIND_PRJLINK_BY_NAME = """
+    // https://stackoverflow.com/questions/11055530/wait-until-setinterval-is-done
     function getPrjLink(prjName, timeoutMs) {
       return new Promise((resolve, reject) => {
         let link;

@@ -248,8 +248,8 @@ def control_command_check(graders, ans):
             elif (ans == "-dist"):
                 try:
                     graders.grader.project_setup()
-                    graders.grader.query_prepare(auto=False)
-                    print("Finding: {} ({})".format(graders.grader.query_text, graders.grader.query_code))
+                    # graders.grader.query_prepare(auto=False)
+                    # print("Finding: {} ({})".format(graders.grader.query_text, graders.grader.query_code))
                     Answer = graders.grader.db_controller.find_most_popular(graders.grader.project_id,
                                                                             graders.grader.project_locale,
                                                                             graders.grader.query_code)
