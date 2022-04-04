@@ -11,11 +11,11 @@ def get_project_list_text(prev_project_index, projects_info, tg=False):
         if index == prev_project_index:
             # define highlight text (tg or non-tg)
             if not tg:
-                txt += config.bcolor.OKGREEN.format("{}: {}\n".format(str(index+1), project["name"]))
+                txt += config.bcolor.OKGREEN.format(f"{str(index + 1)}: [{project['location']}]{project['name']}\n")
             else:
-                txt += config.bcolor.STAR.format("{}: {}\n".format(str(index + 1), project["name"]))
+                txt += config.bcolor.STAR.format(f"{str(index + 1)}: [{project['location']}]{project['name']}\n")
         else:
-            txt += "{}: {})\n".format(str(index + 1), project["name"])
+            txt += f"{str(index + 1)}: [{project['location']}]{project['name']}\n"
     return txt
 
 def menu_choice(prev_project_index, ghost=False):
