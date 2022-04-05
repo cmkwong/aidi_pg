@@ -34,11 +34,15 @@ def control_command_check(graders, ans):
             elif (ans == "-update"):
                 # update the project list
                 project_list = []
+                ccLink = 'https://crowdcollect2.siri.apple.com/main/projects'
+                currentUrl = graders.grader.web_controller.get_motherTag_url()
                 try:
-                    graders.grader.web_controller.browser.get('https://crowdcollect2.siri.apple.com/main/projects') # go to the main page first
+                    if ccLink != currentUrl: graders.grader.web_controller.browser.get(ccLink) # go to the main page first
                     project_list = fileModel.get_projectList_from_txt(graders.grader.web_controller)
+                    if not project_list: # cannot of getting project link
+                        return command_checked
                 except:
-                    print("Cannot get the project list")
+                    print("Error: cannot get the project list")
                 print_projectList_confirm(project_list)
                 confirmed = inputs.user_confirm()  # yes to confirm, else to cancel
                 if confirmed:  # yes to confirm, else to cancel

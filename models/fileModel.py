@@ -10,17 +10,17 @@ def read_txt_file(path, filename):
     return txt
 
 def find_locale_from_prjName(prjLocale):
-    result = re.search(r"([a-z][a-z]_[A-Z][A-Z])", prjLocale)
+    result = re.search(r"[ze][hn]_[HTU][KWS]", prjLocale)
     if result:
         locale = result.group(0)
-        prj_name = prjLocale.replace(f'({locale})', '')
-        return prj_name, locale
+        prj_name = prjLocale.replace(locale, '')
+        return prj_name.strip(), locale.strip()
 
 def txt2prjdict(txt, web_controller):
     prj_list = []
     linkDelimiter = 'http'
     # eliminate all splace and replace last element into overview
-    txt = txt.replace(' ', '').replace('\t', '').replace('\xa0', '').replace('stats/ungradedByLocale', 'overview')
+    txt = txt.replace('stats/ungradedByLocale', 'overview')
     prjs = txt.split('\n')
     for prj in prjs:
         if len(prj) > 0:
@@ -38,7 +38,12 @@ def txt2prjdict(txt, web_controller):
                 prjName, locale = find_locale_from_prjName(prj_locale_str)
                 p_dict['name'] = prjName
                 p_dict['location'] = locale
-                p_dict['link'] = web_controller.findProjectLinkByName(prjName, 5000)
+                prjLink = web_controller.findProjectLinkByName(prjName, 10000)
+                # if cannot get the project link return False
+                if not prjLink:
+                    print(f'{prjName} cannot get the project link, please check if wrong project name and retry again.')
+                    return False
+                p_dict['link'] = prjLink
             prj_list.append(p_dict)
     print("Number of projects: {}".format(len(prj_list)))
     return prj_list

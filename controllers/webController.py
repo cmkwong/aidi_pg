@@ -274,11 +274,10 @@ class Web:
         return report
 
     def findProjectLinkByName(self, prjName, timeout):
-        # check search bar ready or not
-        searchBarReady = self.browser.execute_script(config.CHECK_SEARCH_BAR_READY % timeout)
+        searchBarReady = self.browser.execute_script(config.CHECK_SEARCH_BAR_READY % timeout)   # check search bar ready or not
         if searchBarReady:
-            self.browser.execute_script(config.ENTER_PRJ_NAME % prjName)
-            link = self.browser.execute_script(config.FIND_PRJLINK_BY_NAME % (prjName, timeout))
+            self.browser.execute_script(config.ENTER_PRJ_NAME % prjName)    # enter project name
+            link = self.browser.execute_script(config.FIND_PRJLINK_BY_NAME % (prjName, timeout))    # get the project link once search
             return link
         return False
 
