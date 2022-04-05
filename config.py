@@ -10,15 +10,31 @@ AUTO_ALLOWED_PROJS = ["standard", "classify", "valid"]
 
 # sbs = side-by-side project
 GET_QUERY_TEXT_COMMAND = {
-    "standard": """return document.querySelector('iframe').contentDocument.querySelector('.search input').getAttribute('value');""",
-    "valid": """return document.querySelector('#widget-container h1').innerText;""",
-    "sbs": """return document.querySelector('.utterance').innerText;""",
-    "token": """return document.querySelector('#input-field').querySelector('input').value;""",
-    "classify": """return document.querySelector('#display-section').querySelector('h1').textContent;""",
+    "standard": """
+        let query_text;
+        query_text = document.querySelector('iframe')?.contentDocument?.querySelector('.search input')?.getAttribute('value');
+        if (!query_text) {
+            query_text = document.getElementById('query-container')?.querySelector('i')?.innerText.trim(); // this is for new interface
+        }
+        return query_text;
+        """,
+    "valid": """return document.querySelector('#widget-container h1')?.innerText;""",
+    "sbs": """return document.querySelector('.utterance')?.innerText;""",
+    "token": """return document.querySelector('#input-field')?.querySelector('input')?.value;""",
+    "classify": """return document.querySelector('#display-section')?.querySelector('h1')?.textContent;""",
 }
 
 CLICK_WEB_SEARCH_COMMAND = {
-    "standard": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
+    "standard": """
+        let clickSearchBtn;
+        clickSearchBtn = document.getElementsByClassName(
+          'clicked validates-clicked'
+        )[0];
+        if (!clickSearchBtn) {
+          clickSearchBtn = document.querySelector('#html-widget > a');
+        }
+        clickSearchBtn.click();
+    """,
     "valid": """document.getElementsByClassName('clicked validates-clicked')[0].click();""",
     "sbs": """document.querySelector('.punchout-link').click();""",
 }
@@ -57,23 +73,29 @@ GET_WEB_SEARCH_LINK_COMMAND = {
 CLICK_ALL_RESULTS_COMMAND = {
     "standard": """
         function click_all_results(max_length) {
-          let all_parsecResult = [
-            ...document
-              .querySelector("iframe")
-              .contentDocument.querySelectorAll(".result"),
-          ];
-          all_parsecResult.length !== 0
-            ? all_parsecResult
-            : (all_parsecResult = [
-                ...document
-                  .getElementsByClassName("iframe")[0]
-                  .getElementsByTagName("iframe")
-                  .item(0)
-                  .contentDocument.querySelectorAll(".parsec-result"),
-              ]);
-          all_parsecResult.slice(0, max_length).forEach((el) => {
-            el.querySelector("a")?.click();
-          });
+          let all_parsecResult;
+          // for new version (usually in this form)
+          all_parsecResult = document
+            .querySelector('iframe')
+            ?.contentDocument?.querySelectorAll('.result');
+          // for old version
+          if (!all_parsecResult) {
+            all_parsecResult = document
+              .getElementsByClassName('iframe')[0]
+              ?.getElementsByTagName('iframe')
+              ?.item(0)
+              ?.contentDocument?.querySelectorAll('.parsec-result');
+          }
+          // for more new version 220404
+          if (!all_parsecResult) {
+            all_parsecResult = document.querySelectorAll('.result');
+          }
+          // click the link
+          if (all_parsecResult) {
+            [...all_parsecResult].slice(0, max_length).forEach((el) => {
+              el.querySelector('a')?.click();
+            });
+          }
         }
         const max_len = Number('%s');
         click_all_results(max_len);
