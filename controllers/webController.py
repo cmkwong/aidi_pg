@@ -15,6 +15,7 @@ class Web:
         self.init_url = init_url
         self.browser = None
         self.original_window = None
+        self.currentLink = None
 
     def open_chrome(self, executable_path="../driver/chromedriver"):
         chrome_options = Options()
@@ -48,8 +49,16 @@ class Web:
                     self.browser.close()
                     self.back_tag_one()
         except Exception as e:
-            print('Please close tags manually')
+            print(e)
+            print(config.MESSAGE_CLOSE_TAGS_ERROR)
+            self.browser.quit()
+            self.reopen_current_browser()
             pass
+
+    def reopen_current_browser(self):
+        self.open_chrome()
+        self.init_working_tag()
+        self.open_myLink(self.currentLink)
 
     def click_by_id_until(self, id):
         element = WebDriverWait(self.browser.find_element_by_id(id), 5).until(EC.element_to_be_clickable((By.ID, id)))
@@ -169,7 +178,9 @@ class Web:
             query_code = result.group(1)
         return query_code
 
-    def get_projectId_locale_from_url(self, url):
+    def get_projectId_locale_from_url(self, url=None):
+        if not url:
+            url = self.currentLink
         project_id, project_locale = None, None
 
         # project_id and project locale

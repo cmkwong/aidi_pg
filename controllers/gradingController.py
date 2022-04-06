@@ -137,7 +137,7 @@ class base_grader:
         self.web_controller = web_controller
         self.db_controller = db_controller
         self.grader_action_count = 0    # counting the number of grader action took
-        self.query_link = None
+        # self.query_link = None
         self.query_text = None
         self.p_query_text = None
         self.query_done = 0
@@ -202,9 +202,9 @@ class base_grader:
 
     def project_setup(self):
         # get query link, but may be not very updated
-        self.query_link = self.web_controller.get_motherTag_url()
+        self.web_controller.currentLink = self.web_controller.get_motherTag_url()
         # renew project info in every grading: project id and project locale
-        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url(self.query_link)
+        self.project_id, self.project_locale = self.web_controller.get_projectId_locale_from_url()
         if not self.project_id or not self.project_locale:
             print_at(config.MESSAGE_INVALID_GRADING_PAGE, self.tg, self.print_allowed)
             return False
@@ -237,10 +237,10 @@ class base_grader:
             self.p_query_text = self.query_text
             self.new_query = True
 
-    def reopen_current_browser(self):
-        self.web_controller.open_chrome()
-        self.web_controller.init_working_tag()
-        self.web_controller.open_myLink(self.query_link)
+    # def reopen_current_browser(self):
+    #     self.web_controller.open_chrome()
+    #     self.web_controller.init_working_tag()
+    #     self.web_controller.open_myLink(self.query_link)
 
     def delay_timer(self, time_used=0, alarm=True):
         self.timer_running = True
@@ -263,7 +263,7 @@ class base_grader:
             if alarm:
                 sounds.beep("Times up", self.tg)
         except KeyboardInterrupt:
-            self.reopen_current_browser()
+            self.web_controller.reopen_current_browser()
             if not self.tg: print("Timer interrupted. Reopening...")
             self.timer_running = False
             return False
@@ -299,7 +299,7 @@ class base_grader:
             self.timer_running = False
             return None
         except KeyboardInterrupt:
-            self.reopen_current_browser()
+            self.web_controller.reopen_current_browser()
             if not self.tg: print("Timer interrupted. Reopening...")
             self.timer_running = False
             return False

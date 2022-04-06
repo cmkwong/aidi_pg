@@ -702,6 +702,7 @@ MESSAGE_PROJECT_TYPE_NOT_FOUND_IN_RENEW =               bcolor.WARNING.format("p
 MESSAGE_TIMEOUT =                                       bcolor.WARNING.format("Time Out")
 MESSAGE_NO_FINISHED_POP =                               bcolor.WARNING.format("No Finished Pop-up")
 MESSAGE_NOT_SUCCESS =                                   bcolor.WARNING.format("Unsuccessful.")
+MESSAGE_CLOSE_TAGS_ERROR =                              bcolor.WARNING.format("Close tags error, reopen...")
 MESSAGE_CANCEL =                                        bcolor.OKGREEN.format("Cancelled.")
 MESSAGE_NO_CONFLICT =                                   bcolor.OKGREEN.format("No Conflict")
 MESSAGE_SUCCESS =                                       bcolor.OKGREEN.format("Successful.")
