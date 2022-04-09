@@ -323,6 +323,7 @@ class base_grader:
                     if (auto and query_text == filter_query): print_at(config.MESSAGE_INPUT_MANUALLY, self.tg)
                     return None
                 query_text = self.web_controller.browser.execute_script(js_code)
+                if not query_text: query_text = filter_query  # if (query_text = None) that mean is not found, re-find
                 time.sleep(0.5)
             except:
                 continue  # continue looping
