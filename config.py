@@ -215,19 +215,46 @@ GET_RESULT_LINK_DETAILS_COMMAND = {
         return link_details ? link_details : []
     """,
     "sbs": """
-        const details = [];
-        let cards = ['L', 'R'];
-        let c = 0;
-        document.querySelectorAll('.info-box').forEach(node => {
-            let card = cards[c];
-            let count = 1
-            node.querySelectorAll('a').forEach(el => {
-              details.push(`${card}${count}: ${el.querySelector('p')?.textContent.trim()}`);
-              count++;
-              c++;
-            })
-        });
-        return details;
+        function getSideResult() {
+          let sideResults = {};
+          // LHS
+          sideResults['LHS'] = Array.from(
+            document
+              .querySelector('.side-by-side')
+              .children[0].querySelectorAll('.summary')
+          ).map((el) => {
+            return el.innerText;
+          });
+          // RHS
+          sideResults['RHS'] = Array.from(
+            document
+              .querySelector('.side-by-side')
+              .children[1].querySelectorAll('.summary')
+          ).map((el) => {
+            return el.innerText;
+          });
+          return sideResults;
+        }
+        
+        function getResults() {
+          let all_resultDict = [];
+          let sideResults = getSideResult();
+          for (const key in sideResults) {
+            let sideResult = sideResults[key]; // key = LHS/RHS
+            sideResult.forEach((text) => {
+              let resultDict = {
+                type: key,
+                title: '',
+                description: text,
+                footnote: '',
+                link: '',
+              };
+              all_resultDict.push(resultDict);
+            });
+          }
+          return all_resultDict;
+        }
+        return getResults();
     """
 }
 

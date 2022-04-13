@@ -84,5 +84,5 @@ def get_project_code(web_controller):
     index = project_id.find('sbs')
     if index > 0:
         prj_code['project_type'] = 'sbs'
-        prj_code['max_answer_slots'] = 10
+        prj_code['max_answer_slots'] = 15   # ~ is available for clicking the link
     return prj_code
