@@ -320,6 +320,8 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                 if len(comment) == 0:
                     print_at(config.MESSAGE_COMMENTS_NEEDED, tg)
                     return False
+                # search for keyword command -12
+                comment = _decodeComment(comment)
                 web_controller.insert_comment(project_type, comment)
         # flash web search
         web_controller.flash_web_search(project_type)

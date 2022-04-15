@@ -201,12 +201,13 @@ def control_command_check(graders, ans):
                 return command_checked
 
             elif (ans == '-sbss'): # update the sbs sentence
-                rawText = fileModel.read_txt_file('../docs', 'sbs.txt')
+                rawText = fileModel.read_txt_file('./docs', 'sbs.txt')
                 config.sbsSent = fileModel.txt2SbsSent(rawText)
                 if not config.sbsSent:
                     config.sbsSent = {}
-                    print(config.MESSAGE_CANCEL)
+                    print_at(config.MESSAGE_CANCEL, graders.grader.tg)
                     return False
+                print_at(config.MESSAGE_SUCCESS, graders.grader.tg)
                 return command_checked
 
         if graders.grader.grader_level >= 2:
