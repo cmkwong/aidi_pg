@@ -3,6 +3,7 @@ from utils import sounds
 import time
 import numpy as np
 import config
+import re
 
 def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
     if (ans == '`'):
@@ -67,6 +68,14 @@ def valid_answer_length(ans, web_controller, max_answer_slots, project_type):
         return True
     else:
         return False
+
+# for sbs project
+def _decodeComment(comment):
+    results = re.findall(r"-(\d+)", comment)
+    for result in results:
+        sentId = int(result)
+        comment = re.sub(f"-{result}", config.sbsSent[sentId], comment)
+    return comment
 
 def grading(ans, web_controller, project_type, tg, auto=False, project_code=None):
 
@@ -255,7 +264,6 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         return True
 
     elif (project_type == 'sbs'):
-
         # # extract the comment
         command, comment = ans[0], ''
         # is NOT 1-4 or w answer, then do NOT split the ans
@@ -278,7 +286,9 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
             if len(comment) == 0:
                 print_at(config.MESSAGE_COMMENTS_NEEDED, tg)
                 return False
-            web_controller.insert_comment(project_type, comment)
+            # search for keyword command -12
+            comment = _decodeComment(comment)
+            web_controller.insert_comment(project_type, comment) # insert comment
         # if have sufficient information to judge Siri's responses
         else:
             web_controller.click_by_id("query_validationyes")

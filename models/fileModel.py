@@ -9,6 +9,18 @@ def read_txt_file(path, filename):
     f.close()
     return txt
 
+# for sbs project
+def txt2SbsSent(rawText):
+    sbsSent = {}
+    lines = rawText.split('\n')
+    for line in lines:
+        num, sent = line.split(' ', 1)
+        if not num.isnumeric():
+            print(f"{line}: wrong syntax")
+            return False
+        sbsSent[int(num.strip())] = sent.strip()
+    return sbsSent
+
 def find_locale_from_prjName(prjLocale):
     result = re.search(r"[ze][hn]_[HTU][KWS]", prjLocale)
     if result:

@@ -200,6 +200,15 @@ def control_command_check(graders, ans):
                     print('Please try again.')
                 return command_checked
 
+            elif (ans == '-sbss'): # update the sbs sentence
+                rawText = fileModel.read_txt_file('../docs', 'sbs.txt')
+                config.sbsSent = fileModel.txt2SbsSent(rawText)
+                if not config.sbsSent:
+                    config.sbsSent = {}
+                    print(config.MESSAGE_CANCEL)
+                    return False
+                return command_checked
+
         if graders.grader.grader_level >= 2:
             if (ans == "-auto" or ans == "--a"):
                 gradingController.set_auto_mode(graders)

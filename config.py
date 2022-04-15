@@ -848,3 +848,5 @@ projects_code = {} # store the project_code with respect to each of project_id
 ghost_projects_info = []
 
 cheat_sheet = set()
+
+sbsSent = {} # storage of usually used sentence for SBS project
