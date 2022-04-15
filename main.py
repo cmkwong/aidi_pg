@@ -15,7 +15,10 @@ MAIN_LOOP_COUNT = 0
 
 while (not (command == "quit")):
 
-    command = graders.run(command)
+    try:
+        command = graders.run(command)
+    except Exception as e:
+        print(e)
 
     MAIN_LOOP_COUNT += 1
 
