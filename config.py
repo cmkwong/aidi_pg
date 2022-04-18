@@ -108,16 +108,16 @@ GET_RESULT_LINKS_COMMAND = {
             let all_parsecResult = [
               ...document
                 .querySelector("iframe")
-                .contentDocument.querySelectorAll(".result"),
+                ?.contentDocument?.querySelectorAll(".result"),
             ];
             all_parsecResult.length !== 0
               ? all_parsecResult
               : (all_parsecResult = [
                   ...document
                     .getElementsByClassName("iframe")[0]
-                    .getElementsByTagName("iframe")
-                    .item(0)
-                    .contentDocument.querySelectorAll(".parsec-result"),
+                    ?.getElementsByTagName("iframe")
+                    ?.item(0)
+                    ?.contentDocument?.querySelectorAll(".parsec-result"),
                 ]);
             let resultLinkArray = [];
             all_parsecResult.forEach((parsecResult) => {
