@@ -61,8 +61,12 @@ def pattern_one(a, num, web_controller, tg=None):
             return False
     return True
 
-def valid_answer_length(ans, web_controller, max_answer_slots, project_type):
-    links = web_controller.get_result_links(project_type)
+def valid_answer_length(ans, web_controller, max_answer_slots, project_type, tg, print_allowed):
+    try:
+        links = web_controller.get_result_links(project_type)
+    except:
+        print_at('Warning: not checking input ans length if valid. Bypassed. ', tg, print_allowed)
+        return True
     required_length = min(len(links), max_answer_slots)
     if len(ans) == required_length:
         return True
@@ -78,7 +82,7 @@ def _decodeComment(comment, tg):
     if results: print_at(comment, tg)
     return comment
 
-def grading(ans, web_controller, project_type, tg, auto=False, project_code=None):
+def grading(ans, web_controller, project_type, tg, auto=False, project_code=None, print_allowed=True):
 
     if project_type == "standard":
 
@@ -107,7 +111,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
                 web_controller.click_by_id("query_appropriatetrue")
 
         # checking wrong length
-        if not valid_answer_length(ans, web_controller, max_answer_slots, project_type):
+        if not valid_answer_length(ans, web_controller, max_answer_slots, project_type, tg, print_allowed):
             print_at(config.MESSAGE_WRONG_LEN_ANS, tg)
             return False
 

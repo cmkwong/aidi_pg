@@ -367,7 +367,7 @@ class base_grader:
                 self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
 
             # execute the command
-            grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code)
+            grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code, print_allowed=self.print_allowed)
             if not grade_ok:
                 return False
 
@@ -448,7 +448,7 @@ class base_grader:
             return False
 
         # grading ans that from database
-        grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code)
+        grade_ok = gradingModel.grading(Answer.ans, self.web_controller, self.project_type, self.tg, auto=True, project_code=self.project_code, print_allowed=self.print_allowed)
         if not grade_ok:
             return False
 
