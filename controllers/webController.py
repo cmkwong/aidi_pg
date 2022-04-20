@@ -53,7 +53,7 @@ class Web:
             print(config.MESSAGE_CLOSE_TAGS_ERROR)
             self.browser.quit()
             self.reopen_current_browser()
-            pass
+            return False
 
     def reopen_current_browser(self):
         self.open_chrome()
@@ -120,7 +120,9 @@ class Web:
 
     def flash_all_results(self, max_answer_slots, project_type):
         self.click_all_results(max_answer_slots, project_type)
-        self.close_other_tags()
+        closeTagsOk = self.close_other_tags()
+        if not closeTagsOk:
+            return False
 
     def get_web_search_link(self, project_type):
         js_code = config.GET_WEB_SEARCH_LINK_COMMAND[project_type]

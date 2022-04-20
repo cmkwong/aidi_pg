@@ -364,7 +364,10 @@ class base_grader:
 
             # press web search if in tg mode
             if self.tg is not None:
-                self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
+                flashOk = self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
+                if not flashOk:
+                    print_at('Cannot flash the tags', self.tg, self.print_allowed)
+                    return False
 
             # execute the command
             grade_ok = gradingModel.grading(ans, self.web_controller, self.project_type, self.tg, auto=False, project_code=self.project_code, print_allowed=self.print_allowed)
@@ -409,7 +412,10 @@ class base_grader:
             return False
 
         # flash all web search and results links
-        self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
+        flashOk = self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
+        if not flashOk:
+            print_at('Cannot flash the tags', self.tg, self.print_allowed)
+            return False
 
         if self.view:
             print_at("text: " + self.query_text, self.tg)
