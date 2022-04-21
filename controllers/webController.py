@@ -54,6 +54,7 @@ class Web:
             self.browser.quit()
             self.reopen_current_browser()
             return False
+        return True
 
     def reopen_current_browser(self):
         self.open_chrome()
@@ -123,6 +124,7 @@ class Web:
         closeTagsOk = self.close_other_tags()
         if not closeTagsOk:
             return False
+        return True
 
     def get_web_search_link(self, project_type):
         js_code = config.GET_WEB_SEARCH_LINK_COMMAND[project_type]
