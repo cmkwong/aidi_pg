@@ -734,7 +734,7 @@ MESSAGE_CANCEL =                                        bcolor.OKGREEN.format("C
 MESSAGE_NO_CONFLICT =                                   bcolor.OKGREEN.format("No Conflict")
 MESSAGE_SUCCESS =                                       bcolor.OKGREEN.format("Successful.")
 MESSAGE_ERROR_PAGE_SENT =                               "{}({})\n {}.".format({}, {}, bcolor.OKGREEN.format('Error Page Sent'))
-MESSAGE_PROMOTE_MESSAGE =                               f"PLAN A: $186/1m (STANDARD)\n  PLAN B: $450/3m {bcolor.BLINK.format('(20% OFF)')}\n"
+MESSAGE_PROMOTE_MESSAGE =                               f"  PLAN A: $186/1m (STANDARD)\n  PLAN B: $400/3m {bcolor.BLINK.format('(29% OFF)')}\n"
 MESSAGE_PAYMENT_REMIND_MESSAGE =                        f"\n\n************************\n  {MESSAGE_PROMOTE_MESSAGE}  {bcolor.OKGREEN.format('-pay')}\n************************\n\n"
 
 MESSAGE_OPENING_PRJ =                                   "Opening the project ... "
