@@ -201,9 +201,12 @@ def control_command_check(graders, ans):
                     print('Please try again.')
                 return command_checked
 
-            elif (ans == '-sbss'): # update the sbs sentence
+            elif (ans == '-opensbs'):
+                osSystem.openFile('./docs', 'sbs.txt')
+
+            elif (ans == '-readsbs'): # update the sbs sentence
                 rawText = fileModel.read_txt_file('./docs', 'sbs.txt')
-                config.sbsSent = fileModel.txt2SbsSent(rawText)
+                config.sbsSent = fileModel.txt2SbsSent(rawText) # store into local storage
                 if not config.sbsSent:
                     config.sbsSent = {}
                     print_at(config.MESSAGE_CANCEL, graders.grader.tg)

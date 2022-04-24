@@ -45,6 +45,9 @@ def download_driver(executable_path):   # '../driver/chromedriver'
 def show_img(path):
     os.system('open {}'.format(path))
 
+def openFile(path, fileName):
+    os.startfile(path, fileName)
+
 def read_cheat_sheet(path, file_name):
     config.cheat_sheet = set()
     total_line = 0
