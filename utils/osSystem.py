@@ -45,11 +45,13 @@ def download_driver(executable_path):   # '../driver/chromedriver'
 def show_img(path):
     os.system('open {}'.format(path))
 
-def openFile(path, fileName):
+def openTxtFile(path, fileName):
     fullPath = os.path.join(path, fileName)
-    with open(fullPath, 'w+'): # create file
-        pass
-    os.system('open -e {}'.format(fullPath))
+    # create file if does not exist
+    if not os.path.isfile(fullPath):
+        f = open(fullPath, 'w+')
+        f.close()
+    os.system('open -e {}'.format(fullPath)) # open with built-in textEditor
 
 def read_cheat_sheet(path, file_name):
     config.cheat_sheet = set()

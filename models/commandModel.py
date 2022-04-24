@@ -201,8 +201,9 @@ def control_command_check(graders, ans):
                     print('Please try again.')
                 return command_checked
 
-            elif (ans == '-opensbs'):
-                osSystem.openFile('./docs', 'sbs.txt')
+            elif (ans == '-editsbs'):
+                osSystem.openTxtFile('./docs', 'sbs.txt')
+                print_at('After edit, type -readsbs to update.', graders.grader.tg, graders.grader.print_allowed)
                 return command_checked
 
             elif (ans == '-readsbs'): # update the sbs sentence
