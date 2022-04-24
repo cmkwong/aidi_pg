@@ -180,7 +180,7 @@ class base_grader:
         if self.grader_action_count % 100 == 0:
             hr_left = self.db_controller.check_health_status(self._version, self.grader_id)
             if hr_left < self.due_hour_before:
-                print_at(config.MESSAGE_DUE_DATE_MESSAGE + config.MESSAGE_PROMOTE_MESSAGE, self.tg, print_allowed=True)
+                print_at(config.MESSAGE_DUE_DATE_MESSAGE + config.MESSAGE_PAYMENT_REMIND_MESSAGE, self.tg, print_allowed=True)
             # denied the operation for unauthorized user
             if hr_left < 0:
                 print_at(config.MESSAGE_PERMISSION_DENIED, self.tg)
