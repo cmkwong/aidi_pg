@@ -203,12 +203,13 @@ def control_command_check(graders, ans):
 
             elif (ans == '-opensbs'):
                 osSystem.openFile('./docs', 'sbs.txt')
+                return command_checked
 
             elif (ans == '-readsbs'): # update the sbs sentence
                 rawText = fileModel.read_txt_file('./docs', 'sbs.txt')
                 config.sbsSent = fileModel.txt2SbsSent(rawText) # store into local storage
                 if not config.sbsSent:
-                    config.sbsSent = {}
+                    config.sbsSent = {} # reset the local storage
                     print_at(config.MESSAGE_CANCEL, graders.grader.tg)
                     return False
                 print_at(config.MESSAGE_SUCCESS, graders.grader.tg)
