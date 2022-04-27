@@ -83,6 +83,16 @@ def control_command_check(graders, ans):
                     print("Time delay: ", time_delay)
                 return command_checked
 
+            elif (ans == "-infodelay"):
+                print("Input the info delay in second: ")
+                time_delay = inputs.int_input()
+                if not time_delay:
+                    print("Set info delay failed. Try again.")
+                else:
+                    graders.grader.info_timeout = time_delay
+                    print("Time delay: ", time_delay)
+                return command_checked
+
             elif (ans == "-md"):
                 graders.grader.manual_timer = True
                 print("Manual timer activated. \nPress -nd to cancel.")
