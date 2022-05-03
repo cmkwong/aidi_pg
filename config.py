@@ -14,7 +14,7 @@ GET_QUERY_TEXT_COMMAND = {
         let query_text;
         query_text = document.querySelector('iframe')?.contentDocument?.querySelector('.search input')?.getAttribute('value');
         if (!query_text) {
-            query_text = document.getElementById('query-container')?.querySelector('i')?.innerText.trim(); // this is for new interface
+            query_text = document.getElementById('query-container')?.querySelector('i')?.innerText.trim(); // this is for new interface (220503)
         }
         return query_text;
         """,
@@ -31,7 +31,7 @@ CLICK_WEB_SEARCH_COMMAND = {
           'clicked validates-clicked'
         )[0];
         if (!clickSearchBtn) {
-          clickSearchBtn = document.querySelector('#html-widget > a');
+          clickSearchBtn = document.querySelector('#html-widget > a'); // new interface (220503)
         }
         clickSearchBtn.click();
     """,
@@ -65,7 +65,14 @@ CLICK_NEXT_BTN_COMMAND = {
 }
 
 GET_WEB_SEARCH_LINK_COMMAND = {
-    "standard": """return document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');""",
+    "standard": """
+        let link = document.getElementsByClassName('clicked validates-clicked')[0]?.getAttribute('href');
+        // for new interface (220503)
+        if (!link) {
+            link = document.querySelector('#html-widget > a')?.getAttribute('href');
+        }
+        return link;
+    """,
     "valid": """return document.getElementsByClassName('clicked validates-clicked')[0].getAttribute('href');""",
     "sbs": """return document.querySelector('.punchout-link').getAttribute('href');""",
 }
@@ -499,7 +506,8 @@ GET_QUERY_ANSWER_COMMAND = {
 GET_SEARCH_DATE_COMMAND = {
     "standard": """
         const re_date = /from (.+?)\./;
-        return document.querySelector(".message.blue").querySelector("p").firstChild.textContent.match(re_date)[1]
+        let searchDate = document.querySelector(".message.blue")?.querySelector("p")?.firstChild?.textContent?.match(re_date)[1];
+        return searchDate ? searchDate : 'NA'; // for new interface (220503)
     """,
     "sbs": """
         return document.querySelector('.html-widget-wrapper').querySelector('p').textContent;
