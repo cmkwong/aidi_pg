@@ -33,10 +33,16 @@ def send_tg_info(grader):
     query_text = grader.query_text
     if not query_text:
         return False
-    # get search date
-    search_date = grader.web_controller.get_search_date(grader.project_type)
-    # get web search links
-    web_search_link = grader.web_controller.get_web_search_link(grader.project_type)
+    try:
+        # get search date
+        search_date = grader.web_controller.get_search_date(grader.project_type)
+    except:
+        return 'search_date'
+    try:
+        # get web search links
+        web_search_link = grader.web_controller.get_web_search_link(grader.project_type)
+    except:
+        return 'https_na'
     try:
         # get links and its details
         link_details = grader.get_links_and_details()

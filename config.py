@@ -6,7 +6,7 @@
 UPDATE_DB_PROJS = ["standard", "classify", "valid", "sbs"]
 
 # projects that auto allowable
-AUTO_ALLOWED_PROJS = ["standard", "classify", "valid"]
+AUTO_ALLOWED_PROJS = ["standard", "classify", "valid", "sbs"]
 
 # sbs = side-by-side project
 GET_QUERY_TEXT_COMMAND = {
