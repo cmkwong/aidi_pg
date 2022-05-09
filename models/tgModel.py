@@ -37,17 +37,17 @@ def send_tg_info(grader):
         # get search date
         search_date = grader.web_controller.get_search_date(grader.project_type)
     except:
-        return 'search_date'
+        search_date = 'search_date'
     try:
         # get web search links
         web_search_link = grader.web_controller.get_web_search_link(grader.project_type)
     except:
-        return 'https_na'
+        web_search_link = 'https://www.google.com.hk/'
     try:
         # get links and its details
         link_details = grader.get_links_and_details()
     except:
-        return ['NA', 'NA', 'NA', 'NA', 'NA']
+        link_details = ['NA', 'NA', 'NA', 'NA', 'NA']
 
     max_index = min(len(link_details), grader.project_code["max_answer_slots"])
     # query and its introduction
