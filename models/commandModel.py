@@ -175,8 +175,10 @@ def control_command_check(graders, ans):
             elif (ans == "-text"):
                 try:
                     report = graders.grader.web_controller.get_report_data()
+                    summaryReport = graders.grader.web_controller.prjClassifyReport(report)
                     if report:
                         reportModel.print_report(report)
+                        reportModel.print_report(summaryReport)
                     else:
                         print("No report")
                 except:

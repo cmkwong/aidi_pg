@@ -288,6 +288,53 @@ class Web:
                     report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
         return report
 
+    def prjClassifyReport(self, report_dic):
+        """
+        classify the report text clustering into different type of proj
+        :return:
+        """
+        reportSummary_temp = {}
+        reportSummary_temp['spot12'] = [0, 0 ,0, set()]
+        reportSummary_temp['saf'] = [0, 0, 0, set()]
+        reportSummary_temp['sbs'] = [0, 0, 0, set()]
+        reportSummary_temp['QC'] = [0, 0, 0, set()]
+        reportSummary_temp['training'] = [0, 0, 0, set()]
+        for key, value in report_dic.items():
+            prjName, local = key[0], key[1]
+            done, working_hrs, breaking_hrs = value[0], value[1], value[2]
+            if (len(re.findall('spot[12]]', prjName)) != 0 ):
+                reportSummary_temp['spot12'][0] += done
+                reportSummary_temp['spot12'][1] += working_hrs
+                reportSummary_temp['spot12'][2] += breaking_hrs
+                reportSummary_temp['spot12'][3].add(local)
+            elif (len(re.findall('saf', prjName)) != 0):
+                reportSummary_temp['saf'][0] += done
+                reportSummary_temp['saf'][1] += working_hrs
+                reportSummary_temp['saf'][2] += breaking_hrs
+                reportSummary_temp['spot12'][3].add(local)
+            elif (len(re.findall('sbs', prjName)) != 0):
+                reportSummary_temp['sbs'][0] += done
+                reportSummary_temp['sbs'][1] += working_hrs
+                reportSummary_temp['sbs'][2] += breaking_hrs
+                reportSummary_temp['spot12'][3].add(local)
+            elif (len(re.findall('dr-[\d]+-custom-', prjName)) != 0):
+                reportSummary_temp['QC'][0] += done
+                reportSummary_temp['QC'][1] += working_hrs
+                reportSummary_temp['QC'][2] += breaking_hrs
+                reportSummary_temp['spot12'][3].add(local)
+            elif (len(re.findall('training', prjName)) != 0):
+                reportSummary_temp['training'][0] += done
+                reportSummary_temp['training'][1] += working_hrs
+                reportSummary_temp['training'][2] += breaking_hrs
+                reportSummary_temp['spot12'][3].add(local)
+        # format the reportSummary into report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
+        reportSummary = {}
+        for key, value in reportSummary_temp.items():
+            prjName, locals = key, str(value[3])
+            done, working_hrs, breaking_hrs = value[0], value[1], value[2]
+            reportSummary[(prjName, locals)] = [done, working_hrs, breaking_hrs]
+        return reportSummary
+
     def findProjectLinkByName(self, prjName, timeout):
         searchBarReady = self.browser.execute_script(config.CHECK_SEARCH_BAR_READY % timeout)   # check search bar ready or not
         if searchBarReady:

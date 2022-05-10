@@ -1,6 +1,5 @@
 from models import conflictModel
 
-
 def print_list(grader, str_list):
     for string in str_list:
         print_at(string, grader.tg, grader.print_allowed)
