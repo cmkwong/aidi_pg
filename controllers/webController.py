@@ -294,6 +294,7 @@ class Web:
         :return:
         """
         reportSummary_temp = {}
+        reportSummary_temp['amp'] = [0, 0, 0, set()]    # done, working_hrs, breaking_hrs, locals
         reportSummary_temp['spot12'] = [0, 0 ,0, set()]
         reportSummary_temp['saf'] = [0, 0, 0, set()]
         reportSummary_temp['sbs'] = [0, 0, 0, set()]
@@ -307,6 +308,11 @@ class Web:
                 reportSummary_temp['training'][1] += working_hrs
                 reportSummary_temp['training'][2] += breaking_hrs
                 reportSummary_temp['training'][3].add(local)
+            elif (len(re.findall('amp', prjName)) != 0 ):
+                reportSummary_temp['amp'][0] += done
+                reportSummary_temp['amp'][1] += working_hrs
+                reportSummary_temp['amp'][2] += breaking_hrs
+                reportSummary_temp['amp'][3].add(local)
             elif (len(re.findall('spot[12]', prjName)) != 0 ):
                 reportSummary_temp['spot12'][0] += done
                 reportSummary_temp['spot12'][1] += working_hrs
