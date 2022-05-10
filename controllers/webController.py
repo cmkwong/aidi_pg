@@ -302,7 +302,12 @@ class Web:
         for key, value in report_dic.items():
             prjName, local = key[0], key[1]
             done, working_hrs, breaking_hrs = value[0], value[1], value[2]
-            if (len(re.findall('spot[12]', prjName)) != 0 ):
+            if (len(re.findall('training', prjName)) != 0):
+                reportSummary_temp['training'][0] += done
+                reportSummary_temp['training'][1] += working_hrs
+                reportSummary_temp['training'][2] += breaking_hrs
+                reportSummary_temp['training'][3].add(local)
+            elif (len(re.findall('spot[12]', prjName)) != 0 ):
                 reportSummary_temp['spot12'][0] += done
                 reportSummary_temp['spot12'][1] += working_hrs
                 reportSummary_temp['spot12'][2] += breaking_hrs
@@ -322,11 +327,6 @@ class Web:
                 reportSummary_temp['QC'][1] += working_hrs
                 reportSummary_temp['QC'][2] += breaking_hrs
                 reportSummary_temp['QC'][3].add(local)
-            elif (len(re.findall('training', prjName)) != 0):
-                reportSummary_temp['training'][0] += done
-                reportSummary_temp['training'][1] += working_hrs
-                reportSummary_temp['training'][2] += breaking_hrs
-                reportSummary_temp['training'][3].add(local)
         # format the reportSummary into report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
         reportSummary = {}
         for key, value in reportSummary_temp.items():
