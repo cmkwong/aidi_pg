@@ -302,7 +302,7 @@ class Web:
         for key, value in report_dic.items():
             prjName, local = key[0], key[1]
             done, working_hrs, breaking_hrs = value[0], value[1], value[2]
-            if (len(re.findall('spot[12]]', prjName)) != 0 ):
+            if (len(re.findall('spot[12]', prjName)) != 0 ):
                 reportSummary_temp['spot12'][0] += done
                 reportSummary_temp['spot12'][1] += working_hrs
                 reportSummary_temp['spot12'][2] += breaking_hrs
@@ -311,28 +311,28 @@ class Web:
                 reportSummary_temp['saf'][0] += done
                 reportSummary_temp['saf'][1] += working_hrs
                 reportSummary_temp['saf'][2] += breaking_hrs
-                reportSummary_temp['spot12'][3].add(local)
+                reportSummary_temp['saf'][3].add(local)
             elif (len(re.findall('sbs', prjName)) != 0):
                 reportSummary_temp['sbs'][0] += done
                 reportSummary_temp['sbs'][1] += working_hrs
                 reportSummary_temp['sbs'][2] += breaking_hrs
-                reportSummary_temp['spot12'][3].add(local)
+                reportSummary_temp['sbs'][3].add(local)
             elif (len(re.findall('dr-[\d]+-custom-', prjName)) != 0):
                 reportSummary_temp['QC'][0] += done
                 reportSummary_temp['QC'][1] += working_hrs
                 reportSummary_temp['QC'][2] += breaking_hrs
-                reportSummary_temp['spot12'][3].add(local)
+                reportSummary_temp['QC'][3].add(local)
             elif (len(re.findall('training', prjName)) != 0):
                 reportSummary_temp['training'][0] += done
                 reportSummary_temp['training'][1] += working_hrs
                 reportSummary_temp['training'][2] += breaking_hrs
-                reportSummary_temp['spot12'][3].add(local)
+                reportSummary_temp['training'][3].add(local)
         # format the reportSummary into report[(pj_name, locate)] = [done, working_hrs, breaking_hrs]
         reportSummary = {}
         for key, value in reportSummary_temp.items():
-            prjName, locals = key, str(value[3])
+            prjName, locals = key, ' '.join(value[3])
             done, working_hrs, breaking_hrs = value[0], value[1], value[2]
-            reportSummary[(prjName, locals)] = [done, working_hrs, breaking_hrs]
+            reportSummary[(prjName, locals)] = [done, round(working_hrs, 2), round(breaking_hrs, 2)]
         return reportSummary
 
     def findProjectLinkByName(self, prjName, timeout):
