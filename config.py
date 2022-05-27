@@ -18,7 +18,7 @@ GET_QUERY_TEXT_COMMAND = {
         }
         return query_text;
         """,
-    "valid": """return document.querySelector('#widget-container h1')?.innerText;""",
+    "valid": """return document.querySelector('#html-widget h2')?.innerText;""",
     "sbs": """return document.querySelector('.utterance')?.innerText;""",
     "token": """return document.querySelector('#input-field')?.querySelector('input')?.value;""",
     "classify": """return document.querySelector('#display-section')?.querySelector('h1')?.textContent;""",
