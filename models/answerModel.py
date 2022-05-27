@@ -21,5 +21,10 @@ def enter(graders, command):
     terminal.activate()             # back to terminal shell for input
     user_input = input(placeholder) # waiting user input
 
+    # preset user-input
+    if not command:
+        if graders.grader.project_type == 'valid':
+            user_input = 'n'
+
     command = commandModel.control_command_check(graders, user_input)
     return user_input, command

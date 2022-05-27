@@ -38,6 +38,7 @@ from models import gradingModel
 #     return links, link_details
 
 def get_project_code(web_controller):
+    project_id = web_controller.get_projectId_from_url()
     prj_code = {
         'project_type': None,
         'vague': 0,
@@ -80,9 +81,16 @@ def get_project_code(web_controller):
 
     # ----------------- check for sbs -----------------
     # check the url has 'sbs' keyword
-    project_id = web_controller.get_projectId_from_url()
     index = project_id.find('sbs')
     if index > 0:
         prj_code['project_type'] = 'sbs'
         prj_code['max_answer_slots'] = 15   # ~ is available for clicking the link
+
+    # ---------------- check for validation spot ----------------
+    # check the project id has validation plus spot keyword
+    validation_index = project_id.find('validation')
+    spot_index = project_id.find('spot')
+    if validation_index > 0 and spot_index > 0:
+        prj_code['project_type'] = 'valid'
     return prj_code
+
