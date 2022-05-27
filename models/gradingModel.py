@@ -249,7 +249,11 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
     elif (project_type == "valid"):
 
         # flash web search
-        web_controller.flash_web_search(project_type)
+        try:
+            web_controller.flash_web_search(project_type)
+        except:
+            print('Cannot flash the web-search')
+            pass
 
         if ans == 'v':
             web_controller.click_by_id("query_validationquery_vague")
