@@ -90,7 +90,8 @@ def get_project_code(web_controller):
     # check the project id has validation plus spot keyword
     validation_index = project_id.find('validation')
     spot_index = project_id.find('spot')
-    if validation_index > 0 and spot_index > 0:
+    saf_index = project_id.find('saf')
+    if (validation_index > 0 and spot_index > 0) or (validation_index > 0 and saf_index > 0):
         prj_code['project_type'] = 'valid'
     return prj_code
 
