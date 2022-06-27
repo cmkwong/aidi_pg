@@ -229,10 +229,12 @@ def control_command_check(graders, ans):
             elif (ans == '-qt'):
                 graders.grader.control_queryTextBypass = False
                 print_at("Query text will be needed before next query. ", graders.grader.tg)
+                return command_checked
 
             elif (ans == '-nqt'):
                 graders.grader.control_queryTextBypass = True
                 print_at("Getting query Text bypassed. ", graders.grader.tg)
+                return command_checked
 
 
         if graders.grader.grader_level >= 2:
