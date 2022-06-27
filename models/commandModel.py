@@ -226,6 +226,15 @@ def control_command_check(graders, ans):
                 print_at(config.MESSAGE_SUCCESS, graders.grader.tg)
                 return command_checked
 
+            elif (ans == '-qt'):
+                graders.grader.control_queryTextBypass = False
+                print_at("Query text will be needed before next query. ", graders.grader.tg)
+
+            elif (ans == '-nqt'):
+                graders.grader.control_queryTextBypass = True
+                print_at("Getting query Text bypassed. ", graders.grader.tg)
+
+
         if graders.grader.grader_level >= 2:
             if (ans == "-auto" or ans == "--a"):
                 gradingController.set_auto_mode(graders)

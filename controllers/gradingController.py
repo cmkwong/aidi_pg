@@ -138,6 +138,7 @@ class base_grader:
         self.db_controller = db_controller
         self.grader_action_count = 0    # counting the number of grader action took
         # self.query_link = None
+        self.control_queryTextBypass = True
         self.query_text = None
         self.p_query_text = None
         self.query_done = 0
@@ -221,7 +222,10 @@ class base_grader:
 
     def query_prepare(self, auto):
         self.web_controller.back_tag_one()
-        self.query_text = self.get_query_text(auto)
+        if self.control_queryTextBypass:
+            self.query_text = 'BYPASSED'
+        else:
+            self.query_text = self.get_query_text(auto)
         if self.query_text == None:
             return False
         self.query_code = self.web_controller.get_queryCode_from_url()  # right after the getting query text successful
