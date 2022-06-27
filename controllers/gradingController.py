@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+import random
 from functools import partial
 import config
 from models import gradingModel, dbModel, infoModel, answerModel
@@ -223,7 +224,7 @@ class base_grader:
     def query_prepare(self, auto):
         self.web_controller.back_tag_one()
         if self.control_queryTextBypass:
-            self.query_text = 'BYPASSED'
+            self.query_text = 'BYPASSED' + str(random.randint(0, 1000))
         else:
             self.query_text = self.get_query_text(auto)
         if self.query_text == None:
