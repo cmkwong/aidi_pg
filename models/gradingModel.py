@@ -36,26 +36,37 @@ def base_code_check(controller, project_type, ans, max_answer_slots, tg=None):
         return False # False = continue
 
 def pattern_one(a, num, web_controller, tg=None):
+    """
+    :param a: ans
+    :param num: number of answer slot, sometimes it is empty str
+    :param web_controller: object class
+    :param tg: object class
+    :return: bool
+    """
+    if web_controller.findElemById('result_validationresult_inappropriate'): # means it is simplest version
+        countSlotStr = ''
+    else:
+        countSlotStr = str(num)
     if (a == 'i'):
         web_controller.click_by_id(
-            ("result" + str(num) + "_validationresult" + str(num) + "_inappropriate"))
+            ("result" + countSlotStr + "_validationresult" + countSlotStr + "_inappropriate"))
     elif (a == 'l'):
         web_controller.click_by_id(
-            ("result" + str(num) + "_validationresult" + str(num) + "_wrong_language"))
+            ("result" + countSlotStr + "_validationresult" + countSlotStr + "_wrong_language"))
     elif (a == 'x'):
         web_controller.click_by_id(
-            ("result" + str(num) + "_validationresult" + str(num) + "_cannot_be_judged"))
+            ("result" + countSlotStr + "_validationresult" + countSlotStr + "_cannot_be_judged"))
     else:
         web_controller.click_by_id(
-            ("result" + str(num) + "_validationresult" + str(num) + "_can_be_judged"))
+            ("result" + countSlotStr + "_validationresult" + countSlotStr + "_can_be_judged"))
         if (a == 'e'):
-            web_controller.click_by_id(("result" + str(num) + "_relevanceexcellent"))
+            web_controller.click_by_id(("result" + countSlotStr + "_relevanceexcellent"))
         elif (a == 'g'):
-            web_controller.click_by_id(("result" + str(num) + "_relevancegood"))
+            web_controller.click_by_id(("result" + countSlotStr + "_relevancegood"))
         elif (a == 'f'):
-            web_controller.click_by_id(("result" + str(num) + "_relevancefair"))
+            web_controller.click_by_id(("result" + countSlotStr + "_relevancefair"))
         elif (a == 'b'):
-            web_controller.click_by_id(("result" + str(num) + "_relevancebad"))
+            web_controller.click_by_id(("result" + countSlotStr + "_relevancebad"))
         else:
             print_at(config.MESSAGE_WRONG_ANS, tg)
             return False

@@ -126,6 +126,16 @@ class Web:
             return False
         return True
 
+    def findElemById(self, elemId):
+        """
+        Find the element existed or not
+        :return:
+        """
+        js_code = f"return document.getElementById('{elemId}')"
+        if self.browser.execute_script(js_code):
+            return True
+        return False
+
     def get_web_search_link(self, project_type):
         js_code = config.GET_WEB_SEARCH_LINK_COMMAND[project_type]
         link = self.browser.execute_script(js_code)
