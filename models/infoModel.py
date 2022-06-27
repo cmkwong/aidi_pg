@@ -67,7 +67,7 @@ def get_project_code(web_controller):
     try:
         for num in range(1, 15):    # max 15 answer slow
             # check if need pattern_one format
-            countSlotStr = gradingModel.pattern_one('g', num, web_controller)
+            pattern_ok, countSlotStr = gradingModel.pattern_one('g', num, web_controller)
             prj_code['project_type'] = 'standard' # if pattern_one exist, that is standard
             prj_code['max_answer_slots'] = num if countSlotStr else 1
             try:

@@ -69,8 +69,8 @@ def pattern_one(a, num, web_controller, tg=None):
             web_controller.click_by_id(("result" + countSlotStr + "_relevancebad"))
         else:
             print_at(config.MESSAGE_WRONG_ANS, tg)
-            return False
-    return countSlotStr # if empty means it is only 1 ans slot needed (used in infoModel)
+            return False, countSlotStr
+    return True, countSlotStr # if empty means it is only 1 ans slot needed (used in infoModel)
 
 def valid_answer_length(ans, web_controller, max_answer_slots, project_type, tg, print_allowed):
     try:
@@ -131,7 +131,7 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         # for spot12, amp ... with yes/no after pattern one
         if project_code['pattern_one_yes_no']:
             for a in ans:
-                pattern_ok = pattern_one(a, num, web_controller, tg)
+                pattern_ok, countSlotStr = pattern_one(a, num, web_controller, tg)
                 if not pattern_ok:
                     return False
                 if len(ans) > num:
@@ -142,8 +142,9 @@ def grading(ans, web_controller, project_type, tg, auto=False, project_code=None
         # for spot12, amp, eval3 ...
         else:
             for a in ans:
-                pattern_ok = pattern_one(a, num, web_controller, tg)
+                pattern_ok, countSlotStr = pattern_one(a, num, web_controller, tg)
                 if not pattern_ok:
+                    print('Pattern one cannot perform')
                     return False
                 num = num + 1
             # the rest ans by 10 is no results
