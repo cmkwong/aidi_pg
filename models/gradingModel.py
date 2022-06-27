@@ -70,7 +70,7 @@ def pattern_one(a, num, web_controller, tg=None):
         else:
             print_at(config.MESSAGE_WRONG_ANS, tg)
             return False
-    return True
+    return countSlotStr # if empty means it is only 1 ans slot needed (used in infoModel)
 
 def valid_answer_length(ans, web_controller, max_answer_slots, project_type, tg, print_allowed):
     try:
