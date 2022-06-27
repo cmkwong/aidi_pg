@@ -139,7 +139,7 @@ class base_grader:
         self.db_controller = db_controller
         self.grader_action_count = 0    # counting the number of grader action took
         # self.query_link = None
-        self.control_queryTextBypass = True
+        self.control_queryTextBypass = False # bypass to get query text
         self.query_text = None
         self.p_query_text = None
         self.query_done = 0

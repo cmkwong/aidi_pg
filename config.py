@@ -16,6 +16,9 @@ GET_QUERY_TEXT_COMMAND = {
         if (!query_text) {
             query_text = document.getElementById('query-container')?.querySelector('i')?.innerText.trim(); // this is for new interface (220503)
         }
+        if (!query_text) {
+            query_text = document.querySelector('.query-text i').innerText.replaceAll('"', '');
+        }
         return query_text;
         """,
     "valid": """return document.querySelector('#html-widget h2')?.innerText;""",
