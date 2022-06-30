@@ -22,7 +22,7 @@ def txt2SbsSent(rawText):
     return sbsSent
 
 def find_locale_from_prjName(prjLocale):
-    result = re.search(r"[ZzEe][HhNn]_[HhTtUuCc][KkWwSsNn]", prjLocale) #zh_HK, zh_TW, zh_CN, en_US
+    result = re.search(r"[ZzEe][HhNn][-_][HhTtUuCc][KkWwSsNn]", prjLocale) #zh_HK, zh_TW, zh_CN, en_US
     if result:
         locale = result.group(0)
         prj_name = prjLocale.replace(locale, '')
