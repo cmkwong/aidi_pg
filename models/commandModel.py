@@ -339,6 +339,16 @@ def control_command_check(graders, ans):
                     print_conflict(conflict, graders.grader.tg)
                 return command_checked
 
+            elif (ans == '-flash'):
+                print('Flash results activated. ')
+                graders.grader.control_flash = True
+                return command_checked
+
+            elif (ans == '-nflash'):
+                print('Flash results in-activated. ')
+                graders.grader.control_flash = False
+                return command_checked
+
         if graders.grader.grader_level >= 3:
             if (ans == "-gp"):
                 graders.grader.db_controller.get_ghost_project_list()

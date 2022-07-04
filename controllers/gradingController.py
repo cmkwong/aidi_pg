@@ -171,6 +171,7 @@ class base_grader:
         self.timer_running = False
         # training mode, if so, find ans from most popular one
         self.training = False
+        self.control_flash = False # if True, flash the results
 
     def renew_status(self, auto):
 
@@ -368,7 +369,7 @@ class base_grader:
             #         return False
 
             # press web search if in tg mode
-            if self.tg is not None:
+            if self.tg is not None or self.control_flash:
                 flashOk = self.web_controller.flash_all_results(self.project_code["max_answer_slots"], self.project_type)
                 if not flashOk:
                     print_at('Cannot flash the tags', self.tg, self.print_allowed)
