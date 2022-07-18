@@ -1,5 +1,17 @@
 from models import infoModel
 
+def _build_dummy_link_details():
+    link_details = []
+    for i in range(5):
+        link_details.append({
+            'type': 'type_na',
+            'title': 'title_na',
+            'description': 'description_na',
+            'footnote': 'footnote_na',
+            'link': 'http://na'
+        })
+    return link_details
+
 def _form_result_text(link_detail):
     text = ''
     text += "type: {}:\n{}\n".format(link_detail['type'], link_detail['title'])
@@ -46,8 +58,10 @@ def send_tg_info(grader):
     try:
         # get links and its details
         link_details = grader.get_links_and_details()
+        if not link_details:
+            link_details = _build_dummy_link_details()
     except:
-        link_details = ['NA', 'NA', 'NA', 'NA', 'NA']
+        link_details = _build_dummy_link_details()
 
     max_index = min(len(link_details), grader.project_code["max_answer_slots"])
     # query and its introduction
